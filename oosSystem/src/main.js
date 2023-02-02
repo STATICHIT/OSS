@@ -9,6 +9,9 @@ import router from './router/index'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
 
+
+const app = createApp(App) // 生成 Vue 实例 app
+
 app.use(router)
 
 app.use(createPinia())
