@@ -30,5 +30,69 @@ axios.interceptors.response.use(res => {
   return res.data
 })
 
-
+// 封装post,get,post,delete方法
+const http = {
+  get(url = '', params = {}) {
+    return new Promise((resolve, reject) => {
+      _axios({
+        url,
+        params,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8', 'token': localGet('token') },
+        method: 'GET'
+      }).then(res => {
+        resolve(res.data)
+        return res
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  post(url = '', params = {}) {
+    return new Promise((resolve, reject) => {
+      _axios({
+        url,
+        data: qs.parse(params),
+        headers: { 'Content-Type': 'application/json;charset=UTF-8', 'token': localGet('token') },
+        method: 'POST'
+      }).then(res => {
+        resolve(res.data)
+        return res.data
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  put(url = '', params = {}) {
+    return new Promise((resolve, reject) => {
+      _axios({
+        url,
+        data: params,
+        params: qs.parse(params),
+        headers: { 'Content-Type': 'application/json;charset=UTF-8', 'token': localGet('token') },
+        method: 'PUT'
+      }).then(res => {
+        resolve(res.data)
+        return res.data
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  delete(url = '', params = {}) {
+    return new Promise((resolve, reject) => {
+      _axios({
+        url,
+        data: params,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8', 'token': localGet('token') },
+        method: 'DELETE'
+      }).then(res => {
+        resolve(res.data)
+        return res.data
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
+}
+// export default http
 export default axios
