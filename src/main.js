@@ -20,6 +20,7 @@ app.config.globalProperties.$http = axios
 
 
 
-  axios.defaults.baseURL = 'http://localhost:8080';//后端开发环境地址
+  axios.defaults.baseURL = 'http://101.35.43.156:8080';//后端开发环境地址
+
 
 createApp(App).mount('#app')
