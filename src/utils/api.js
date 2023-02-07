@@ -9,8 +9,28 @@ let apiFun = {
   object:{
     tag:{},
   },
+  test:{},
 };
 
+/**
+ * 测试接口（按需添加，可删）
+ * */
+
+//前后端链接测试
+apiFun.test.test = () =>{
+  return http.get('/test/demo')
+}
+
+//测试文件预览
+apiFun.test.fileView =() =>{
+  return http.get('test/downLoad')
+}
+
+//测试文件MD5
+apiFun.test.getMd5 =() =>{
+  return http.get('test/getMd5')
+}
+ 
 /**
  * 用户接口 
  * */ 
