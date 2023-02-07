@@ -1,20 +1,20 @@
 import axios from 'axios'
+import qs from 'qs';//转json数据工具包
 import { ElMessage } from 'element-plus'
 import router from '../router/index'
 import { localGet } from './index'
 
 
+let baseURL = 'http://101.35.43.156:8080/' //后端开发环境地址
+let config = {
+  baseURL: baseURL,
+  timeout: 30000    //设置最大请求时间
+}
+const _axios = axios.create(config);
 
-axios.defaults.withCredentials = true
-// 请求头，headers 信息
-axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
-axios.defaults.headers['token'] = localGet('token') || ''
-// 默认 post 请求，使用 application/json 形式
-// axios.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded"
-//  'application/json'
 
-// 请求拦截器，内部根据返回值，重新组装，统一管理。
-axios.interceptors.response.use(res => {
+// 接收请求拦截器，内部根据返回值，重新组装，统一管理。
+_axios.interceptors.response.use(res => {
   if (typeof res.data !== 'object') {
     ElMessage.error('服务端异常！')
     return Promise.reject(res)
@@ -94,5 +94,4 @@ const http = {
     })
   }
 }
-// export default http
-export default axios
+export default http
