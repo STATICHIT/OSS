@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+// import store from './store'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'element-plus/dist/index.css'
@@ -20,7 +21,8 @@ Vue.prototype.$apiFun = apiFun;//全局使用$apiFun调用接口方法
 const app = createApp(App) // 生成 Vue 实例 app
 
 app.use(router)
-app.use(createPinia())
+// app.use(store)
 app.use(ElementPlus)
+app.use(createPinia())
 
 app.mount('#app')
