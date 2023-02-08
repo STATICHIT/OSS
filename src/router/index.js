@@ -1,19 +1,19 @@
 import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
 
+//路由配置数组
 const routes = [
   //   { path: '/', component: () => import('../views/home.vue') },
+  {path: '/', redirect: '/login',},
+  {
+    path: '/login',
+    component: () => import('../views/login.vue')
+  }
 ]
 
-
+//router指向的是大路由，配置路由和组件之间的应用关系
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: [
-    {path: '/', redirect: '/login',},
-    {
-      path: '/login',
-      component: () => import('../views/login.vue')
-    }
-  ]
+  routes
 })
 
 /*
