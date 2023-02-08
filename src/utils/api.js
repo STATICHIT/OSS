@@ -165,3 +165,5 @@ apiFun.object.tag.add =(objectName) =>{
 apiFun.object.tag.delete =(objectName,key) =>{
   return http.delete('/objectTag/deleteObjectTag?objectName='+objectName+'&key='+key)
 }
+
+export default apiFun;

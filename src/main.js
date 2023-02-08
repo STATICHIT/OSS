@@ -17,8 +17,7 @@ Vue.prototype.$apiFun = apiFun;//全局使用$apiFun调用接口方法
 const app = createApp(App) // 生成 Vue 实例 app
 
 app.use(router)
-
 app.use(createPinia())
 app.use(ElementPlus)
 
-createApp(App).mount('#app')
+app.mount('#app')

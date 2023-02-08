@@ -1,15 +1,22 @@
-import { createRouter, createWebHistory ,useRouter,useRoute} from 'vue-router'
+import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
 
 const routes = [
-//   { path: '/', component: () => import('../views/home.vue') },
+  //   { path: '/', component: () => import('../views/home.vue') },
 ]
 
- 
+
 const router = createRouter({
-  history: createWebHistory(),
-  routes
+  history: createWebHashHistory(),
+  routes: [
+    {path: '/', redirect: '/login',},
+    {
+      path: '/login',
+      component: () => import('../views/login.vue')
+    }
+  ]
 })
 
+/*
 //设置路由守卫
 router.beforeEach((to, from, next) => {
   if (to.path == '/login') {
@@ -26,5 +33,7 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
+*/
+
 
 export default router
