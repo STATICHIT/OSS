@@ -7,11 +7,12 @@
       </div>
       <div class="right">
         <div class="right-con">
-          <h1>账号登录</h1>
+          <h1>账 号 登 录</h1>
+          <br>
           <h3>用户名</h3>
           <input class="text" type="text" v-model="username"/>
-          <h3>邮箱</h3>
-          <input class="text" type="text" v-model="email"/>
+          <!-- <h3>邮箱</h3>
+          <input class="text" type="text" v-model="email"/> -->
           <h3>密码</h3>
           <input class="text" type="password" v-model="password"/>
           <input class="btn" type="button" @click="login" value="登 录" />
@@ -129,14 +130,14 @@ body {
 }
 
 h1 {
-  font-size: 26px;
+  font-size: 30px;
   color: #70b4e3;
   font-weight: 400;
   padding-bottom: 10px;
 }
 
 h3 {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: #70b4e3;
   padding: 20px 0;
@@ -149,6 +150,7 @@ h3 {
   border-bottom: 1px solid #70b4e3;
   color: #366ae6;
   background-color: rgba(0, 0, 0, 0);
+  text-align: center
 }
 
 .btn {
