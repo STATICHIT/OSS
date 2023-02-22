@@ -6,6 +6,7 @@
         <video src="../assets/海浪浪花.mp4" muted loop autoplay></video>
       </div>
       <div class="right">
+        <div class="go-to-register"><span>注册</span></div>
         <div class="right-con">
           <h1>账 号 登 录</h1>
           <br>
@@ -77,7 +78,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('../assets/wallpaper1.jpg');
+  background-image: url('../assets/wallpaper.png');
   background-size: 100% 100%;
 }
 
@@ -114,6 +115,7 @@ body {
 }
 
 .right {
+  position: relative;
   width: 400px;
   height: 560px;
   background: rgba(255, 255, 255, 0.9);
@@ -162,10 +164,31 @@ h3 {
   font-size: 16px;
   cursor: pointer;
   margin-top: 50px;
-  background-image: linear-gradient(120deg, #18D4FF 0%, #DE0041 100%);
+  background:#96cef7be;
 }
 
 .btn:hover {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.go-to-register {
+  cursor: pointer;
+  height: 70px;
+  width: 70px;
+  background-image: url(../assets/toR.png);
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  text-align: right;
+}
+
+.go-to-register span {
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+    position: relative;
+    top: 10px;
+    right: 7px;
 }
 </style>
