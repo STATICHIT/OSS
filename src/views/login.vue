@@ -37,25 +37,29 @@ export default {
   },
   methods:{
     login(){
-      if(this.username == "" || this.password == ""){
-        ElMessage.error("账号或密码不能为空");
-      }else{
-        alert("账号："+this.username+"密码："+this.password)
-        apiFun.login({
-          username:this.username,
-          password:this.password,
-        }).then((res)=>{
-          if(res.success == false){
-            ElMessage.error(res.msg)
-          }else{
-            var token = res.data;
-            //把token放进store中
-            // this.$store.commit("setToken", token);
-            ElMessage.success("用户 “"+this.username+"” 登录成功");
-            this.$router.push({path:'/main'})//跳转到主页面
-          }
-        })
-      }
+      //测试
+      this.$router.push({path:'/test'})
+
+      //登录
+      // if(this.username == "" || this.password == ""){
+      //   ElMessage.error("账号或密码不能为空");
+      // }else{
+      //   alert("账号："+this.username+"密码："+this.password)
+      //   apiFun.login({
+      //     username:this.username,
+      //     password:this.password,
+      //   }).then((res)=>{
+      //     if(res.success == false){
+      //       ElMessage.error(res.msg)
+      //     }else{
+      //       var token = res.data;
+      //       //把token放进store中
+      //       // this.$store.commit("setToken", token);
+      //       ElMessage.success("用户 “"+this.username+"” 登录成功");
+      //       this.$router.push({path:'/main'})//跳转到主页面
+      //     }
+      //   })
+      // }
     }
   }
 };
