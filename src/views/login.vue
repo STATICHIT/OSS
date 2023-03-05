@@ -1,22 +1,59 @@
 <template>
-  <div class="wrap">
-    <div class="title"><img src="../assets/仓库_仓储管理.png" alt=""> OSS对象存储平台</div>
-    <div class="form">
-      <div class="left">
-        <video src="../assets/海浪浪花.mp4" muted loop autoplay></video>
-      </div>
-      <div class="right">
-        <div class="go-to-register"><span>注册</span></div>
-        <div class="right-con">
-          <h1>账 号 登 录</h1>
-          <br>
-          <h3>用户名</h3>
-          <input class="text" type="text" v-model="username"/>
-          <!-- <h3>邮箱</h3>
-          <input class="text" type="text" v-model="email"/> -->
-          <h3>密码</h3>
-          <input class="text" type="password" v-model="password"/>
-          <input class="btn" type="button" @click="login" value="登 录" />
+  <div>
+    <div class="login-page">
+      <div>
+        <div class="login-box">
+          <br />
+          <p class="login-box-msg">Welcome , please login to your account.</p>
+        </div>
+        <br /><br />
+        <el-icon><User /></el-icon><span style="color: gray"> Username</span>
+
+        <input
+          type="text"
+          class="form-control"
+          name="username"
+          placeholder="请输入您的账号"
+          required
+          autofocus
+        />
+        <br />
+        <br />
+        <el-icon><Lock /></el-icon><span style="color: gray"> Password</span>
+
+        <div class="help-block with-errors"></div>
+        <input
+          minlength="5"
+          maxlength="20"
+          type="password"
+          class="form-control"
+          name="password"
+          placeholder="请输入您的密码"
+          required
+          autocomplete="current-password"
+        />
+
+        <br /><br /><br />
+        <div class="text-left">
+          <div class="remember">
+            <input id="remember" name="remember" type="checkbox" />
+            <span> Remember me</span>
+          </div>
+          <div class="register">
+            <router-link to="/register" style="text-decoration: none"
+              ><span>注册新账号</span></router-link
+            >
+          </div>
+        </div>
+        <br />
+        <button class="login-btn" @click="login">
+          登 录
+          <el-icon><Right /></el-icon>
+        </button>
+        <div>
+          <router-link to="/ramLogin" class="ram" style="text-decoration: none"
+            ><span>RAM账户登录</span></router-link
+          >
         </div>
       </div>
     </div>
@@ -24,21 +61,20 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus';
-import apiFun from '../utils/api';
-
+import { ElMessage } from "element-plus";
+import apiFun from "../utils/api";
 export default {
-  data(){
-    return{
-      username:"",
-      email:"",
-      password:"",
-    }
+  data() {
+    return {
+      username: "",
+      email: "",
+      password: "",
+    };
   },
-  methods:{
-    login(){
+  methods: {
+    login() {
       //测试
-      this.$router.push({path:'/test'})
+      this.$router.push({ path: "/test" });
 
       //登录
       // if(this.username == "" || this.password == ""){
@@ -60,140 +96,61 @@ export default {
       //     }
       //   })
       // }
-    }
-    
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.login-btn {
+  color: white;
+  border-style: none;
+  width: 350px;
+  padding: 0.54rem 1.2rem !important;
+  height: 34px;
+  line-height: 1.2;
+  border-radius: 0.2rem;
+  background-color: #586cb1;
+  cursor: pointer;
+  box-shadow: 0 3px 1px -2px rgb(209, 208, 208);
 }
-
-body {
-  overflow: hidden;
-}
-
-.wrap {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-image: url('../assets/wallpaper.png');
-  background-size: 100% 100%;
-}
-
-.title{
-  height: 50px;
-  width: 1000px;
-  font-size: 40px;
-  position : absolute;
-  top:50px;
-  left:50px;
-}
-
-.title img{
-  vertical-align: bottom; 
-}
-.form {
-  width: 900px;
-  height: 560px;
-  display: flex;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
-}
-
-.left {
-  width: 500px;
-  height: 560px;
-}
-
-.left video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.right {
-  position: relative;
-  width: 400px;
-  height: 560px;
-  background: rgba(255, 255, 255, 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.right-con {
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
-h1 {
-  font-size: 30px;
-  color: #70b4e3;
-  font-weight: 400;
-  padding-bottom: 10px;
-}
-
-h3 {
-  font-size: 14px;
-  font-weight: 400;
-  color: #70b4e3;
-  padding: 20px 0;
-}
-
-.text {
-  width: 100%;
+.form-control {
+  width: 330px;
+  height: 36px;
+  padding: 0 10px;
+  border-color: rgba(228, 227, 227, 0.719);
   outline: none;
   border: none;
-  border-bottom: 1px solid #70b4e3;
-  color: #366ae6;
-  background-color: rgba(0, 0, 0, 0);
-  text-align: center
+  border-bottom: 1px solid #626364;
 }
 
-.btn {
+.form-control:hover {
+  box-shadow: 0 3px 1px -2px rgb(104, 103, 103);
+}
+
+.login-btn:hover {
+  background-color: #4e5e9b;
+  box-shadow: 0 3px 1px -2px rgb(104, 103, 103);
+}
+.text-left {
+  display: flex;
+}
+
+.text-left .remember {
   width: 100%;
-  height: 40px;
-  border-radius: 20px;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 50px;
-  background:#96cef7be;
 }
 
-.btn:hover {
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+.text-left .register {
+  width: 100px;
 }
 
-
-.go-to-register {
-  cursor: pointer;
-  height: 70px;
-  width: 70px;
-  background-image: url(../assets/toR.png);
+.ram {
+  font-style: 8px;
+  color: #4e5e9b;
   position: absolute;
-  top: 0px;
-  right: 0px;
-  text-align: right;
-}
-
-.go-to-register span {
-    font-size: 14px;
-    color: rgb(255, 255, 255);
-    font-weight: 500;
-    position: relative;
-    top: 10px;
-    right: 7px;
+  bottom: 20px;
+  left: 180px;
+  background-color: white;
+  text-align: center;
 }
 </style>
