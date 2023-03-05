@@ -9,7 +9,8 @@
 <script>
 //引入echarts
 import * as echarts from "echarts";
-
+//引入主题
+import theme from './echarts_test' ;
 export default {
   data() {
     return {
@@ -23,27 +24,28 @@ export default {
   },
   methods: {
     initEcharts() {
-      const option = {
-        title: {
-          text: "ECharts 入门示例"
-        },
-        tooltip: {},
-        legend: {
-          data: ["销量"]
-        },
-        xAxis: {
-          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-        },
-        yAxis: {},
-        series: [
-          {
-            name: "销量",
-            type: "bar", //类型为柱状图
-            data: [5, 20, 36, 10, 10, 20]
-          }
-        ]
-      };
-      const myChart = echarts.init(document.getElementById("mychart"));// 图标初始化
+      var option = {
+                series : [
+                    {
+                        name: '访问来源',
+                        type: 'pie',
+                        radius: '55%',
+                        roseType: 'angle',
+                        data:[
+                            {value:235, name:'视频广告'},
+                            {value:274, name:'联盟广告'},
+                            {value:310, name:'邮件营销'},
+                            {value:335, name:'直接访问'},
+                            {value:400, name:'搜索引擎'}
+                        ]
+                    }
+                ]
+            };
+ 
+
+      echarts.registerTheme('theme',theme);//注册主题
+      const myChart = echarts.init(document.getElementById('mychart'),'theme');// 图标初始化
+
       myChart.setOption(option);// 渲染页面
       //随着屏幕大小调节图表
       window.addEventListener("resize", () => {
