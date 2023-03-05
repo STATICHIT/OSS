@@ -3,10 +3,19 @@ import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-rou
 //路由配置数组
 const routes = [
   //   { path: '/', component: () => import('../views/home.vue') },
-  {path: '/', redirect: '/login',},
+  {path: '/', redirect: '/index',},
+  {
+    path: '/index',
+    component: () => import('../views/Index.vue'),
+    
+  },
   {
     path: '/login',
-    component: () => import('../views/login.vue')
+    component: () => import('../views/Login.vue')
+  },
+  {
+    path: '/register',
+    component: () => import('../views/Register.vue')
   },
   {
     path: '/test',

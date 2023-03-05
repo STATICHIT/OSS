@@ -1,0 +1,227 @@
+<template>
+  <div>
+    <div class="main">
+      <div class="left">
+        <div class="login-page">
+          <div class="auth-brand text-lg-left">CloudCan云罐</div>
+
+          <div class="login-box">
+            <div class="login-logo">
+              <h4 class="mt-0">让存储无限量</h4>
+              <br />
+              <p class="login-box-msg">
+                Welcome , please login to your account.
+              </p>
+            </div>
+            <br /><br />
+            <el-icon><User /></el-icon
+            ><span style="color: gray"> Username</span>
+
+            <input
+              type="hidden"
+              name="_token"
+              value="QqiX4P0xUyPdJtASLNZ5v9U7MVvaDk0u2b3Nzsln"
+            />
+
+            <input
+              type="text"
+              class="form-control"
+              name="username"
+              placeholder="请输入您的账号"
+              required
+              autofocus
+            />
+            <br />
+            <br />
+            <el-icon><Lock /></el-icon
+            ><span style="color: gray"> Password</span>
+
+            <div class="help-block with-errors"></div>
+            <input
+              minlength="5"
+              maxlength="20"
+              type="password"
+              class="form-control"
+              name="password"
+              placeholder="请输入您的密码"
+              required
+              autocomplete="current-password"
+            />
+
+            <br /><br /><br />
+            <div class="text-left">
+              <div class="remember">
+                <input id="remember" name="remember" type="checkbox" />
+                <span> Remember me</span> 
+              </div>
+              <div class="register">
+                <router-link to="/register" style="text-decoration:none;"><span>注册新账号</span></router-link>
+              </div>
+            </div>
+            <br />
+            <button class="login-btn" @click="login">
+              登 录
+              <el-icon><Right /></el-icon>
+            </button>
+          </div>
+        </div>
+        <div >
+          <input type="button" class="text-btn ram" value="RAM账户登录">
+        </div>
+      </div>
+      <div class="right">
+        <div class="content-front"></div>
+        <div class="login-description">
+          <p style="color: aliceblue">
+            让数据与智慧更高效地流动。
+            <br />
+            CloudCan
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ElMessage } from 'element-plus';
+import apiFun from '../utils/api';
+export default {
+  data(){
+    return{
+      username:"",
+      email:"",
+      password:"",
+    }
+  },
+  methods:{
+    login(){
+      //测试
+      this.$router.push({path:'/test'})
+
+      //登录
+      // if(this.username == "" || this.password == ""){
+      //   ElMessage.error("账号或密码不能为空");
+      // }else{
+      //   alert("账号："+this.username+"密码："+this.password)
+      //   apiFun.login({
+      //     username:this.username,
+      //     password:this.password,
+      //   }).then((res)=>{
+      //     if(res.success == false){
+      //       ElMessage.error(res.msg)
+      //     }else{
+      //       var token = res.data;
+      //       //把token放进store中
+      //       // this.$store.commit("setToken", token);
+      //       ElMessage.success("用户 “"+this.username+"” 登录成功");
+      //       this.$router.push({path:'/main'})//跳转到主页面
+      //     }
+      //   })
+      // }
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.main {
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: row;
+  align-items: stretch;
+  margin: 0;
+}
+.left {
+  width: 350px;
+  padding: 60px;
+  text-align: left !important;
+}
+
+.main .auth-brand {
+  margin: 4rem 0 4rem;
+  font-size: 26px;
+  width: 325px;
+}
+
+.login-btn {
+  color: white;
+  border-style: none;
+  width: 350px;
+  padding: 0.54rem 1.2rem !important;
+  height: 34px;
+  line-height: 1.2;
+  border-radius: 0.2rem;
+  background-color: #586cb1;
+  cursor: pointer;
+  box-shadow: 0 3px 1px -2px rgb(209, 208, 208);
+}
+.form-control {
+  width: 330px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 5px;
+  border-color: rgba(228, 227, 227, 0.719);
+}
+
+.form-control:hover {
+  box-shadow: 0 3px 1px -2px rgb(104, 103, 103);
+}
+
+.login-btn:hover {
+  background-color: #4e5e9b;
+  box-shadow: 0 3px 1px -2px rgb(104, 103, 103);
+}
+.right {
+  padding: 6rem 3rem;
+  flex: 1;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.3);
+  text-align: center !important;
+  background: url(../assets/wallpaper.png) center;
+  background-size: cover;
+}
+.text-left{
+  display: flex;
+}
+
+.text-left .remember{
+  width: 100%;
+}
+
+.text-left .register{
+  width: 100px;
+}
+
+.login-description {
+  position: absolute;
+  margin: 0 auto;
+  padding: 0 1.75rem;
+  bottom: 3rem;
+  left: 0;
+  right: 0;
+}
+
+.content-front {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.1);
+  margin-top: -6rem;
+}
+
+.text-btn{
+  border:0;
+  cursor:pointer;
+}
+
+.ram{
+  position: absolute;
+  bottom: 20px;
+  left: 180px;
+  background-color: white;
+  text-align: center;
+}
+</style>
