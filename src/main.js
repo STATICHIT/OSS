@@ -6,6 +6,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'element-plus/dist/index.css'
 import {createPinia} from 'pinia'
+//element-plus图标库
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
 

@@ -29,7 +29,11 @@ const routes = [
   },
   {
     path: '/test',
-    component: () => import('../views/test.vue')
+    component: () => import('../views/treetable_test.vue')
+  },
+  {
+    path: '/test2',
+    component: () => import('../views/echarts_test2.vue')
   }
 ]
 
