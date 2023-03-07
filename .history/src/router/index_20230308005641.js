@@ -30,16 +30,16 @@ const routes = [
   {
     path: '/test',
     component: () => import('../views/test.vue')
+  }
+  // {path: '/', redirect: '/login',},
+  {
+    path: '/login',
+    component: () => import('../views/login.vue')
   },
-
-   {
-     path: '/menu',
-      component: () => import('../components/menu.vue') 
-    },
-   {
-     path: '/header',
-      component: () => import('../components/header.vue') 
-    },
+   { path: '/menu', component: () => import('../components/menu.vue') },
+   { path: '/header', component: () => import('../components/header.vue') },
+   { path: '/login', component: () => import('../views/login.vue') },
+   { path: '/main', component: () => import('../views/main.vue') },
 ]
 
 //router指向的是大路由，配置路由和组件之间的应用关系
