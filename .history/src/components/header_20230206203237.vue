@@ -1,0 +1,17 @@
+<template>
+  <div class="header">
+    
+  </div>
+</template>
+
+<script setup>
+
+</script>
+
+<style>
+.header{
+    height: 70px;
+    width: 100%;
+    border-bottom: 1.5px solid rgb(122, 121, 121);
+}
+</style>

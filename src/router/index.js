@@ -1,8 +1,9 @@
-import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
+import { createRouter, createWebHistory, useRouter, useRoute } from 'vue-router'
 
 //路由配置数组
 const routes = [
   //   { path: '/', component: () => import('../views/home.vue') },
+<<<<<<< HEAD
   { path: '/', redirect: '/index', },
   {
     path: '/index',
@@ -31,11 +32,22 @@ const routes = [
     path: '/test',
     component: () => import('../views/test.vue')
   }
+=======
+  // {path: '/', redirect: '/login',},
+  {
+    path: '/login',
+    component: () => import('../views/login.vue')
+  },
+   { path: '/menu', component: () => import('../components/menu.vue') },
+   { path: '/header', component: () => import('../components/header.vue') },
+   { path: '/login', component: () => import('../views/login.vue') },
+   { path: '/main', component: () => import('../views/main.vue') },
+>>>>>>> d82874d (laqu)
 ]
 
 //router指向的是大路由，配置路由和组件之间的应用关系
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 
