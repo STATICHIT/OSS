@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
+import { createRouter, createWebHistory, useRouter, useRoute } from 'vue-router'
 
 //路由配置数组
 const routes = [
@@ -47,11 +47,22 @@ const routes = [
     path:'/dataScreen',
     component: () => import('../views/DataScreen.vue')
   }
+    path:'/tests',
+    component: () => import('../views/test.vue')
+  },
+  {
+    path: '/menu',
+    component: () => import('../components/menu.vue') 
+  },
+  {
+    path: '/header',
+    component: () => import('../components/header.vue') 
+  },
 ]
 
 //router指向的是大路由，配置路由和组件之间的应用关系
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 
