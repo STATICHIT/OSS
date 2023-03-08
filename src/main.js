@@ -10,6 +10,9 @@ import {createPinia} from 'pinia'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
 
+//组件
+import echarts from './components/echarts_test2.vue'
+
 
 //vue2才把apiFun对象赋值给vue的全局变量
 /*
@@ -28,4 +31,6 @@ app.use(createPinia())
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
+
+app.component('my-echarts',echarts)
 app.mount('#app')

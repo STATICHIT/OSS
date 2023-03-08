@@ -10,7 +10,7 @@
 //引入echarts
 import * as echarts from "echarts";
 //引入主题
-import theme from './echarts_test' ;
+import theme from './echarts_test'
 export default {
   data() {
     return {

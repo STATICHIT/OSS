@@ -3,37 +3,49 @@ import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-rou
 //路由配置数组
 const routes = [
   //   { path: '/', component: () => import('../views/home.vue') },
-  { path: '/', redirect: '/index', },
+  { path: '/', redirect: '/dataScreen', },
   {
+    // 登录注册底页
     path: '/index',
     component: () => import('../views/Index.vue'),
     redirect:'/login',
     children: [
       {
+        // 登录模块
         path: '/login',
         component: () => import('../views/Login.vue')
       },
       {
+        // 注册模块
         path: '/register',
         component: () => import('../views/Register.vue')
       },
       {
+        // RAM用户登录模块
         path: '/ramLogin',
         component: () => import('../views/RamLogin.vue')
       }
     ]
   },
   {
+    //客户端主页面(ls的主页框架写好之后可以直接连接这个链接)
     path: '/main',
     component: () => import('../views/Main.vue')
   },
   {
+    //关于树形列表的测试
     path: '/test',
     component: () => import('../views/treetable_test.vue')
   },
   {
+    //关于echarts工具的测试
     path: '/test2',
-    component: () => import('../views/echarts_test2.vue')
+    component: () => import('../components/echarts_test2.vue')
+  },
+  {
+    //数据大屏
+    path:'/dataScreen',
+    component: () => import('../views/DataScreen.vue')
   }
 ]
 
