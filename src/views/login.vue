@@ -82,7 +82,7 @@ export default {
   methods: {
     login() {
       //测试
-      this.$router.push({ path: "/test" });
+      this.$router.push({ path: "/test2" });
 
       //登录
       // if(this.username == "" || this.password == ""){
