@@ -4,7 +4,7 @@ import store from './store'
 import router from './router/index'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import {createPinia} from 'pinia'
+import { createPinia } from 'pinia'
 //element-plus图标库
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
@@ -29,11 +29,11 @@ app.use(router)
 app.use(store)
 app.use(ElementPlus)
 app.use(createPinia())
-<<<<<<< HEAD
+app.use({ locale })
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
-app.component('my-echarts',echarts)
+app.component('my-echarts', echarts)
 app.mount('#app')
 

@@ -61,7 +61,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import { ElMessage } from "element-plus";
 import apiFun from "../utils/api";
 
