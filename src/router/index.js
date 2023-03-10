@@ -45,13 +45,15 @@ const routes = [
   {
     //数据大屏
     path: '/dataScreen',
-    component: () => import('../views/DataScreen.vue')
+    component: () => import('../views/subpages/DataScreen.vue')
   },
   {
+    //菜单控件
     path: '/menu',
     component: () => import('../components/menu.vue')
   },
   {
+    //头部控件
     path: '/header',
     component: () => import('../components/header.vue')
   },

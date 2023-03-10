@@ -1,3 +1,4 @@
+<!-- 子页面 ———— 数据大屏 -->
 <template>
   <div>
     <div class="box">
@@ -7,7 +8,12 @@
         <div class="board2 card">
           <div>
             <span class="littleTitle"><b>存储用量</b></span>
-            <el-select class="type" v-model="value" placeholder="请选择">
+            <el-select
+              class="type"
+              @change="curSelect"
+              v-model="value"
+              placeholder="请选择"
+            >
               <el-option
                 v-for="item in selects"
                 :key="item.value"
@@ -22,12 +28,20 @@
                 <th>计费容量</th>
               </tr>
               <tr>
-                <td><span class="capacity">485.65</span> MB</td>
-                <td><span class="capacity">485.71</span> MB</td>
+                <td>
+                  <span class="capacity">{{ capacity1 }}</span> MB
+                </td>
+                <td>
+                  <span class="capacity">{{ capacity2 }}</span> MB
+                </td>
               </tr>
               <tr>
-                <td>月同比--</td>
-                <td>月同比--</td>
+                <td>
+                  月同比 -- <span class="rate">{{ rate1 }}</span>
+                </td>
+                <td>
+                  月同比 -- <span class="rate">{{ rate2 }}</span>
+                </td>
               </tr>
             </table>
           </div>
@@ -40,10 +54,10 @@
         <h2 class="title2">Bucket管理</h2>
         <div class="up" id="mychart"></div>
         <div class="down">
-          <el-button plain class="createBtn" >创建 Bucket</el-button>
+          <el-button plain class="createBtn">创建 Bucket</el-button>
           <el-button plain>查看 Bucket 列表</el-button>
           <el-button plain>导出CSV</el-button>
-        </div> 
+        </div>
       </div>
       <span class="power">powered by Kunshi Vajra Gong</span>
     </div>
@@ -58,29 +72,33 @@ import theme from "../components/echarts_test";
 export default {
   data() {
     return {
+      capacity1: "485.65",
+      capacity2: "485.71",
+      rate1: "237.39%↑",
+      rate2: "237.42%↑",
       selects: [
         {
-          value: "总用量",
+          value: "1",
           label: "总用量",
         },
         {
-          vlaue: "标准存储",
+          value: "2",
           label: "标准存储",
         },
         {
-          value: "低频访问",
+          value: "3",
           label: "低频访问",
         },
         {
-          value: "归档存储",
+          value: "4",
           label: "归档存储",
         },
         {
-          value: "冷归档存储",
+          value: "5",
           label: "冷归档存储",
         },
       ],
-      value: "",
+      value: "1",
     };
   },
   mounted() {
@@ -199,6 +217,57 @@ export default {
         myChart.resize();
       });
     },
+    curSelect(val) {
+      console.log(val);
+      switch (val) {
+        case "1":
+          {
+            this.capacity1 = "264.12";
+            this.capacity2 = "124.88";
+            this.rate1 = "147.87%↑";
+            this.rate2 = "137.54%↑";
+          }
+          break;
+        case "2":
+          {
+            this.capacity1 = "125.46";
+            this.capacity2 = "112.15";
+            this.rate1 = "123.453%↓";
+            this.rate2 = "114.24%↓";
+          }
+          break;
+        case "3":
+          {
+            this.capacity1 = "435.84";
+            this.capacity2 = "412.48";
+            this.rate1 = "128.84%↑";
+            this.rate2 = "104.31%↑";
+          }
+          break;
+        case "4":
+          {
+            this.capacity1 = "84.25";
+            this.capacity2 = "75.31";
+            this.rate1 = "12.45%↓";
+            this.rate2 = "10.12%↓";
+          }
+          break;
+        case "5":
+          {
+            this.capacity1 = "45.73";
+            this.capacity2 = "40.45";
+            this.rate1 = "153.34%↓";
+            this.rate2 = "145.27%↓";
+          }
+          break;
+        default: {
+          this.capacity1 = "";
+          this.capacity2 = "";
+          this.rate1 = "";
+          this.rate2 = "";
+        }
+      }
+    },
   },
 };
 </script>
@@ -219,7 +288,7 @@ export default {
 }
 
 .right {
-  border-radius:5px;
+  border-radius: 5px;
   float: right;
   width: 500px;
   height: 730px;
@@ -240,21 +309,20 @@ export default {
   // background-color: rgb(188, 196, 245);
 }
 
-.title2{
+.title2 {
   margin-top: 20px;
-  color:#6472a3;
+  color: #6472a3;
 }
 
-.createBtn{
+.createBtn {
   background-color: #8c99c6;
   color: white;
-
 }
 
 .card {
   width: 480px;
   height: 227px;
-  border-radius:5px;
+  border-radius: 5px;
   background-color: white;
 }
 
@@ -296,21 +364,24 @@ td {
   padding: 15px;
 }
 
-.capacity{
+.capacity {
   font-size: 30px;
 }
 
+.rate {
+  color: red;
+}
 .board3 {
   width: 980px;
   height: 467px;
   padding: 20px;
   box-sizing: border-box;
-  border-radius:5px;
+  border-radius: 5px;
   margin-top: 267px;
   background-color: white;
 }
 
-#mychart2{
+#mychart2 {
   width: 940px;
   height: 450px;
 }
