@@ -4,7 +4,20 @@
     <div class="box">
       <!-- <div class="title">云罐 / 数据大屏</div> -->
       <div class="left">
-        <div class="board1 card"></div>
+        <div class="board1 card">
+          <div class="part1">
+            <div><h3>总访问量及独立访客量</h3></div>
+            <br />
+            <br /><br />
+            <div class="pv">
+              PV： <b>{{ pv }}</b>
+            </div>
+            <div class="uv">
+              UV： <b>{{ uv }}</b>
+            </div>
+          </div>
+          <div id="mychart3"></div>
+        </div>
         <div class="board2 card">
           <div>
             <span class="littleTitle"><b>存储用量</b></span>
@@ -59,23 +72,31 @@
           <el-button plain>导出CSV</el-button>
         </div>
       </div>
-      <span class="power">powered by Kunshi Vajra Gong</span>
+      <span class="power">@2023 - Made by Kunshi Vajra Gong</span>
     </div>
   </div>
 </template>
 
 <script>
+import { ElMessage } from "element-plus";
+import apiFun from "../../utils/api";
 //引入echarts
 import * as echarts from "echarts";
 //引入主题
-import theme from "../components/echarts_test";
+import theme from "./echarts_test";
 export default {
   data() {
     return {
+      cnt1: 1048,
+      cnt2: 735,
+      cnt3: 580,
+      cnt4: 484,
       capacity1: "485.65",
       capacity2: "485.71",
       rate1: "237.39%↑",
       rate2: "237.42%↑",
+      pv: 6521,
+      uv: 4563,
       selects: [
         {
           value: "1",
@@ -103,8 +124,16 @@ export default {
   },
   mounted() {
     this.initEcharts();
+    this.initData();
   },
   methods: {
+    initData() {
+      apiFun.getScreenData().then((res) => {
+        this.pv=res.method.pv;
+        this.uv=res.method.uv;
+        //...
+      });
+    },
     initEcharts() {
       var option = {
         title: {
@@ -123,10 +152,10 @@ export default {
             type: "pie",
             radius: "50%",
             data: [
-              { value: 1048, name: "标准存储" },
-              { value: 735, name: "冷归档存储" },
-              { value: 580, name: "归档存储" },
-              { value: 484, name: "低频访问存储" },
+              { value: this.cnt1, name: "标准存储" },
+              { value: this.cnt2, name: "冷归档存储" },
+              { value: this.cnt3, name: "归档存储" },
+              { value: this.cnt4, name: "低频访问存储" },
             ],
             emphasis: {
               itemStyle: {
@@ -147,12 +176,19 @@ export default {
           trigger: "axis",
         },
         legend: {
-          data: ["Email", "Union Ads", "Video Ads", "Direct", "Search Engine"],
+          top: 40,
+          data: [
+            "标准存储-本地冗余",
+            "低频访问-本地冗余",
+            "归档存储",
+            "冷归档存储",
+          ],
         },
         grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
+          top: "100",
+          left: "2%",
+          right: "5%",
+          bottom: "5%",
           containLabel: true,
         },
         toolbox: {
@@ -170,47 +206,80 @@ export default {
         },
         series: [
           {
-            name: "Email",
+            name: "标准存储-本地冗余",
             type: "line",
             stack: "Total",
             data: [120, 132, 101, 134, 90, 230, 210],
           },
           {
-            name: "Union Ads",
+            name: "低频访问-本地冗余",
             type: "line",
             stack: "Total",
             data: [220, 182, 191, 234, 290, 330, 310],
           },
           {
-            name: "Video Ads",
+            name: "归档存储",
             type: "line",
             stack: "Total",
             data: [150, 232, 201, 154, 190, 330, 410],
           },
           {
-            name: "Direct",
+            name: "冷归档存储",
             type: "line",
             stack: "Total",
             data: [320, 332, 301, 334, 390, 330, 320],
           },
-          {
-            name: "Search Engine",
-            type: "line",
-            stack: "Total",
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-          },
         ],
       };
 
+      var option3 = {
+        tooltip: {
+          trigger: "item",
+        },
+        legend: {
+          orient: "vertical",
+          left: 10,
+          top: 300,
+        },
+        series: [
+          {
+            type: "pie",
+            radius: ["40%", "80%"],
+            center: ["50%", "70%"],
+            startAngle: 180,
+            data: [
+              {
+                value: 1048,
+                name: "pv(访问量)",
+              },
+              {
+                value: 735,
+                name: "uv(独立访客)",
+              },
+              {
+                value: 1048 + 735,
+                itemStyle: {
+                  color: "none",
+                },
+              },
+            ],
+          },
+        ],
+      };
       echarts.registerTheme("theme", theme); //注册主题
       const myChart = echarts.init(document.getElementById("mychart"), "theme"); // 图标初始化
       const myChart2 = echarts.init(
         document.getElementById("mychart2"),
         "theme"
       );
+      const myChart3 = echarts.init(
+        document.getElementById("mychart3"),
+        "theme"
+      );
 
       myChart.setOption(option); // 渲染页面
       myChart2.setOption(option2);
+      myChart3.setOption(option3);
 
       //随着屏幕大小调节图表
       window.addEventListener("resize", () => {
@@ -273,8 +342,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.box {
+* {
   box-sizing: border-box;
+}
+
+.box {
   position: relative;
   padding: 30px;
   width: 1570px;
@@ -293,7 +365,6 @@ export default {
   width: 500px;
   height: 730px;
   padding: 20px;
-  box-sizing: border-box;
   background-color: white;
 }
 
@@ -327,12 +398,35 @@ export default {
 }
 
 .board1 {
+  position: relative;
   float: left;
+  padding: 30px;
+  text-align: left;
+}
+
+.pv {
+  height: 30px;
+  line-height: 30px;
+}
+
+.uv {
+  height: 30px;
+  line-height: 30px;
+}
+.pv::before {
+  content: url("../../assets/pv.png");
+}
+
+.uv::before {
+  content: url("../../assets/uv.png");
+}
+
+.part1 {
+  position: absolute;
 }
 
 .board2 {
   float: right;
-  box-sizing: border-box;
   padding: 20px;
 }
 
@@ -375,7 +469,6 @@ td {
   width: 980px;
   height: 467px;
   padding: 20px;
-  box-sizing: border-box;
   border-radius: 5px;
   margin-top: 267px;
   background-color: white;
@@ -384,6 +477,13 @@ td {
 #mychart2 {
   width: 940px;
   height: 450px;
+}
+
+#mychart3 {
+  float: right;
+  margin-top: 30px;
+  width: 350px;
+  height: 150px;
 }
 
 .power {

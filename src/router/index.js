@@ -38,11 +38,6 @@ const routes = [
     component: () => import('../views/treetable_test.vue')
   },
   {
-    //关于echarts工具的测试
-    path: '/test2',
-    component: () => import('../components/echarts_test2.vue')
-  },
-  {
     //数据大屏
     path: '/dataScreen',
     component: () => import('../views/subpages/DataScreen.vue')
