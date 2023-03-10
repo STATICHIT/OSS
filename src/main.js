@@ -9,7 +9,6 @@ import { createPinia } from 'pinia'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
 import locale from 'element-plus/es/locale/lang/zh-cn'
-import axios from 'axios'
 
 //组件
 import echarts from './components/echarts_test2.vue'
