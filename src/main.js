@@ -4,12 +4,11 @@ import store from './store'
 import router from './router/index'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import {createPinia} from 'pinia'
+import { createPinia } from 'pinia'
 //element-plus图标库
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
 import locale from 'element-plus/es/locale/lang/zh-cn'
-import axios from 'axios'
 
 //组件
 import echarts from './components/echarts_test2.vue'
@@ -29,24 +28,11 @@ app.use(router)
 app.use(store)
 app.use(ElementPlus)
 app.use(createPinia())
-<<<<<<< HEAD
+app.use({ locale })
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
-app.component('my-echarts',echarts)
+app.component('my-echarts', echarts)
 app.mount('#app')
-=======
 
-//全局导入icons
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    app.component(key, component)
-  }
-app.config.globalProperties.$http = axios
-
-
-
-  axios.defaults.baseURL = 'http://101.35.43.156:8080';//后端开发环境地址
-
-app.use({locale}).mount('#app')
->>>>>>> d82874d (laqu)

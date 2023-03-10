@@ -8,7 +8,7 @@ const routes = [
     // 登录注册底页
     path: '/index',
     component: () => import('../views/Index.vue'),
-    redirect:'/login',
+    redirect: '/login',
     children: [
       {
         // 登录模块
@@ -44,19 +44,18 @@ const routes = [
   },
   {
     //数据大屏
-    path:'/dataScreen',
-    component: () => import('../views/DataScreen.vue')
-  }
-    path:'/tests',
-    component: () => import('../views/test.vue')
+    path: '/dataScreen',
+    component: () => import('../views/subpages/DataScreen.vue')
   },
   {
+    //菜单控件
     path: '/menu',
-    component: () => import('../components/menu.vue') 
+    component: () => import('../components/menu.vue')
   },
   {
+    //头部控件
     path: '/header',
-    component: () => import('../components/header.vue') 
+    component: () => import('../components/header.vue')
   },
 ]
 
