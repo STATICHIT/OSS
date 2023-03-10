@@ -46,9 +46,6 @@ const routes = [
     //数据大屏
     path:'/dataScreen',
     component: () => import('../views/DataScreen.vue')
-  }
-    path:'/tests',
-    component: () => import('../views/test.vue')
   },
   {
     path: '/menu',

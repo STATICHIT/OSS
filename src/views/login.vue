@@ -64,13 +64,7 @@
 <<<<<<< HEAD
 import { ElMessage } from "element-plus";
 import apiFun from "../utils/api";
-=======
-import { ElMessage } from 'element-plus';
-import apiFun from '../utils/api';
-import axios from 'axios';
-import router from '../router';
 
->>>>>>> d82874d (laqu)
 export default {
   data() {
     return {
@@ -109,7 +103,6 @@ export default {
 };
 </script>
 
-<<<<<<< HEAD
 <style lang="scss" scoped>
 .login-btn {
   color: white;
@@ -122,13 +115,6 @@ export default {
   background-color: #586cb1;
   cursor: pointer;
   box-shadow: 0 3px 1px -2px rgb(209, 208, 208);
-=======
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
->>>>>>> d82874d (laqu)
 }
 .form-control {
   width: 330px;
