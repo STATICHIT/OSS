@@ -36,3 +36,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.component('my-echarts', echarts)
 app.mount('#app')
 
+axios.defaults.baseURL = 'http://101.35.43.156:8080';//后端开发环境地址
+
+app.use({locale}).mount('#app')

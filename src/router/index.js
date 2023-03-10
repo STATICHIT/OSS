@@ -57,6 +57,23 @@ const routes = [
     path: '/header',
     component: () => import('../components/header.vue')
   },
+
+   {
+     path: '/inMenu',
+      component: () => import('../components/InMenu.vue') 
+    },
+   {
+     path: '/header',
+      component: () => import('../components/Header.vue') 
+    },
+    {
+      path: '/menu',
+       component: () => import('../components/Menu.vue') 
+     },
+     {
+      path: '/home',
+       component: () => import('../views/Home.vue') 
+     },
 ]
 
 //router指向的是大路由，配置路由和组件之间的应用关系
