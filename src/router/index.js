@@ -3,7 +3,7 @@ import { createRouter, createWebHistory, useRouter, useRoute } from 'vue-router'
 //路由配置数组
 const routes = [
   //   { path: '/', component: () => import('../views/home.vue') },
-  { path: '/', redirect: '/home', },
+  { path: '/', redirect: '/bucketList', },
   {
     // 登录注册底页
     path: '/index',
@@ -96,7 +96,7 @@ const routes = [
       {
         //标签管理
         path: '/labelManage',
-        component: () => import('../views/subpages/LableManage.vue')
+        component: () => import('../views/subpages/LabelManage.vue')
       },
       {
         //Bucket(包含子菜单及子内页)
@@ -107,42 +107,42 @@ const routes = [
           {
             //概览
             path: '/overview',
-            component:() => import('../views/bucketSubpage/Overview.vue')
+            component: () => import('../views/bucketSubpage/Overview.vue')
           },
           {
             //文件列表
             path: '/fileList',
-            component:() => import('../views/bucketSubpage/FileList.vue')
+            component: () => import('../views/bucketSubpage/FileList.vue')
           },
           {
             //数据索引
             path: '/dataIndex',
-            component:() => import('../views/bucketSubpage/DataIndex.vue')
+            component: () => import('../views/bucketSubpage/DataIndex.vue')
           },
           {
             //权限控制
             path: '/permissionControl',
-            component:() => import('../views/bucketSubpage/PermissionControl.vue')
+            component: () => import('../views/bucketSubpage/PermissionControl.vue')
           },
           {
             //保留策略
             path: '/retentionPolicies',
-            component:() => import('../views/bucketSubpage/RetentionPolicies.vue')
+            component: () => import('../views/bucketSubpage/RetentionPolicies.vue')
           },
           {
             //服务器端加密
             path: '/serverSideEncryption',
-            component:() => import('../views/bucketSubpage/ServerSideEncryption.vue')
+            component: () => import('../views/bucketSubpage/ServerSideEncryption.vue')
           },
           {
             //图片处理
             path: '/imageProcessing',
-            component:() => import('../views/bucketSubpage/ImageProcessing.vue')
+            component: () => import('../views/bucketSubpage/ImageProcessing.vue')
           },
           {
             //Bucket标签
             path: '/bucketLabel',
-            component:() => import('../views/bucketSubpage/BucketLabel.vue')
+            component: () => import('../views/bucketSubpage/BucketLabel.vue')
           },
         ]
       }

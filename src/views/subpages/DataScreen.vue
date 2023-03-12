@@ -2,7 +2,12 @@
 <template>
   <div>
     <div class="box">
-      <!-- <div class="title">云罐 / 数据大屏</div> -->
+      <!-- 面包屑导航 -->
+      <el-breadcrumb class="el-breadcrumb">
+        <el-breadcrumb-item :to="{ path: '/home' }">云罐</el-breadcrumb-item>
+        <el-breadcrumb-item>数据大屏</el-breadcrumb-item>
+      </el-breadcrumb>
+
       <div class="left">
         <div class="board1 card">
           <div class="part1">
@@ -80,6 +85,8 @@
 <script>
 import { ElMessage } from "element-plus";
 import apiFun from "../../utils/api";
+//引入面包屑和地板基本样式
+import "../../style/subPage.scss";
 //引入echarts
 import * as echarts from "echarts";
 //引入主题
@@ -129,8 +136,8 @@ export default {
   methods: {
     initData() {
       apiFun.getScreenData().then((res) => {
-        this.pv=res.method.pv;
-        this.uv=res.method.uv;
+        this.pv = res.method.pv;
+        this.uv = res.method.uv;
         //...
       });
     },
@@ -342,17 +349,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-}
-
-.box {
-  position: relative;
-  padding: 30px;
-  width: 1570px;
-  height: 900px;
-  background-color: #eff1f7;
-}
 .left {
   float: left;
   width: 980px;
