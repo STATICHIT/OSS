@@ -60,6 +60,7 @@ const handleClose = (key, keyPath) => {
   console.log(key, keyPath);
 };
 const isCollapse = ref(false); //设置主菜单收起/显示状态
+
 </script>
 
 <style lang="scss" scoped>
