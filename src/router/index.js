@@ -3,7 +3,7 @@ import { createRouter, createWebHistory, useRouter, useRoute } from 'vue-router'
 //路由配置数组
 const routes = [
   //   { path: '/', component: () => import('../views/home.vue') },
-  { path: '/', redirect: '/dataScreen', },
+  { path: '/', redirect: '/home', },
   {
     // 登录注册底页
     path: '/index',
@@ -38,11 +38,6 @@ const routes = [
     component: () => import('../views/treetable_test.vue')
   },
   {
-    //数据大屏
-    path: '/dataScreen',
-    component: () => import('../views/subpages/DataScreen.vue')
-  },
-  {
     //菜单控件
     path: '/menu',
     component: () => import('../components/menu.vue')
@@ -52,23 +47,34 @@ const routes = [
     path: '/header',
     component: () => import('../components/header.vue')
   },
-
-   {
-     path: '/inMenu',
-      component: () => import('../components/InMenu.vue') 
-    },
-   {
-     path: '/header',
-      component: () => import('../components/Header.vue') 
-    },
-    {
-      path: '/menu',
-       component: () => import('../components/Menu.vue') 
-     },
-     {
-      path: '/home',
-       component: () => import('../views/Home.vue') 
-     },
+  {
+    //主菜单
+    path: '/menu',
+    component: () => import('../components/Menu.vue')
+  },
+  {
+    //bucket菜单
+    path: '/inMenu',
+    component: () => import('../components/InMenu.vue')
+  },
+  {
+    //头部
+    path: '/header',
+    component: () => import('../components/Header.vue')
+  },
+  {
+    //客户端底部
+    path: '/home',
+    component: () => import('../views/Home.vue'),
+    redirect: '/dataScreen',
+    children: [
+      {
+        //数据大屏
+        path: '/dataScreen',
+        component: () => import('../views/subpages/DataScreen.vue')
+      },
+    ]
+  },
 ]
 
 //router指向的是大路由，配置路由和组件之间的应用关系

@@ -54,7 +54,7 @@ import {
   Setting,
 } from "@element-plus/icons-vue";
 import { ref } from "vue";
-import {} from "@/style/base.scss";
+import {} from "../style/base.scss";
 
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath);
@@ -62,7 +62,7 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   console.log(key, keyPath);
 };
-const isCollapse = ref(true);
+const isCollapse = ref(false);//设置主菜单收起/显示状态
 </script>
 
 <style lang="scss" scoped>
@@ -98,10 +98,9 @@ $second-color: #f0f1f8;
   color: #7e7e7e;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 170px;
-  min-height: 400px;
+  width: 220px;
+  // max-height: 918px;
 }
-
 .el-menu-vertical-demo.el-menu--collapse {
   width: 0px;
 }
