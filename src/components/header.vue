@@ -15,7 +15,7 @@
       >
         <template #reference>
           <div class="author" style="font-weight: bold">
-            <img style="margin-top:2px; margin-right: 5px;" src="@/assets/preAvatar.png" class="avatar-img">
+            <img style="margin-top:2px; margin-right: 5px;" src="../assets/preAvatar.png" class="avatar-img">
             <span style="margin-top: -5px;">sunsan</span>
             <!-- <i class="icon el-icon-s-custom" /> -->
             <!-- <i class="el-icon-caret-bottom" /> -->
@@ -36,9 +36,9 @@
 
 <script setup>
 import { onMounted, reactive } from "vue";
-import axios from "@/utils/axios";
+import apiFun from '../utils/api';
 import { localGet } from "../utils";
-import '@/style/base.scss'
+import '../style/base.scss'
 const back = () => {
   router.back();
 };

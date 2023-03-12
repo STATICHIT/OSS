@@ -11,7 +11,7 @@ import './style.css'
 import locale from 'element-plus/es/locale/lang/zh-cn'
 
 //组件
-import echarts from './components/echarts_test2.vue'
+
 
 
 //vue2才把apiFun对象赋值给vue的全局变量
@@ -33,9 +33,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
-app.component('my-echarts', echarts)
+app.use({locale});
 app.mount('#app')
-
-axios.defaults.baseURL = 'http://101.35.43.156:8080';//后端开发环境地址
-
-app.use({locale}).mount('#app')

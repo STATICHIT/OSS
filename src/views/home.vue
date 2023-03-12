@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <headerVue></headerVue>
+    <headerVue style="z-index:2"></headerVue>
     <div class="aside">
-      <menuVue></menuVue>
-      <router-view></router-view>
+      <menuVue style="z-index:3"></menuVue>
+      <router-view style="z-index:1"></router-view>
     </div>
   </div>
 </template>
 
 <script setup>
-import headerVue from "../components/Header.vue";
-import menuVue from "../components/Menu.vue";
-import "@/style/base.scss";
+import headerVue from "../components/header.vue";
+import menuVue from "../components/menu.vue";
+import "../style/base.scss";
 </script>
 
 <style lang="scss" scoped>

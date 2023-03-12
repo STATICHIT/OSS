@@ -30,7 +30,12 @@ apiFun.test.fileView =() =>{
 apiFun.test.getMd5 =() =>{
   return http.get('test/getMd5')
 }
- 
+
+//获取数据大屏初始化数据接口
+apiFun.getScreenData = () => {
+  return http.get('/allBucketMessage/getMessage')
+}
+
 /**
  * 用户接口 
  * */ 
