@@ -1,0 +1,63 @@
+$primary-color: #6477B7;
+$second-color:#F0F1F8;
+$back-color: #F0F2F8;
+
+
+/* 文字样式 */
+.text {
+    font-size: 10px;
+    color: #333;
+    line-height: 1.5;
+  }
+  
+  /* 按钮样式 */
+  .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  
+    &:hover {
+      background-color: $second-color;
+    }
+  
+    &:active {
+      background-color: $second-color;
+    }
+  }
+  
+  /* 输入框样式 */
+  .input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease-in-out;
+  
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px $primary-color;
+    }
+  }
+  
+  /* 容器样式 */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .avatar-img{
+    height: 22px;
+     width: 22px;
+     border-radius: 50%;
+     border: 1px solid #b7b7b7;
+  }

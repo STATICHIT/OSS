@@ -61,8 +61,11 @@
 </template>
 
 <script>
-import { ElMessage } from "element-plus";
-import apiFun from "../utils/api";
+import { ElMessage } from 'element-plus';
+import apiFun from '../utils/api';
+import axios from 'axios';
+import router from '../router';
+
 export default {
   data() {
     return {
@@ -102,6 +105,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .login-btn {
   color: white;
   border-style: none;

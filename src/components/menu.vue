@@ -1,181 +1,108 @@
 <template>
-    <div class="layout" style="display: flex;flex-direction: row;">
-      <el-container  class="container">
-        <el-aside class="aside">
-          <div class="head">
-            <span>对象存储OSS</span>
-          </div>
-          <div class="line" />
-          <el-menu
-            background-color="#001529"
-            text-color="#fff"
-            :router="true"
-            font-size:20px
-            width:20px
-          >
-          <el-menu-item index="4">
-          <span style="color: #A5ACB3;margin-left: 30px;">概览</span>
-        </el-menu-item>
-        <el-menu-item index="4">
-          <span style="color: #A5ACB3;margin-left: 30px;">bucket列表</span>
-        </el-menu-item>
-            <el-sub-menu index="3">
-              <template #title>
-                <img src="../assets/icon1.png" class="icon">
-                <span>数据服务</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="/category">数据复制</el-menu-item>
-                <el-menu-item index="/good">数据导入</el-menu-item>
-              </el-menu-item-group>
-            </el-sub-menu>
-            <el-sub-menu index="4">
-              <template #title>
-                <el-icon><FolderOpened /></el-icon>
-                <span>资源管理</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="/">子用户管理</el-menu-item>
-                <el-menu-item index="/">标签管理</el-menu-item>
-                <el-sub-menu index="1-4">
-            <template #title>收藏路径</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-          </el-sub-menu>
-              </el-menu-item-group>
-            </el-sub-menu>
-          </el-menu>
-        </el-aside>
-      </el-container>
-      <div class="header">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAYAAACAvzbMAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEwAACxMBAJqcGAAAAdlJREFUeNrMlE2IVGEQhb9BbXMsoIY6YXbJlO06lEhA6AiKkOyghKKyoIKJLUQsUjK0U6AqiYzFHEhUSrM0wTJj+IEBDMn3NNqrbJlZXZ+99GZufj9zzn3nHvJxwDM+jo6P++o8cLWj5vN/5z58B2XZ8AQ3q/G37v7rzUMpNnfM/VyGdO4IW+VzuPajuy4O04X7OuSxPl2I7wSlm0bGGyFadC11fKjmgXvu8W4p4FvLaxi1ybJ7Vzi8WQWrS7TL5oKQZ36aTw5ALW1nNY5vNgKDWJi+LHl8WGrjfAMnEe0qA5eMv0pW6F8RkRiJcZfDvY+sPbwl9ACzryDlMsV7wMLtCQ2t8OBmMr3qZtmyhF/4i/9Y1sBr4y4SL7wNyyhTwhVg/WuZhSlPULV7jKpItY9fEtGVTiRyx7PCy48kKjVwsO2OoFlnogq3cOtszF+C0j+jl4z0i4yBiyGdNhV7TbwyDZSmxz7ZiudJbGc8W1nMp79ou38f09uoUoD6n8AX6rNnAnslPYKx20Fyr1lIK2J5IsbK5dj5MWqtBwvF8W06KjGkCvxj1MPSvD8XJQplL+5q5qyPxTPv5eJPOWjckRZI/U1ZJ/KvO8XGjqfMGltg+Pu6LlU6J0U6lKlt0hqSVrj+oNadSy9L+G4z1n7y4Nv31uHj/1T+SgBWo7XRULhKsbAAAAAElFTkSuQmCC">
-    <span style="color: #535353;">sunsan[超级管理员]</span>
-    <el-button type="primary" link>退出</el-button>
-    
-  </div>
-    </div>
-  </template>
-  
-  <script setup>
+  <el-menu
+    default-active="2"
+    class="el-menu-vertical-demo"
+    :collapse="isCollapse"
+    @open="handleOpen"
+    @close="handleClose"
+    style="
+      min-height: 100vh;
+      box-shadow: 10px 10px 10px -4px rgba(0, 0, 0, 0.1);
+    "
+  >
+    <el-menu-item index="/data">
+      <template #title>数据大屏</template>
+    </el-menu-item>
+    <el-menu-item index="/bucketList">
+      <template #title>Bucket列表</template>
+    </el-menu-item>
+    <el-sub-menu index="/dataServer">
+      <template #title>
+        <span>数据服务</span>
+      </template>
+      <el-menu-item index="/dataCopy">数据复制</el-menu-item>
+      <el-menu-item index="/dataInsert">数据导入</el-menu-item>
+    </el-sub-menu>
+
+    <el-sub-menu index="4">
+      <template #title>
+        <span>资源管理</span>
+      </template>
+      <el-menu-item index="/userManager">子用户管理</el-menu-item>
+      <el-menu-item index="/tagManager">标签管理</el-menu-item>
+      <el-sub-menu index="4-3">
+        <template #title><span>收藏路径</span></template>
+        <el-menu-item index="4-3-1">item one</el-menu-item>
+      </el-sub-menu>
+    </el-sub-menu>
+    <button class="open-btn" @click="isCollapse = !isCollapse">
+      <el-icon class="open-icon" v-show="isCollapse"
+        ><ArrowRightBold
+      /></el-icon>
+      <el-icon v-show="!isCollapse"
+        ><ArrowLeftBold class="open-icon"
+      /></el-icon>
+    </button>
+  </el-menu>
+</template>
+
+<script setup>
 import {
   Document,
   Menu as IconMenu,
   Location,
   Setting,
-} from '@element-plus/icons-vue'
+} from "@element-plus/icons-vue";
+import { ref } from "vue";
+import {} from "@/style/base.scss";
+
 const handleOpen = (key, keyPath) => {
-  console.log(key, keyPath)
-}
+  console.log(key, keyPath);
+};
 const handleClose = (key, keyPath) => {
-  console.log(key, keyPath)
+  console.log(key, keyPath);
+};
+const isCollapse = ref(true);
+</script>
+
+<style lang="scss" scoped>
+$primary-color: #6477b7;
+$back-color: #f0f2f8;
+$second-color: #f0f1f8;
+
+.el-menu.el-menu-item {
+  font-size: 10px;
 }
-  </script>
-  
-  <style scoped>
-  .layout {
-    min-height: 100vh;
-    background-color: #ffffff;
+.open-btn {
+  border-radius: 0;
+  width: 15px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: 1px solid #dde0e6;
+  // border-left: 0;
+  background: #fff;
+  height: 30px;
+  position: absolute;
+  bottom: 50vh;
+  right: -15px;
+  &:hover {
+    background-color: $second-color;
   }
-  .container {
-    height: 100vh;
-  }
-  .aside {
-    width: 200px!important;
-    background-color: #001529;
-  }
-  .head {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 70px;
-    border-bottom:1px solid rgb(180, 180, 180);
-  }
-  .icon{
-    height: 20px;
-    margin-left: 2px;
-    margin-right: 10px;
-  }
-  .head > div {
-    display: flex;
-    align-items: center;
-  }
-  
-  .head img {
-    width: 80px;
-    height: 80px;
-  }
-  .head span {
-    font-size: 20px;
-    color: #415D9F;
-    font-weight: 600;
-    font-size: 26px;
-  }
-  .line {
-    border-top: 1px solid hsla(0,0%,100%,.05);
-    border-bottom: 1px solid rgba(0,0,0,.2);
-  }
-  .content {
-    display: flex;
-    flex-direction: column;
-    max-height: 100vh;
-    overflow: hidden;
-  }
-  .main {
-    height: calc(100vh - 100px);
-    overflow: auto;
-    padding: 10px;
-  }
-  .header{
-    height: 70px;
-    width: 84%;
-    border-bottom: 1.5px solid rgb(180, 180, 180);
-    display:flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    box-sizing: border-box;
-    padding: 20px;
+  transform: translateY(-50%);
+  transition: right 0.3s ease-in-out;
 }
-.header img{
-    border-radius: 50%;
-    height: 32px;
-    border: 1px solid rgb(211, 211, 211);
-    margin-right: 10px;
+.el-menu-vertical-demo.is-collapsed .open-btn {
+  right: 170px;
 }
-.header span{
-    /* color: rgb(89, 89, 89); */
-    font-size: 14px;
-    margin-right: 10px;
+.open-icon {
+  color: #7e7e7e;
 }
-  </style>
-  
-  <style>
-    body {
-      padding: 0;
-      margin: 0;
-      box-sizing: border-box;
-    }
-    .el-menu {
-      border-right: none!important;
-    }
-    .el-submenu {
-      border-top: 1px solid hsla(0, 0%, 100%, .05);
-      border-bottom: 1px solid rgba(0, 0, 0, .2);
-    }
-    .el-submenu:first-child {
-      border-top: none;
-    }
-    .el-submenu [class^="el-icon-"] {
-      vertical-align: -1px!important;
-    }
-    a {
-      color: #409eff;
-      text-decoration: none;
-    }
-    .el-pagination {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .el-popper__arrow {
-      display: none;
-    }
-  </style>
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 170px;
+  min-height: 400px;
+}
+
+.el-menu-vertical-demo.el-menu--collapse {
+  width: 0px;
+}
+</style>
