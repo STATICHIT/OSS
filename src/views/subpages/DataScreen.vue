@@ -91,8 +91,7 @@ import "../../style/subPage.scss";
 import * as echarts from "echarts";
 //引入主题
 import theme from "./echarts_test";
-// // 尺寸监听组件
-// import elementResize from 'element-resize-detector' 
+
 export default {
   data() {
     return {
@@ -130,6 +129,10 @@ export default {
       ],
       value: "1",
     };
+  },
+  components: {
+    echarts,
+    theme,
   },
   mounted() {
     this.initEcharts();
@@ -289,16 +292,6 @@ export default {
       myChart.setOption(option); // 渲染页面
       myChart2.setOption(option2);
       myChart3.setOption(option3);
-
-      // var elementResizes = elementResize({
-		  //     strategy: 'scroll', // <- 推荐监听滚动，提升性能
-		  //     callOnAdd: true // 添加侦听器时是否应调用,默认true
-		  //   })
-
-		  //   elementResize.listenTo(myChart2, function(element) {
-		  //     echarts.init(myChart2).resize() // 当元素尺寸发生改变是会触发此事件，刷新图表
-		  //   });
-
     },
     curSelect(val) {
       console.log(val);
