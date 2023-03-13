@@ -91,6 +91,8 @@ import "../../style/subPage.scss";
 import * as echarts from "echarts";
 //引入主题
 import theme from "./echarts_test";
+// // 尺寸监听组件
+// import elementResize from 'element-resize-detector' 
 export default {
   data() {
     return {
@@ -288,10 +290,15 @@ export default {
       myChart2.setOption(option2);
       myChart3.setOption(option3);
 
-      //随着屏幕大小调节图表
-      window.addEventListener("resize", () => {
-        myChart.resize();
-      });
+      // var elementResizes = elementResize({
+		  //     strategy: 'scroll', // <- 推荐监听滚动，提升性能
+		  //     callOnAdd: true // 添加侦听器时是否应调用,默认true
+		  //   })
+
+		  //   elementResize.listenTo(myChart2, function(element) {
+		  //     echarts.init(myChart2).resize() // 当元素尺寸发生改变是会触发此事件，刷新图表
+		  //   });
+
     },
     curSelect(val) {
       console.log(val);
@@ -351,14 +358,16 @@ export default {
 <style lang="scss" scoped>
 .left {
   float: left;
-  width: 980px;
+  // width: 980px;
+  width: 63%;
   height: 730px;
 }
 
 .right {
   border-radius: 5px;
   float: right;
-  width: 500px;
+  // width: 500px;
+  width: 33%;
   height: 730px;
   padding: 20px;
   background-color: white;
@@ -366,12 +375,14 @@ export default {
 
 .up {
   padding-top: 60px;
-  width: 460px;
+  // width: 460px;
+  width: 100%;
   height: 510px;
 }
 
 .down {
-  width: 460px;
+  width: 100%;
+  // width: 460px;
   height: 185px;
   // background-color: rgb(188, 196, 245);
 }
@@ -387,7 +398,8 @@ export default {
 }
 
 .card {
-  width: 480px;
+  // width: 480px;
+  width: 48%;
   height: 227px;
   border-radius: 5px;
   background-color: white;
@@ -446,7 +458,7 @@ th {
 
 table {
   border-collapse: collapse;
-  width: 400px;
+  width: 100%;
 }
 
 th,
@@ -462,7 +474,8 @@ td {
   color: red;
 }
 .board3 {
-  width: 980px;
+  // width: 980px;
+  width: 100%;
   height: 467px;
   padding: 20px;
   border-radius: 5px;
@@ -471,7 +484,9 @@ td {
 }
 
 #mychart2 {
-  width: 940px;
+  // width: 940px;
+  // width: 100%;
+  width: 100%;
   height: 450px;
 }
 

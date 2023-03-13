@@ -3,7 +3,7 @@
     <headerVue style="z-index:2"></headerVue>
     <div class="aside">
       <menuVue style="z-index:3"></menuVue>
-      <router-view style="z-index:1"></router-view>
+      <router-view class="subPage" style="z-index:1"></router-view>
     </div>
   </div>
 </template>
@@ -26,5 +26,8 @@ import "../style/base.scss";
 .aside {
   display: flex;
   flex-direction: row;
+}
+.subPage{
+  width: 100%;
 }
 </style>

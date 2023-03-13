@@ -1,14 +1,15 @@
-import {defineStore} from 'pinia'
-import {ref} from "vue";
+import { defineStore } from 'pinia'
+import { ref } from "vue";
 
 
-export default defineStore('first',{state:()=>{
-    const token=''
-},
-getters:{
-},
-action:{
+export default defineStore('first', {
+  state: () => {
+    const token = ''
+  },
+  getters: {
+  },
+  action: {
 
-}
+  }
 })
 

@@ -13,16 +13,8 @@ import locale from 'element-plus/es/locale/lang/zh-cn'
 //组件
 
 
-
-//vue2才把apiFun对象赋值给vue的全局变量
-/*
-//把apiFun对象赋值给vue的全局变量
-import apiFun from './utils/api.js';
-Vue.config.productionTip = false;//阻止启动生产消息
-Vue.prototype.$apiFun = apiFun;//全局使用$apiFun调用接口方法
-*/
-
-const app = createApp(App) // 生成 Vue 实例 app
+// 生成 Vue 实例 app
+const app = createApp(App)
 
 app.use(router)
 app.use(store)
@@ -33,5 +25,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
-app.use({locale});
+//挂载到Vue根实例
 app.mount('#app')
