@@ -52,7 +52,7 @@ $second-color:#F0F1F8;
 $back-color: #F0F2F8;
 
 .header {
-    height: 50px;
+    height: 67px;
     border-bottom: 1px solid #e9e9e9;
     display: flex;
     justify-content: space-between;

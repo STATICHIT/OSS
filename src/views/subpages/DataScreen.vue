@@ -2,7 +2,12 @@
 <template>
   <div>
     <div class="box">
-      <!-- <div class="title">云罐 / 数据大屏</div> -->
+      <!-- 面包屑导航 -->
+      <el-breadcrumb class="el-breadcrumb">
+        <el-breadcrumb-item :to="{ path: '/home' }">云罐</el-breadcrumb-item>
+        <el-breadcrumb-item>数据大屏</el-breadcrumb-item>
+      </el-breadcrumb>
+
       <div class="left">
         <div class="board1 card">
           <div class="part1">
@@ -80,10 +85,13 @@
 <script>
 import { ElMessage } from "element-plus";
 import apiFun from "../../utils/api";
+//引入面包屑和地板基本样式
+import "../../style/subPage.scss";
 //引入echarts
 import * as echarts from "echarts";
 //引入主题
 import theme from "./echarts_test";
+
 export default {
   data() {
     return {
@@ -122,6 +130,10 @@ export default {
       value: "1",
     };
   },
+  components: {
+    echarts,
+    theme,
+  },
   mounted() {
     this.initEcharts();
     this.initData();
@@ -129,8 +141,8 @@ export default {
   methods: {
     initData() {
       apiFun.getScreenData().then((res) => {
-        this.pv=res.method.pv;
-        this.uv=res.method.uv;
+        this.pv = res.method.pv;
+        this.uv = res.method.uv;
         //...
       });
     },
@@ -280,11 +292,6 @@ export default {
       myChart.setOption(option); // 渲染页面
       myChart2.setOption(option2);
       myChart3.setOption(option3);
-
-      //随着屏幕大小调节图表
-      window.addEventListener("resize", () => {
-        myChart.resize();
-      });
     },
     curSelect(val) {
       console.log(val);
@@ -342,27 +349,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-}
-
-.box {
-  position: relative;
-  padding: 30px;
-  width: 1570px;
-  height: 900px;
-  background-color: #eff1f7;
-}
 .left {
   float: left;
-  width: 980px;
+  // width: 980px;
+  width: 63%;
   height: 730px;
 }
 
 .right {
   border-radius: 5px;
   float: right;
-  width: 500px;
+  // width: 500px;
+  width: 33%;
   height: 730px;
   padding: 20px;
   background-color: white;
@@ -370,12 +368,14 @@ export default {
 
 .up {
   padding-top: 60px;
-  width: 460px;
+  // width: 460px;
+  width: 100%;
   height: 510px;
 }
 
 .down {
-  width: 460px;
+  width: 100%;
+  // width: 460px;
   height: 185px;
   // background-color: rgb(188, 196, 245);
 }
@@ -391,7 +391,8 @@ export default {
 }
 
 .card {
-  width: 480px;
+  // width: 480px;
+  width: 48%;
   height: 227px;
   border-radius: 5px;
   background-color: white;
@@ -450,7 +451,7 @@ th {
 
 table {
   border-collapse: collapse;
-  width: 400px;
+  width: 100%;
 }
 
 th,
@@ -466,7 +467,8 @@ td {
   color: red;
 }
 .board3 {
-  width: 980px;
+  // width: 980px;
+  width: 100%;
   height: 467px;
   padding: 20px;
   border-radius: 5px;
@@ -475,7 +477,9 @@ td {
 }
 
 #mychart2 {
-  width: 940px;
+  // width: 940px;
+  // width: 100%;
+  width: 100%;
   height: 450px;
 }
 

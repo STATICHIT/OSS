@@ -5,10 +5,7 @@
     :collapse="isCollapse"
     @open="handleOpen"
     @close="handleClose"
-    style="
-      min-height: 100vh;
-      box-shadow: 10px 10px 10px -4px rgba(0, 0, 0, 0.1);
-    "
+    style="min-height: 90vh; box-shadow: 10px 10px 10px -4px rgba(0, 0, 0, 0.1)"
   >
     <el-menu-item index="/data">
       <template #title>数据大屏</template>
@@ -62,7 +59,7 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   console.log(key, keyPath);
 };
-const isCollapse = ref(false);//设置主菜单收起/显示状态
+const isCollapse = ref(false); //设置主菜单收起/显示状态
 </script>
 
 <style lang="scss" scoped>
@@ -98,7 +95,7 @@ $second-color: #f0f1f8;
   color: #7e7e7e;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 220px;
+  width: 260px;
   // max-height: 918px;
 }
 .el-menu-vertical-demo.el-menu--collapse {

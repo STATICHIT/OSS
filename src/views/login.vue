@@ -63,8 +63,6 @@
 <script>
 import { ElMessage } from 'element-plus';
 import apiFun from '../utils/api';
-import axios from 'axios';
-import router from '../router';
 
 export default {
   data() {
