@@ -1,9 +1,8 @@
 <template>
   <div class="header">
     <div class="left">
-      <el-icon class="back" @click="back"><Back /></el-icon>
     </div>
-    <div style="margin-left:-75%">
+    <div style="margin-left:-80%">
         <span class="head-text">CloudCan云罐</span></div>
    
     <div class="right">
@@ -23,8 +22,8 @@
           </div>
         </template>
         <div class="nickname" >
-          <p>昵称：sunsan</p>
-          <p>账号：1245377</p>
+          <p>昵称:sunsan</p>
+          <p>账号:1245377</p>
           <el-tag size="small" effect="dark" class="logout" @click="logout"
             >退出</el-tag
           >
@@ -36,13 +35,16 @@
 
 <script setup>
 import { onMounted, reactive } from "vue";
-import apiFun from '../utils/api';
-import { localGet } from "../utils";
-import '../style/base.scss'
+import axios from "@/utils/axios";
+import { localGet, localRemove } from "../utils";
+import '@/style/base.scss'
 const back = () => {
   router.back();
 };
 
+const logout = () => {
+  localRemove('token')
+}
 
 </script>
 
