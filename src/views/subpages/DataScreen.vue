@@ -1,13 +1,7 @@
 <!-- 子页面 ———— 数据大屏 -->
 <template>
   <div>
-    <div class="box dataStreamBox">
-      <!-- 面包屑导航 -->
-      <el-breadcrumb class="el-breadcrumb">
-        <el-breadcrumb-item :to="{ path: '/home' }">云罐</el-breadcrumb-item>
-        <el-breadcrumb-item>数据大屏</el-breadcrumb-item>
-      </el-breadcrumb>
-
+    <div>
       <div class="left">
         <div class="board1 card">
           <div class="part1">
@@ -85,8 +79,6 @@
 <script>
 import { ElMessage } from "element-plus";
 import apiFun from "../../utils/api";
-//引入面包屑和地板基本样式
-import "../../style/subPage.scss";
 //引入echarts
 import * as echarts from "echarts";
 //引入主题
@@ -140,11 +132,11 @@ export default {
   },
   methods: {
     initData() {
-      apiFun.getScreenData().then((res) => {
-        this.pv = res.method.pv;
-        this.uv = res.method.uv;
-        //...
-      });
+      // apiFun.getScreenData().then((res) => {
+      //   this.pv = res.method.pv;
+      //   this.uv = res.method.uv;
+      //   //...
+      // });
     },
     initEcharts() {
       var option = {
@@ -350,13 +342,8 @@ export default {
 
 <style lang="scss" scoped>
 
-.dataStreamBox{
-  background-color: #eff1f7;
-}
-
 .left {
   float: left;
-  // width: 980px;
   width: 63%;
   height: 730px;
 }
@@ -364,7 +351,6 @@ export default {
 .right {
   border-radius: 5px;
   float: right;
-  // width: 500px;
   width: 33%;
   height: 730px;
   padding: 20px;
@@ -373,16 +359,13 @@ export default {
 
 .up {
   padding-top: 60px;
-  // width: 460px;
   width: 100%;
   height: 510px;
 }
 
 .down {
   width: 100%;
-  // width: 460px;
   height: 185px;
-  // background-color: rgb(188, 196, 245);
 }
 
 .title2 {
@@ -396,7 +379,6 @@ export default {
 }
 
 .card {
-  // width: 480px;
   width: 48%;
   height: 227px;
   border-radius: 5px;
@@ -472,7 +454,6 @@ td {
   color: red;
 }
 .board3 {
-  // width: 980px;
   width: 100%;
   height: 467px;
   padding: 20px;
@@ -482,8 +463,6 @@ td {
 }
 
 #mychart2 {
-  // width: 940px;
-  // width: 100%;
   width: 100%;
   height: 450px;
 }
@@ -497,16 +476,7 @@ td {
 
 .power {
   position: absolute;
-  left: 43%;
+  left: 40%;
   bottom: 20px;
 }
-
-// .clearfix::before,.clearfix::after{
-//   content: "";
-//   display: table;
-// }
-
-// .clearfix::after{
-//   clear:both;
-// }
 </style>

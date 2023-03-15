@@ -67,82 +67,98 @@ const routes = [
     path: '/home',
     component: () => import('../views/Home.vue'),
     redirect: '/dataScreen',//初始显示在数据大屏页
+    meta: { title: '云罐' },
     children: [
       {
         //数据大屏
         path: '/dataScreen',
-        component: () => import('../views/subpages/DataScreen.vue')
+        component: () => import('../views/subpages/DataScreen.vue'),
+        meta: { title: '数据大屏' },
       },
       {
         //Bucket 列表
         path: '/bucketList',
-        component: () => import('../views/subpages/BucketList.vue')
+        component: () => import('../views/subpages/BucketList.vue'),
+        meta: { title: 'Bucket 列表' },
       },
       {
         //数据复制
         path: '/dataCopy',
-        component: () => import('../views/subpages/dataCopy.vue')
+        component: () => import('../views/subpages/dataCopy.vue'),
+        meta: { title: '数据复制' },
       },
       {
         //数据导入
         path: '/dataImport',
-        component: () => import('../views/subpages/DataImport.vue')
+        component: () => import('../views/subpages/DataImport.vue'),
+        meta: { title: '数据导入' },
       },
       {
         //子用户管理
         path: '/subUserManage',
-        component: () => import('../views/subpages/SubUserManage.vue')
+        component: () => import('../views/subpages/SubUserManage.vue'),
+        meta: { title: '子用户管理' },
       },
       {
         //标签管理
         path: '/labelManage',
-        component: () => import('../views/subpages/LabelManage.vue')
+        component: () => import('../views/subpages/LabelManage.vue'),
+        meta: { title: '标签管理' },
       },
       {
         //Bucket(包含子菜单及子内页)
         path: '/bucket',
         component: () => import('../views/subpages/Bucket.vue'),
         redirect: '/fileList',//初始显示在文件列表页面
+        meta: { title: '当前Bucket名' },
         children: [
           {
             //概览
             path: '/overview',
-            component: () => import('../views/bucketSubpage/Overview.vue')
+            component: () => import('../views/bucketSubpage/Overview.vue'),
+            meta: { title: '概览' },
           },
           {
             //文件列表
             path: '/fileList',
-            component: () => import('../views/bucketSubpage/FileList.vue')
+            component: () => import('../views/bucketSubpage/FileList.vue'),
+            meta: { title: '文件列表' },
           },
           {
             //数据索引
             path: '/dataIndex',
-            component: () => import('../views/bucketSubpage/DataIndex.vue')
+            component: () => import('../views/bucketSubpage/DataIndex.vue'),
+            meta: { title: '数据索引' },
           },
           {
             //权限控制
             path: '/permissionControl',
-            component: () => import('../views/bucketSubpage/PermissionControl.vue')
+            component: () => import('../views/bucketSubpage/PermissionControl.vue'),
+            meta: { title: '权限控制' },
           },
           {
             //保留策略
             path: '/retentionPolicies',
-            component: () => import('../views/bucketSubpage/RetentionPolicies.vue')
+            component: () => import('../views/bucketSubpage/RetentionPolicies.vue'),
+            meta: { title: '保留策略' },
           },
           {
             //服务器端加密
             path: '/serverSideEncryption',
-            component: () => import('../views/bucketSubpage/ServerSideEncryption.vue')
+            component: () => import('../views/bucketSubpage/ServerSideEncryption.vue'),
+            meta: { title: '服务器端加密' },
           },
           {
             //图片处理
             path: '/imageProcessing',
-            component: () => import('../views/bucketSubpage/ImageProcessing.vue')
+            component: () => import('../views/bucketSubpage/ImageProcessing.vue'),
+            meta: { title: '图片处理' },
           },
           {
             //Bucket标签
             path: '/bucketLabel',
-            component: () => import('../views/bucketSubpage/BucketLabel.vue')
+            component: () => import('../views/bucketSubpage/BucketLabel.vue'),
+            meta: { title: 'Bucket标签' },
           },
         ]
       }
