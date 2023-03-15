@@ -61,6 +61,8 @@
 </template>
 
 <script>
+import { ElMessage } from "element-plus";
+import apiFun from "../utils/api";
 import { ElMessage } from 'element-plus';
 import apiFun from '../utils/api';
 
@@ -75,7 +77,7 @@ export default {
   methods: {
     login() {
       //测试
-      this.$router.push({ path: "/test2" });
+      this.$router.push({ path: "/home" });
 
       //登录
       // if(this.username == "" || this.password == ""){

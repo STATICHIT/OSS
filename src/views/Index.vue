@@ -12,7 +12,7 @@
         <div class="login-description">
           <p style="color: aliceblue">
             让数据与智慧更高效地流动。
-            <br />
+            <br />  
             CloudCan
           </p>
         </div>

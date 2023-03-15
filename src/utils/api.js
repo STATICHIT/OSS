@@ -93,6 +93,10 @@ apiFun.bucket.collect = (name) =>{
 apiFun.bucket.userDelete = (name) => {
   return http.delete('/favorite/deleteUserFavorite?bucketName='+name)
 }
+//获取用户收藏的桶
+apiFun.bucket.getCollect = () => {
+  return http.get('/favorite/getUserFavorite')
+}
 
 /**
  * bucket授权策略接口
@@ -113,9 +117,13 @@ apiFun.bucket.authorize.delete =(bucketName,authorizeId) =>{
   return http.delete('/authorize/deleteAuthorize?bucketName='+bucketName+'&authorizeId='+authorizeId)
 }
 
+apiFun.object.metadata = (objectName,bucketName) => {
+  return http.get('/ossObject/getObjectInfo?objectName='+objectName+'&bucketName='+bucketName)
+}
 /**
  * 对象接口
  *  */
+//获取用户收藏的桶
 
 //从桶中获取一个对象的元数据
 apiFun.object.metadata = (objectName,bucketName) => {

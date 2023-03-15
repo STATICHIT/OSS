@@ -5,17 +5,21 @@
     :collapse="isCollapse"
     @open="handleOpen"
     @close="handleClose"
-    style="min-height: 90vh; box-shadow: 10px 10px 10px -4px rgba(0, 0, 0, 0.1)"
+    style="min-height: 90vh; box-shadow: 10px 10px 10px -4px rgba(0, 0, 0, 0.06);
+    "
   >
-    <el-menu-item index="/data">
-      <template #title>数据大屏</template>
+    <el-menu-item index="/data" class="el-menu-font">
+      <el-icon><PieChart /></el-icon>
+            <template #title>数据大屏</template>
     </el-menu-item>
-    <el-menu-item index="/bucketList">
+    <el-menu-item index="/bucketList"  class="el-menu-font">
+      <el-icon><FolderOpened /></el-icon>
       <template #title>Bucket列表</template>
     </el-menu-item>
-    <el-sub-menu index="/dataServer">
+    <el-sub-menu index="/dataServer" >
       <template #title>
-        <span>数据服务</span>
+      <el-icon><List /></el-icon>
+        <span  class="el-menu-font">数据服务</span>
       </template>
       <el-menu-item index="/dataCopy">数据复制</el-menu-item>
       <el-menu-item index="/dataInsert">数据导入</el-menu-item>
@@ -23,15 +27,26 @@
 
     <el-sub-menu index="4">
       <template #title>
-        <span>资源管理</span>
+      <el-icon><TrendCharts /></el-icon>
+        <span  class="el-menu-font">资源管理</span>
       </template>
       <el-menu-item index="/userManager">子用户管理</el-menu-item>
       <el-menu-item index="/tagManager">标签管理</el-menu-item>
-      <el-sub-menu index="4-3">
-        <template #title><span>收藏路径</span></template>
-        <el-menu-item index="4-3-1">item one</el-menu-item>
-      </el-sub-menu>
     </el-sub-menu>
+    <el-sub-menu index="5">
+        <template #title>
+          <el-icon><Star /></el-icon>
+                    <span  class="el-menu-font">收藏路径</span>
+                  </template>
+        <el-menu-item
+          v-for="collectBucket in state.collectBuckets"
+          :key="collectBucket.id"
+          index=""
+          >{{ collectBucket.name }}</el-menu-item
+        >
+        <el-menu-item><el-icon><Plus /></el-icon>新建路径</el-menu-item
+        >
+      </el-sub-menu>
     <button class="open-btn" @click="isCollapse = !isCollapse">
       <el-icon class="open-icon" v-show="isCollapse"
         ><ArrowRightBold
@@ -50,8 +65,22 @@ import {
   Location,
   Setting,
 } from "@element-plus/icons-vue";
-import { ref } from "vue";
-import {} from "../style/base.scss";
+import { reactive, ref } from "vue";
+import "@/style/base.scss";
+import apiFun from "../utils/api";
+import { ElMessage } from "element-plus";
+
+const state = reactive({
+  collectBuckets: [],
+});
+
+ apiFun.bucket.getCollect().then((res)=>{
+//   if(res.code==200){
+//     state.collectBuckets=res.data
+//   }
+//   else
+//   ElMessage.error(res.msg)
+ })
 
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath);
@@ -62,7 +91,7 @@ const handleClose = (key, keyPath) => {
 const isCollapse = ref(false); //设置主菜单收起/显示状态
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $primary-color: #6477b7;
 $back-color: #f0f2f8;
 $second-color: #f0f1f8;
@@ -95,10 +124,14 @@ $second-color: #f0f1f8;
   color: #7e7e7e;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 260px;
+  width: 240px;
   // max-height: 918px;
 }
-.el-menu-vertical-demo.el-menu--collapse {
-  width: 0px;
+.el-menu-font{
+  font-weight: bold;
+  color: #4e4e4e;
+}
+.plus-icon{
+  margin-left: 10px;
 }
 </style>

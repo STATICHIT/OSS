@@ -2,70 +2,47 @@
   <el-menu
     default-active="2"
     class="el-menu-vertical-demo"
-    :class="{ 'is-collapse': isCollapse }"
-    :collapse="isCollapse"
     :accordion="true"
     @open="handleOpen"
     @close="handleClose"
     style="
       min-height: 87vh;
       position: relative;
-      box-shadow: -4px 10px 10px 10px rgba(0, 0, 0, 0.08);
+      margin-left: -2.4%;
+      border: 0;
+  border-right: 1px solid #d3d4d5;
     "
   >
-    <el-menu-item index="/overView">
-      <el-icon><icon-menu /></el-icon>
+    <el-menu-item index="/overView" class="el-menu-font">
       <template #title>概览</template>
     </el-menu-item>
-    <el-sub-menu index="2">
-      <template #title>
-        <el-icon><FolderOpened /></el-icon>
-        <span>文件管理</span>
-      </template>
-      <el-menu-item index="/fileList">文件列表</el-menu-item>
-      <el-menu-item index="/dataIndex">数据索引</el-menu-item>
-    </el-sub-menu>
-    <el-sub-menu index="3" class="text">
-      <template #title>
-        <el-icon><Key /></el-icon>
-        <span>权限控制</span>
-      </template>
-      <el-menu-item index="/writeLimit">读写权限</el-menu-item>
-      <el-menu-item index="/BucketLimit">Bucket授权策略</el-menu-item>
-    </el-sub-menu>
+    <el-menu-item index="/fileList" class="el-menu-font">
+      <template #title>文件列表</template>
+    </el-menu-item>
+    <el-menu-item index="/limitController" class="el-menu-font">
+      <template #title>权限控制</template>
+    </el-menu-item>
     <el-sub-menu index="4" class="text">
       <template #title>
-        <el-icon><List /></el-icon>
-        <span>数据安全</span>
+        <span class="el-menu-font">数据安全</span>
       </template>
       <el-menu-item index="/reserve">保留策略</el-menu-item>
       <el-menu-item index="/serverPsw">服务器端加密</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="6">
       <template #title>
-        <el-icon><TrendCharts /></el-icon>
-        <span>数据处理</span>
+        <span class="el-menu-font">数据处理</span>
       </template>
       <el-menu-item index="/imgManage">图片处理</el-menu-item> </el-sub-menu
     ><el-sub-menu index="7" class="text">
       <template #title>
-        <el-icon><Operation /></el-icon>
-        <span>Bucket配置</span>
+        <span class="el-menu-font">Bucket配置</span>
       </template>
       <el-menu-item index="bucketTag">Bucket标签</el-menu-item>
     </el-sub-menu>
-    <el-menu-item index="deleteBucket">
-      <el-icon><DeleteFilled /></el-icon>
+    <el-menu-item index="deleteBucket" class="el-menu-font">
       <template #title>删除Bucket</template>
     </el-menu-item>
-    <button class="open-btn" @click="isCollapse = !isCollapse">
-      <el-icon class="open-icon" v-show="isCollapse"
-        ><ArrowRightBold
-      /></el-icon>
-      <el-icon class="open-icon" v-show="!isCollapse"
-        ><ArrowRightBold
-      /></el-icon>
-    </button>
   </el-menu>
 </template>
   
@@ -78,7 +55,6 @@ import {
   Setting,
 } from "@element-plus/icons-vue";
 import "@/style/base.scss";
-const isCollapse = ref(false);
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath);
 };
@@ -94,6 +70,11 @@ $second-color: #f0f1f8;
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
+
+}
+.el-menu-font{
+  font-weight: bold;
+  color: #4e4e4e;
 }
 .open-icon {
   color: #7e7e7e;
