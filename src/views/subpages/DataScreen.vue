@@ -1,7 +1,7 @@
 <!-- 子页面 ———— 数据大屏 -->
 <template>
   <div>
-    <div class="box">
+    <div class="box dataStreamBox">
       <!-- 面包屑导航 -->
       <el-breadcrumb class="el-breadcrumb">
         <el-breadcrumb-item :to="{ path: '/home' }">云罐</el-breadcrumb-item>
@@ -349,6 +349,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.dataStreamBox{
+  background-color: #eff1f7;
+}
+
 .left {
   float: left;
   // width: 980px;
