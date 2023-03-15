@@ -74,13 +74,13 @@ const state = reactive({
   collectBuckets: [],
 });
 
- apiFun.bucket.getCollect().then((res)=>{
+//  apiFun.bucket.getCollect().then((res)=>{
 //   if(res.code==200){
 //     state.collectBuckets=res.data
 //   }
 //   else
 //   ElMessage.error(res.msg)
- })
+//  })
 
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath);
