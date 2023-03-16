@@ -28,11 +28,6 @@ const routes = [
     ]
   },
   {
-    //客户端主页面(ls的主页框架写好之后可以直接连接这个链接)
-    path: '/main',
-    component: () => import('../views/Main.vue')
-  },
-  {
     //关于树形列表的测试
     path: '/test',
     component: () => import('../views/treetable_test.vue')
@@ -63,7 +58,7 @@ const routes = [
     component: () => import('../components/Header.vue')
   },
   {
-    //客户端底部
+    //客户端底页
     path: '/home',
     component: () => import('../views/Home.vue'),
     redirect: '/dataScreen',//初始显示在数据大屏页
@@ -125,12 +120,6 @@ const routes = [
             meta: { title: '文件列表' },
           },
           {
-            //数据索引
-            path: '/dataIndex',
-            component: () => import('../views/bucketSubpage/DataIndex.vue'),
-            meta: { title: '数据索引' },
-          },
-          {
             //权限控制
             path: '/permissionControl',
             component: () => import('../views/bucketSubpage/PermissionControl.vue'),
@@ -159,6 +148,12 @@ const routes = [
             path: '/bucketLabel',
             component: () => import('../views/bucketSubpage/BucketLabel.vue'),
             meta: { title: 'Bucket标签' },
+          },
+          {
+            //删除Bucket
+            path: '/deleteBucket',
+            component: () => import('../views/bucketSubpage/DeleteBucket.vue'),
+            meta: { title: '删除Bucket' },
           },
         ]
       }

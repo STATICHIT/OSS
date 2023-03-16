@@ -37,6 +37,7 @@ watchEffect(() => {
 
 <style lang="scss" scoped>
 .box {
+  width: 100%;
   position: relative;
   padding: 30px;
   height: 900px;
