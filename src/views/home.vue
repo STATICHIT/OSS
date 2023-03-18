@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <headerVue style="z-index: 2"></headerVue>
+    <headerVue style="z-index: 9"></headerVue>
     <div class="aside">
-      <menuVue style="z-index: 3"></menuVue>
+      <menuVue style="z-index: 10"></menuVue>
       <div class="box" :style="style">
         <!-- 面包屑导航 -->
         <BreadCrumb />
-        <router-view class="subPage" style="z-index: 1"></router-view>
+        <router-view class="subPage" style="z-index: 8"></router-view>
       </div>
     </div>
   </div>

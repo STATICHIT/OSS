@@ -60,6 +60,7 @@ watch(
     isHide.value = "未开启";
   }
 });
+
 </script>
 <style lang="scss" scoped>
 .box {

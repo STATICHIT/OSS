@@ -3,8 +3,8 @@
   <div>
     <div class="container">
       <div class="aside">
-        <menuVue style="z-index: 2"></menuVue>
-        <router-view style="z-index: 1" @change="change"></router-view>
+        <menuVue style="z-index: 7"></menuVue>
+        <router-view style="z-index: 60" @change="change"></router-view>
       </div>
     </div>
   </div>
