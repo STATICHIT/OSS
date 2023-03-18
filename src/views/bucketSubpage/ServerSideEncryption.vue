@@ -29,6 +29,7 @@
 <script setup>
 import { ref } from "vue";
 import { watch } from "vue";
+import { ElMessage } from 'element-plus';
 const title = "服务器端加密";
 const content =
   "服务器端加密机制为静态数据提供保护。适合于对于文件存储有高安全性或者合规性要求的应用场景。例如，深度学习样本文件的存储、在线协作类文档数据的存储。";
@@ -42,7 +43,12 @@ let change = () => {
 
 let save = () => {
   changing.value = false;
-  
+  if(radio.value == "1"){
+    ElMessage.success("已开启服务端加密");
+  }else{
+    ElMessage.success("已关闭服务端加密");
+  }
+
 };
 
 // 对单选框进行监听
