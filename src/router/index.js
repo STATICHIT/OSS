@@ -24,7 +24,7 @@ const routes = [
         // RAM用户登录模块
         path: '/ramLogin',
         component: () => import('../views/RamLogin.vue')
-      }
+      },
     ]
   },
   {
@@ -103,7 +103,8 @@ const routes = [
       {
         //Bucket(包含子菜单及子内页)
         path: '/bucket',
-        component: () => import('../views/subpages/Bucket.vue'),
+        // component: () => import('../views/subpages/Bucket.vue'),
+        component: () => import('../components/BucketTable.vue'),
         redirect: '/fileList',//初始显示在文件列表页面
         meta: { title: '当前Bucket名' },
         children: [
