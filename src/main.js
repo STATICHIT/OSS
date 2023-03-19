@@ -8,8 +8,9 @@ import { createPinia } from 'pinia'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
 import axios from 'axios'
-//组件
 
+//全局组件
+import TitleTip from './components/TitleTip.vue'
 
 // 生成 Vue 实例 app
 const app = createApp(App)
@@ -17,6 +18,8 @@ const app = createApp(App)
 app.use(router)
 app.use(ElementPlus)
 app.use(createPinia())
+
+app.component('title-tip',TitleTip)
 
 //全局导入icons
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

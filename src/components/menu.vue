@@ -5,48 +5,52 @@
     :collapse="isCollapse"
     @open="handleOpen"
     @close="handleClose"
-    style="min-height: 90vh; box-shadow: 10px 10px 10px -4px rgba(0, 0, 0, 0.06);
+    router="true"
+    style="
+      min-height: 90vh;
+      box-shadow: 10px 10px 10px -4px rgba(0, 0, 0, 0.06);
     "
   >
-    <el-menu-item index="/data" class="el-menu-font">
+    <el-menu-item index="/dataScreen" class="el-menu-font">
       <el-icon><PieChart /></el-icon>
-            <template #title>数据大屏</template>
+      <template #title>数据大屏</template>
     </el-menu-item>
-    <el-menu-item index="/bucketList"  class="el-menu-font">
+    <el-menu-item index="/bucketList" class="el-menu-font">
       <el-icon><FolderOpened /></el-icon>
       <template #title>Bucket列表</template>
     </el-menu-item>
-    <el-sub-menu index="/dataServer" >
+    <el-sub-menu index="/dataServer">
       <template #title>
-      <el-icon><List /></el-icon>
-        <span  class="el-menu-font">数据服务</span>
+        <el-icon><List /></el-icon>
+        <span class="el-menu-font">数据服务</span>
       </template>
       <el-menu-item index="/dataCopy">数据复制</el-menu-item>
-      <el-menu-item index="/dataInsert">数据导入</el-menu-item>
+      <el-menu-item index="/dataImport">数据导入</el-menu-item>
     </el-sub-menu>
 
     <el-sub-menu index="4">
       <template #title>
-      <el-icon><TrendCharts /></el-icon>
-        <span  class="el-menu-font">资源管理</span>
+        <el-icon><TrendCharts /></el-icon>
+        <span class="el-menu-font">资源管理</span>
       </template>
-      <el-menu-item index="/userManager">子用户管理</el-menu-item>
-      <el-menu-item index="/tagManager">标签管理</el-menu-item>
+      <el-menu-item index="/subUserManage">子用户管理</el-menu-item>
+      <el-menu-item index="/labelManage">标签管理</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="5">
-        <template #title>
-          <el-icon><Star /></el-icon>
-                    <span  class="el-menu-font">收藏路径</span>
-                  </template>
-        <el-menu-item
-          v-for="collectBucket in state.collectBuckets"
-          :key="collectBucket.id"
-          index=""
-          >{{ collectBucket.name }}</el-menu-item
-        >
-        <el-menu-item><el-icon><Plus /></el-icon>新建路径</el-menu-item
-        >
-      </el-sub-menu>
+      <template #title>
+        <el-icon><Star /></el-icon>
+        <span class="el-menu-font">收藏路径</span>
+      </template>
+      <el-menu-item
+        v-for="collectBucket in state.collectBuckets"
+        :key="collectBucket.id"
+        index=""
+        >{{ collectBucket.name }}</el-menu-item
+      >
+      <el-menu-item
+        ><el-icon><Plus /></el-icon>新建路径</el-menu-item
+      >
+    </el-sub-menu>
     <button class="open-btn" @click="isCollapse = !isCollapse">
       <el-icon class="open-icon" v-show="isCollapse"
         ><ArrowRightBold
@@ -105,7 +109,6 @@ $second-color: #f0f1f8;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border: 1px solid #dde0e6;
-  // border-left: 0;
   background: #fff;
   height: 30px;
   position: absolute;
@@ -125,13 +128,12 @@ $second-color: #f0f1f8;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 240px;
-  // max-height: 918px;
 }
-.el-menu-font{
+.el-menu-font {
   font-weight: bold;
   color: #4e4e4e;
 }
-.plus-icon{
+.plus-icon {
   margin-left: 10px;
 }
 </style>

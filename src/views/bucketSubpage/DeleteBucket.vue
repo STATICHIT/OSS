@@ -1,4 +1,4 @@
-<!-- bucket子页面 ———— 文件管理/数据索引-->
+<!-- bucket子页面 ———— 文件管理/删除Bucket-->
 <template>
   <div>
 
