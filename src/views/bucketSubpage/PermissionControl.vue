@@ -120,15 +120,14 @@
       </div>
 
       <!-- 新增授权策略 -->
-      <div class="addBox">
+      <div>
         <el-dialog
           v-model="centerDialogVisible"
           :title="nowTitle"
           width="30%"
           align-center
-          class="changBox"
         >
-          <div class="innerBox" style="z-index: 100000">
+          <div style="z-index: 100000">
             <div>
               <!--授权资源-->
               <span class="littleTitle">授权资源</span>
@@ -140,13 +139,12 @@
               <!--资源路径-->
               <span class="littleTitle">资源路径</span>
               <span>当前Bucket名称 /</span>&nbsp;
-              <el-input style="width:57%" v-model="path" />
+              <el-input style="width: 57%" v-model="path" />
             </div>
 
             <div>
               <!-- 授权用户 -->
               <span class="littleTitle">授权用户</span>
-              
             </div>
 
             <!--子账号-->
