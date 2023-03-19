@@ -1,11 +1,11 @@
-``<template  >
+<template  >
     <div style="position: relative;">
   <el-table :data="state.tableData" class="bucketTable"
   highlight-current-row:true
   :header-row-class-name="'table-header-row'">
     <el-table-column prop="name" label="Bucket名称" width="210" />
     <el-table-column prop="storageLevel" label="存储类型"  />
-    <el-table-column prop="capacity+'MB'" label="容量"  />
+    <el-table-column prop="capacity" label="容量"  />
     <el-table-column prop="versionControl" label="版本控制" />
     <el-table-column prop="encryption" label="加密存储" />
     <el-table-column prop="watermark" label="图片水印" />
@@ -48,7 +48,7 @@ const changePage = (val) => {
 </script>
 <style scoped>
 .bucketTable{
-    width: 1200px;
+    width: 1300px;
     margin-left: 10px;
 }
 /* .bucketTable:first-line{
