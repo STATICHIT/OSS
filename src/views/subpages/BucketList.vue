@@ -1,9 +1,8 @@
 <!-- 子页面 ———— bucket列表 -->
 <template>
-  <div>
+  <div style="padding: 30px;">
     <div class="box" style="display: flex;flex-direction: column;align-items: flex-start; width: 100%;">
-      <p class="header-text">Bucket列表</p>
-      <p class="header-text-after">统计 Bucket 合计数据，平均延迟 1~3 小时。不作为计量数据，仅作参考</p>
+      <TitleTip :title="state.title" :content="state.content"></TitleTip>
       <div class="btn">
         <el-button type="primary">创建Bucket</el-button>
         <el-input
@@ -17,7 +16,7 @@
       :suffix-icon="Search"
     />
       </div>
-      <BucketTableVue></BucketTableVue>
+      <BucketTableVue class="bucketTable"></BucketTableVue>
       </div>
   </div>
 </template>
@@ -30,9 +29,12 @@ import "../../style/subPage.scss";
 import { reactive } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import BucketTableVue from "../../components/BucketTable.vue";
+import TitleTip from "../../components/TitleTip.vue";
 
 const state = reactive({
-  searchText:''
+  searchText:'',
+  title:'Bucket列表',
+  content:'统计 Bucket 合计数据，平均延迟 1~3 小时。不作为计量数据，仅作参考'
 })
 
 </script>
@@ -42,7 +44,9 @@ const state = reactive({
 .btn{
   display: flex;
   flex-direction: row;
-  margin-left: -17px;
- 
+  margin-left: -20px;
+}
+.bucketTable{
+  margin-left: -10px;
 }
 </style>
