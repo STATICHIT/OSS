@@ -24,14 +24,18 @@ const routes = [
         // RAM用户登录模块
         path: '/ramLogin',
         component: () => import('../views/RamLogin.vue')
-      }
+      },
     ]
   },
   {
     //客户端主页面(ls的主页框架写好之后可以直接连接这个链接)
     path: '/main',
     component: () => import('../views/Main.vue')
-  },
+  },{
+        //标签管理
+        path: '/test-demo',
+        component: () => import('../views/test.vue')
+      },
   {
     //关于树形列表的测试
     path: '/test',
@@ -108,7 +112,8 @@ const routes = [
       {
         //Bucket(包含子菜单及子内页)
         path: '/bucket',
-        component: () => import('../views/subpages/Bucket.vue'),
+        // component: () => import('../views/subpages/Bucket.vue'),
+        component: () => import('../components/BucketTable.vue'),
         redirect: '/fileList',//初始显示在文件列表页面
         meta: { title: '当前Bucket名' },
         children: [
@@ -160,6 +165,7 @@ const routes = [
             component: () => import('../views/bucketSubpage/BucketLabel.vue'),
             meta: { title: 'Bucket标签' },
           },
+          
         ]
       }
     ]
