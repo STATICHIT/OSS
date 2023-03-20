@@ -13,9 +13,9 @@
             >删除Bucket需要对Bucket内的资源进行检测，资源清空后才可删除。</span
           >
         </div>
-        <br>
-        <br>
-        <img src="../../assets/delete.png">
+        <br />
+        <br />
+        <img src="../../assets/delete.png" />
         <template #footer>
           <span class="dialog-footer">
             <el-button type="primary" @click="save" :disabled="disabled">

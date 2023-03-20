@@ -99,8 +99,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { watch } from "vue";
+import { watch, ref } from "vue";
 import { ElMessage } from "element-plus";
 const title = "保留策略";
 const content =
@@ -141,8 +140,8 @@ let change = () => {
 let save = () => {
   centerDialogVisible.value = false;
   day.value = input.value;
-  input.value=day.value;
-  ElMessage.success("修改成功")
+  input.value = day.value;
+  ElMessage.success("修改成功");
 };
 
 // 对时限输入框进行监听

@@ -70,6 +70,7 @@
             ref="multipleTableRef"
             :data="filterTableData"
             style="width: 100%"
+            :header-cell-style="{ background: '#eff1f7', color: '#606266' }"
           >
             <el-table-column type="selection" width="55" />
             <el-table-column label="授权资源" prop="date" />
@@ -184,8 +185,7 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
-import { computed, ref } from "vue";
+import { reactive, computed, ref } from "vue";
 import { ElMessage } from "element-plus";
 //横向导航当前选中（1为读写权限；2为Bucket授权策略）
 const activeIndex = ref("1");
@@ -221,7 +221,7 @@ let save = () => {
 };
 
 //
-const centerDialogVisible = ref(true);
+const centerDialogVisible = ref(false);
 
 // 以下是表格数据（具体数据暂时是假的）
 //搜索框内容字段以及搜索逻辑
@@ -395,6 +395,7 @@ const options = [
   width: 90px;
   height: 40px;
   font-size: 15px;
+  margin-bottom: 10px;
 }
 
 .tip1 {
