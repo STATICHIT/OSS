@@ -103,8 +103,7 @@ const routes = [
       {
         //Bucket(包含子菜单及子内页)
         path: '/bucket',
-        // component: () => import('../views/subpages/Bucket.vue'),
-        // component: () => import('../components/BucketTable.vue'),
+        component: () => import('../views/subpages/Bucket.vue'),
         redirect: '/fileList',//初始显示在文件列表页面
         meta: { title: '当前Bucket名' },
         children: [
@@ -155,6 +154,12 @@ const routes = [
             path: '/deleteBucket',
             component: () => import('../views/bucketSubpage/DeleteBucket.vue'),
             meta: { title: '删除Bucket' },
+          },
+          {
+            //权限控制
+            path: '/fileTable',
+            component: () => import('../components/FileTable.vue'),
+            meta: { title: '文件列表' },
           },
         ]
       }
