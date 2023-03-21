@@ -155,6 +155,12 @@ const routes = [
             component: () => import('../views/bucketSubpage/DeleteBucket.vue'),
             meta: { title: '删除Bucket' },
           },
+          {
+            //权限控制
+            path: '/fileTable',
+            component: () => import('../components/FileTable.vue'),
+            meta: { title: '文件列表' },
+          },
         ]
       }
     ]

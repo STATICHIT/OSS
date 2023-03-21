@@ -6,9 +6,14 @@
       highlight-current-row:true
       :header-row-class-name="'table-header-row'"
       style="width:100%"
+      size="large"
     >
-      <el-table-column prop="name" label="Bucket名称" width="210" />
-      <el-table-column prop="storageLevel" label="存储类型" />
+      <el-table-column class-name="el-table-name" prop="name" label="Bucket名称" width="190" >
+        <template #default="{row}">
+      <router-link :to="{ path: '/bucket', query: { id: row.id } }" class="el-table-link">{{ row.name }}</router-link>
+    </template>
+      </el-table-column>
+      <el-table-column prop="storageLevel"  label="存储类型" />
       <el-table-column prop="capacity" label="容量" />
       <el-table-column prop="versionControl" label="版本控制" />
       <el-table-column prop="encryption" label="加密存储" />
@@ -25,12 +30,14 @@
       :current-page="state.currentPage"
       @current-change="changePage"
     />
+
   </div>
 </template>
 <script setup>
 import { reactive } from "vue";
 import apiFun from "../utils/api";
 import Mock from "mockjs";
+
 
 const state = reactive({
   tableData: [
@@ -104,21 +111,10 @@ const state = reactive({
       bucketAcl: "只读",
       updateTime: "2023年03月19日 19:38",
     },
-    {
-      name: "bucket1",
-      storageLevel: "标准存储1",
-      capacity: "476.12MB",
-      versionControl: "已开启",
-      encryption: "是",
-      watermark: "有",
-      bucketAcl: "只读",
-      updateTime: "2023年03月19日 19:38",
-    },
-
   ],
   total: 200, // 总条数
   currentPage: 1, // 当前页
-  pageSize: 8,
+  pageSize: 7,
 });
 
 defineProps({
@@ -131,17 +127,22 @@ const changePage = (val) => {
 </script>
 <style scoped>
 .bucketTable {
-  width: 1300px;
+  width: 1350px;
   margin-left: 10px;
 }
 /* .bucketTable:first-line{
     background-color: aqua;
 } */
-.table-header-row > th {
-  background-color: #cbdef4;
+
+.el-table-link{
+  color: #3299ff;
+  text-decoration: none;
 }
 ::v-deep .bucketTable th {
   background-color: #eff3f8;
+}
+::v-deep .el-table-name tr {
+  color: #55aaff;
 }
 .page {
   position: absolute;
