@@ -125,7 +125,7 @@ function confirmClick() {
     .then(() => {
       drawer.value = false
       ElMessage.success('创建成功！')
-      router.push({path:'/bucket',query:{id:'1'}})
+      router.push({path:'/bucket',query:{name:state.newBucket.name}})
     })
     .catch(() => {
     })

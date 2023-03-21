@@ -77,6 +77,12 @@ const routes = [
         meta: { title: 'Bucket 列表' },
       },
       {
+        //列表模板，列表都可以拿这个组件用，到时候统一更改样式
+        path: '/tableModel',
+        component: () => import('../components/TableModel.vue'),
+        meta: { title: 'Bucket 列表' },
+      },
+      {
         //数据复制
         path: '/dataCopy',
         component: () => import('../views/subpages/dataCopy.vue'),
