@@ -55,7 +55,7 @@ const routes = [
   {
     //头部
     path: '/header',
-    component: () => import('../components/Header.vue')
+    component: () => import('../components/header.vue')
   },
   {
     //客户端底页
@@ -79,7 +79,7 @@ const routes = [
       {
         //数据复制
         path: '/dataCopy',
-        component: () => import('../views/subpages/dataCopy.vue'),
+        component: () => import('../views/subpages/DataCopy.vue'),
         meta: { title: '数据复制' },
       },
       {

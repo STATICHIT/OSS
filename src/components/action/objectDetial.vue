@@ -10,7 +10,7 @@
   <el-drawer v-model="drawer" direction="rtl" size="40%">
     <!-- 头部 -->
     <template #header>
-      <h3 style="text-align: left">{{ nowTitle }}</h3>
+      <h3 style="text-align: left">详情</h3>
     </template>
     <!-- 内容 -->
     <template #default>
@@ -123,7 +123,7 @@
     <template #footer>
       <div style="flex: auto">
         <el-button @click="cancelClick">取消</el-button>
-        <el-button type="primary" @click="confirmClick">保存</el-button>
+        <el-button type="primary" >保存</el-button>
       </div>
     </template>
   </el-drawer>
@@ -136,17 +136,14 @@ import { ElMessage } from "element-plus";
 const radio1 = ref("1");
 const disabled1 = ref(true);
 const drawer = ref(false);
-var nowTitle = ref("新增授权");
 //当前单选框选择
 var radio = ref("1");
 
 function add() {
-  nowTitle.value == "新增授权";
   drawer.value = true;
 }
 
 function edit() {
-  nowTitle.value == "编辑授权";
   drawer.value = true;
 }
 
@@ -154,14 +151,6 @@ function cancelClick() {
   drawer.value = false;
 }
 
-function confirmClick() {
-  drawer.value = false;
-  if (nowTitle.value == "新增授权") {
-    ElMessage.success("新增成功");
-  } else if (nowTitle.value == "编辑授权") {
-    ElMessage.success == "编辑成功";
-  }
-}
 
 const value1 = ref("1");
 const options = [

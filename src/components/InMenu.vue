@@ -5,7 +5,7 @@
     :accordion="true"
     @open="handleOpen"
     @close="handleClose"
-    router="true"
+    router
     style="
       min-height: 87vh;
       position: relative;
