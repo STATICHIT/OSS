@@ -1,3 +1,4 @@
+<!-- Bucket列表 -->
 <template  >
   <div style="position: relative;">
     <el-table
@@ -30,7 +31,6 @@
       :current-page="state.currentPage"
       @current-change="changePage"
     />
-
   </div>
 </template>
 <script setup>
@@ -111,10 +111,20 @@ const state = reactive({
       bucketAcl: "只读",
       updateTime: "2023年03月19日 19:38",
     },
+    {
+      name: "bucket1",
+      storageLevel: "标准存储1",
+      capacity: "476.12MB",
+      versionControl: "已开启",
+      encryption: "是",
+      watermark: "有",
+      bucketAcl: "只读",
+      updateTime: "2023年03月19日 19:38",
+    },
   ],
   total: 200, // 总条数
   currentPage: 1, // 当前页
-  pageSize: 7,
+  pageSize: 8,
 });
 
 defineProps({
