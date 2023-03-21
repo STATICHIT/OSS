@@ -19,7 +19,7 @@
           @select="handleSelect"
         >
           <el-menu-item index="1">读写权限</el-menu-item>
-          <el-menu-item index="2">Bucke 授权策略</el-menu-item>
+          <el-menu-item index="2">Bucket 授权策略</el-menu-item>
         </el-menu>
       </div>
       <!-- 读写权限 -->
@@ -29,7 +29,7 @@
           。对于一个已经存在的Bucket，只有它的创建者可以通过OSS的PutBucketAcl接口修改该Bucket的权限。</span
         >
         <br /><br /><br />
-        <span><b>服务端加密：</b></span>
+        <span><b>Bucket ACL</b></span>
         <div class="radio-group">
           <div class="mb-2 flex items-center text-sm">
             <el-radio-group v-model="radio" class="ml-4" :disabled="disabled">
@@ -61,19 +61,21 @@
           <span>⚠ 权限列表的展示有延迟，将在设置成功15分钟内更新。</span>
         </div>
         <br />
-        <el-button class="btn3" type="primary" @click="add">新增授权</el-button>
+        <el-button class="btn3" type="primary" @click="addBucket"
+          >新增授权</el-button
+        >
         <!-- 权限表格 -->
         <div>
           <el-table
             ref="multipleTableRef"
             :data="filterTableData"
             style="width: 100%"
+            :header-cell-style="{ background: '#eff1f7', color: '#606266' }"
           >
             <el-table-column type="selection" width="55" />
             <el-table-column label="授权资源" prop="date" />
             <el-table-column label="授权操作" prop="name" />
-            <el-table-column label="授权用户" prop="name" />
-            <el-table-column label="效力" prop="effectiveness" />
+            <el-table-column label="授权用户" prop="address" />
             <el-table-column align="right">
               <template #header>
                 <el-input
@@ -106,65 +108,90 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination
+            background
+            class="page"
+            layout="prev, pager, next"
+            :total="state.total"
+            :page-size="state.pageSize"
+            :current-page="state.currentPage"
+            @current-change="changePage"
+          />
         </div>
       </div>
 
       <!-- 新增授权策略 -->
-      <div class="addBox">
+      <div>
         <el-dialog
-        v-model="centerDialogVisible"
-        title="编辑"
-        width="30%"
-        align-center
-        class="changBox"
-      >
-        <div class="innerBox" style="z-index: 100000">
-          <div class="tip1">
-            <span
-              >⚠「基于时间的保留策略」被锁定后，您可以延长保留周期，但无法缩短保留周期。请合理设置保留策略。</span
-            >
-          </div>
-          <div class="littleTitle">策略类型</div>
-          <el-select
-            v-model="value"
-            disabled
-            placeholder="Select"
-            style="width: 95%"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+          v-model="centerDialogVisible"
+          :title="nowTitle"
+          width="30%"
+          align-center
+        >
+          <div style="z-index: 100000">
+            <div>
+              <!--授权资源-->
+              <span class="littleTitle">授权资源</span>
+              <el-button plain>整个 Bucket</el-button>
+              <el-button plain>指定资源</el-button>
+            </div>
+
+            <div>
+              <!--资源路径-->
+              <span class="littleTitle">资源路径</span>
+              <span>当前Bucket名称 /</span>&nbsp;
+              <el-input style="width: 57%" v-model="path" />
+            </div>
+
+            <div>
+              <!-- 授权用户 -->
+              <span class="littleTitle">授权用户</span>
+            </div>
+
+            <!--子账号-->
+            <div class="m-4">
+              <el-select
+                v-model="value1"
+                multiple
+                placeholder="Select"
+                style="width: 95%"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+
+            <div class="littleTitle">保留周期</div>
+            <el-input
+              style="width: 95%"
+              v-model="input"
+              placeholder="Please input"
             />
-          </el-select>
-          <div class="littleTitle">保留周期</div>
-          <el-input
-            style="width: 95%"
-            v-model="input"
-            placeholder="Please input"
-          />
-          <br />
-          <span>修改后时间的取值必须大于原有时间，且小于25550。</span>
-        </div>
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button type="primary" @click="save" :disabled="disabled">
-              确定
-            </el-button>
-          </span>
-        </template>
-      </el-dialog>
+            <br />
+          </div>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button type="primary" @click="save2"> 确定 </el-button>
+            </span>
+          </template>
+        </el-dialog>
       </div>
     </div>
   </el-scrollbar>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { reactive, computed, ref } from "vue";
 import { ElMessage } from "element-plus";
+//横向导航当前选中（1为读写权限；2为Bucket授权策略）
 const activeIndex = ref("1");
+//now为当前显示子页
 const now = ref(true);
+//横向导航选择与子页面显示的绑定
 const handleSelect = (key, keyPath) => {
   console.log(key);
   if (key == "1") {
@@ -173,93 +200,149 @@ const handleSelect = (key, keyPath) => {
     now.value = false;
   }
 };
+//是否正在编辑读写权限
 var changing = ref(false);
+//控制读写权限单选框的可编辑性
 var disabled = ref(true);
+//当前单选框选择
 var radio = ref("1");
 
+//设置按钮点击方法
 let change = () => {
   changing.value = true;
   disabled.value = false;
 };
 
+//保存按钮点击方法
 let save = () => {
   changing.value = false;
   disabled.value = true;
   ElMessage.success("修改成功");
 };
 
-const centerDialogVisible = ref(true);
+//
+const centerDialogVisible = ref(false);
 
-// 表格数据
+// 以下是表格数据（具体数据暂时是假的）
+//搜索框内容字段以及搜索逻辑
 const search = ref("");
 const filterTableData = computed(() =>
-  tableData.filter(
+  state.tableData.filter(
     (data) =>
       !search.value ||
       data.name.toLowerCase().includes(search.value.toLowerCase())
   )
 );
+//子项编辑按钮点击方法
 const handleEdit = (index, row) => {
   console.log(index, row);
 };
+
+////子项删除按钮点击方法
 const handleDelete = (index, row) => {
   console.log(index, row);
 };
 
-const tableData = [
+const state = reactive({
+  //表格（fake）数据
+  tableData: [
+    {
+      date: "bucket1",
+      name: "只读",
+      address: "*",
+    },
+    {
+      date: "bucket2",
+      name: "读/写",
+      address: "AAAbc",
+    },
+    {
+      date: "bucket3",
+      name: "RAM读/写",
+      address: "*",
+    },
+    {
+      date: "bucket4",
+      name: "RAM读",
+      address: "abc,aaa,AAAbc",
+    },
+    {
+      date: "bucket5",
+      name: "私有",
+      address: "*",
+    },
+    {
+      date: "bucket6",
+      name: "读/写",
+      address: "AAAbc",
+    },
+    {
+      date: "bucket7",
+      name: "RAM读/写",
+      address: "*",
+    },
+    {
+      date: "bucket8",
+      name: "RAM读",
+      address: "abc,aaa,AAAbc",
+    },
+    {
+      date: "bucket9",
+      name: "私有",
+      address: "*",
+    },
+  ],
+  //分页
+  total: 200, // 总条数
+  currentPage: 1, // 当前页
+  pageSize: 8,
+});
+
+//分页跳转
+const changePage = (val) => {
+  state.currentPage = val;
+};
+
+//新增按钮点击事件
+const addBucket = () => {
+  centerDialogVisible.value = true;
+};
+
+//确定按钮点击事件
+const save2 = () => {
+  centerDialogVisible.value = false;
+  if (nowTitle.value == "新增授权") {
+    ElMessage.success("新增成功");
+  } else if (nowTitle.value == "编辑授权") {
+    ElMessage.success == "编辑成功";
+  }
+};
+
+//编辑/新增框字段
+//当前操作标题
+const nowTitle = ref("新增授权");
+//子账号列表
+const value1 = ref("Option1");
+const options = [
   {
-    date: "bucket1",
-    name: "只读",
-    address: "*",
-    effectiveness: "允许",
+    value: "Option1",
+    label: "子用户1",
   },
   {
-    date: "bucket2",
-    name: "读/写",
-    address: "AAAbc",
-    effectiveness: "允许",
+    value: "Option2",
+    label: "子用户2",
   },
   {
-    date: "bucket3",
-    name: "RAM读/写",
-    address: "*",
-    effectiveness: "允许",
+    value: "Option3",
+    label: "子用户3",
   },
   {
-    date: "bucket4",
-    name: "RAM读",
-    address: "abc,aaa,AAAbc",
-    effectiveness: "允许",
+    value: "Option4",
+    label: "子用户4",
   },
   {
-    date: "bucket5",
-    name: "私有",
-    address: "*",
-    effectiveness: "允许",
-  },
-  {
-    date: "bucket6",
-    name: "读/写",
-    address: "AAAbc",
-    effectiveness: "允许",
-  },
-  {
-    date: "bucket7",
-    name: "RAM读/写",
-    address: "*",
-    effectiveness: "允许",
-  },
-  {
-    date: "bucket8",
-    name: "RAM读",
-    address: "abc,aaa,AAAbc",
-    effectiveness: "允许",
-  },
-  {
-    date: "bucket9",
-    name: "私有",
-    address: "*",
-    effectiveness: "允许",
+    value: "Option5",
+    label: "子用户5",
   },
 ];
 </script>
@@ -312,6 +395,7 @@ const tableData = [
   width: 90px;
   height: 40px;
   font-size: 15px;
+  margin-bottom: 10px;
 }
 
 .tip1 {
@@ -320,6 +404,15 @@ const tableData = [
   background-color: rgba(196, 218, 250, 0.253);
 }
 
-.addBox {
+.page {
+  position: absolute;
+  bottom: 30px;
+  right: 130px;
+  margin-top: 20px;
+}
+
+.littleTitle {
+  font-weight: bold;
+  margin-right: 20px;
 }
 </style>
