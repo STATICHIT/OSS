@@ -123,7 +123,7 @@
     <template #footer>
       <div style="flex: auto">
         <el-button @click="cancelClick">取消</el-button>
-        <el-button type="primary" >保存</el-button>
+        <el-button type="primary">保存</el-button>
       </div>
     </template>
   </el-drawer>
@@ -150,7 +150,6 @@ function edit() {
 function cancelClick() {
   drawer.value = false;
 }
-
 
 const value1 = ref("1");
 const options = [
