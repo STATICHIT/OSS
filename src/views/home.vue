@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import headerVue from "../components/header.vue";
+import headerVue from "../components/Header.vue";
 import menuVue from "../components/menu.vue";
 import "../style/base.scss";
 import "../style/subPage.scss";

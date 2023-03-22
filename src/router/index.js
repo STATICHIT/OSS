@@ -33,14 +33,9 @@ const routes = [
     component: () => import('../views/treetable_test.vue')
   },
   {
-    //菜单控件
-    path: '/menu',
-    component: () => import('../components/menu.vue')
-  },
-  {
     //头部控件
     path: '/header',
-    component: () => import('../components/header.vue')
+    component: () => import('../components/Header.vue')
   },
   {
     //主菜单
@@ -51,11 +46,6 @@ const routes = [
     //bucket菜单
     path: '/inMenu',
     component: () => import('../components/InMenu.vue')
-  },
-  {
-    //头部
-    path: '/header',
-    component: () => import('../components/header.vue')
   },
   {
     //客户端底页
@@ -162,10 +152,10 @@ const routes = [
             meta: { title: '删除Bucket' },
           },
           {
-            //权限控制
+            //文件表格测试
             path: '/fileTable',
             component: () => import('../components/FileTable.vue'),
-            meta: { title: '文件列表' },
+            meta: { title: '文件表格' },
           },
         ]
       }
