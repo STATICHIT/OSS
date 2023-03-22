@@ -157,6 +157,11 @@ const routes = [
             component: () => import('../components/FileTable.vue'),
             meta: { title: '文件表格' },
           },
+          {
+            //操作测试页面
+            path:'/actionTest',
+            component:()=>import('../views/ActionTest.vue')
+          },
         ]
       }
     ]

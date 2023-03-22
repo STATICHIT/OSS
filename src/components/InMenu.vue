@@ -46,6 +46,9 @@
     <el-menu-item index="deleteBucket" class="el-menu-font">
       <template #title>删除Bucket</template>
     </el-menu-item>
+    <el-menu-item index="actionTest" class="el-menu-font">
+      <template #title>操作测试页</template>
+    </el-menu-item>
   </el-menu>
 </template>
   
@@ -78,5 +81,4 @@ $second-color: #f0f1f8;
   font-weight: bold;
   color: #4e4e4e;
 }
-
 </style>
