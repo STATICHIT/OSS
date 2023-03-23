@@ -140,6 +140,11 @@ const routes = [
             meta: { title: '图片处理' },
           },
           {
+            //视频处理
+            path:'/videoProcessing',
+            component: () => import('../views/bucketSubpage/VideoProcessing.vue')
+          },
+          {
             //Bucket标签
             path: '/bucketLabel',
             component: () => import('../views/bucketSubpage/BucketLabel.vue'),
