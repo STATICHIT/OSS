@@ -88,7 +88,7 @@ const routes = [
         //子用户管理
         path: '/sub',
         redirect: '/userManage',
-        meta: { title: '子用户管理' ,hidden: true},
+        meta: { title: '资源管理' ,hidden: true},
         children: [
           {
             path:"/userManage",  //子用户管理

@@ -6,14 +6,12 @@
     <h1>该页面暂时用于测试</h1>
     <h3>增加bucket策略抽屉</h3>
     <addBucketPolicies></addBucketPolicies>
-    <h3>查看object详情策略</h3>
-    <objctDetial></objctDetial>
+
   </div>
 </template>
 
 <script setup>
 import addBucketPolicies from "../components/action/addBucketPolicies.vue";
-import objctDetial from "../components/action/objectDetial.vue";
 const title = "测试页面";
 const content = "成员进行组件测试时可以在此编辑触发按钮";
 </script>
