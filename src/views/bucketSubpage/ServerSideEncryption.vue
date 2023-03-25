@@ -36,10 +36,12 @@ var isHide = ref("已开启"); //未开启 已开启两种状态
 var changing = ref(false);
 var radio = ref("1");
 
+// 设置按钮点击事件
 let change = () => {
   changing.value = true;
 };
 
+// 保存修改按钮点击事件
 let save = () => {
   changing.value = false;
   if (radio.value == "1") {

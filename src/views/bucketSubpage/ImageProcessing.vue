@@ -6,10 +6,13 @@
         <el-button class="myBtn" @click="importImg" plain>选择图片</el-button>
         <el-button class="myBtn" @click="save" plain>保存更改</el-button>
       </div>
+
+      <!-- 图片处理组件 -->
       <div class="drawing-container">
         <div id="tui-image-editor"></div>
       </div>
-      <!-- 选择图片 -->
+
+      <!-- 选择图片抽屉组件 -->
       <div>
         <el-drawer v-model="drawer" direction="rtl" size="40%">
           <!-- 头部 -->
@@ -79,6 +82,7 @@ export default {
       currentSrc:
         "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA12s6NU.img",
       a: true,
+      // 图片源列表
       classList: [
         {
           id: "001",
@@ -117,6 +121,7 @@ export default {
     this.init();
   },
   methods: {
+    // 图片处理组件数据初始化
     init() {
       this.instance = new ImageEditor(
         document.querySelector("#tui-image-editor"),

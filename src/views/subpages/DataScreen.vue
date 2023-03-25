@@ -17,6 +17,7 @@
           </div>
           <div id="mychart3"></div>
         </div>
+
         <div class="board2 card">
           <div>
             <span class="littleTitle"><b>存储用量</b></span>
@@ -58,10 +59,12 @@
             </table>
           </div>
         </div>
+
         <div class="board3">
           <div id="mychart2"></div>
         </div>
       </div>
+
       <div class="right">
         <h2 class="title2">Bucket管理</h2>
         <div class="up" id="mychart"></div>
@@ -131,6 +134,7 @@ export default {
     this.initData();
   },
   methods: {
+    // 初始化数据
     initData() {
       // apiFun.getScreenData().then((res) => {
       //   this.pv = res.method.pv;
@@ -138,7 +142,9 @@ export default {
       //   //...
       // });
     },
+    // 初始化表格
     initEcharts() {
+      // 表格数据1
       var option = {
         title: {
           left: "center",
@@ -172,6 +178,7 @@ export default {
         ],
       };
 
+      // 表格数据2
       var option2 = {
         title: {
           text: "存储类型",
@@ -236,6 +243,7 @@ export default {
         ],
       };
 
+      // 表格数据3
       var option3 = {
         tooltip: {
           trigger: "item",
@@ -270,6 +278,7 @@ export default {
           },
         ],
       };
+
       echarts.registerTheme("theme", theme); //注册主题
       const myChart = echarts.init(document.getElementById("mychart"), "theme"); // 图标初始化
       const myChart2 = echarts.init(
@@ -285,6 +294,8 @@ export default {
       myChart2.setOption(option2);
       myChart3.setOption(option3);
     },
+
+    // 根据存储类型查看用量
     curSelect(val) {
       console.log(val);
       switch (val) {
