@@ -141,8 +141,9 @@ const routes = [
           },
           {
             //视频处理
-            path:'/videoProcessing',
-            component: () => import('../views/bucketSubpage/VideoProcessing.vue')
+            path: '/videoProcessing',
+            component: () => import('../views/bucketSubpage/VideoProcessing.vue'),
+            meta: { title: '视频处理' }
           },
           {
             //Bucket标签
@@ -164,8 +165,8 @@ const routes = [
           },
           {
             //操作测试页面
-            path:'/actionTest',
-            component:()=>import('../views/ActionTest.vue')
+            path: '/actionTest',
+            component: () => import('../views/ActionTest.vue')
           },
         ]
       }
