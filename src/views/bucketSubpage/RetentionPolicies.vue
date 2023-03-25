@@ -49,6 +49,8 @@
       </el-col>
     </el-row>
     <el-button plain class="btn1" @click="change">编辑</el-button>
+
+    <!-- 编辑保留策略弹框 -->
     <div>
       <el-dialog
         v-model="centerDialogVisible"
@@ -110,6 +112,7 @@ const value = ref("Option1");
 const input = ref(115);
 const disabled = ref(true);
 
+//保留策略类型选项
 const options = [
   {
     value: "Option1",
@@ -133,10 +136,12 @@ const options = [
   },
 ];
 
+// 编辑按钮点击事件
 let change = () => {
   centerDialogVisible.value = true;
 };
 
+// 确认修改按钮点击事件
 let save = () => {
   centerDialogVisible.value = false;
   day.value = input.value;

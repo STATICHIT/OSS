@@ -6,7 +6,7 @@
       <div class="box" :style="style">
         <!-- 面包屑导航 -->
         <BreadCrumb />
-        <router-view class="subPage" style="z-index: 8"></router-view>
+        <router-view class="subPage" style="z-index: 10"></router-view>
       </div>
     </div>
   </div>
@@ -14,7 +14,7 @@
 
 <script setup>
 import headerVue from "../components/Header.vue";
-import menuVue from "../components/menu.vue";
+import menuVue from "../components/Menu.vue";
 import "../style/base.scss";
 import "../style/subPage.scss";
 import { useRoute } from "vue-router";
@@ -41,7 +41,6 @@ watchEffect(() => {
   position: relative;
   padding: 30px;
   height: 900px;
-  // background-color: #eff1f7;
 }
 .container {
   display: flex;

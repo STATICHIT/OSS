@@ -1,23 +1,73 @@
 <template>
-  <div class="box">
-    <title-tip :title="this.title" :content="this.content"></title-tip>
-    <div class="buttons">
-      <el-button class="myBtn" @click="importImg" plain>选择图片</el-button>
-      <el-button class="myBtn" @click="save" plain>保存更改</el-button>
-    </div>
-    <div class="drawing-container">
-      <div id="tui-image-editor"></div>
+  <div>
+    <div class="box">
+      <title-tip :title="this.title" :content="this.content"></title-tip>
+      <div class="buttons">
+        <el-button class="myBtn" @click="importImg" plain>选择图片</el-button>
+        <el-button class="myBtn" @click="save" plain>保存更改</el-button>
+      </div>
+
+      <!-- 图片处理组件 -->
+      <div class="drawing-container">
+        <div id="tui-image-editor"></div>
+      </div>
+
+      <!-- 选择图片抽屉组件 -->
+      <div>
+        <el-drawer v-model="drawer" direction="rtl" size="40%">
+          <!-- 头部 -->
+          <template #header>
+            <h3 style="text-align: left">选择图片</h3>
+          </template>
+          <!-- 内容 -->
+          <template #default>
+            <h3>请选择您要进行处理的图片文件</h3>
+            <div class="circle">
+              <ul class="circle-ul">
+                <li v-for="item of classList" :key="item.id" class="circle-li">
+                  <div
+                    v-on:click="changeList(item.id, item.coverImg)"
+                    v-bind:class="{ changeBorder: item.id == a }"
+                    value="change!"
+                  >
+                    <img
+                      :src="item.coverImg"
+                      style="width: 100px; height: 100px; padding-top: 5px"
+                      alt
+                    />
+                    <div>{{ item.id }}</div>
+                    <div class="topic-shade">
+                      <div class="shade">
+                        <img
+                          src="../../assets/select.png"
+                          style="width: 14px; height: 14px"
+                          alt
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </template>
+          <!-- 尾部 -->
+          <template #footer>
+            <div style="flex: auto">
+              <el-button @click="cancelClick">取消</el-button>
+              <el-button type="primary" @click="chooseImg">确定</el-button>
+            </div>
+          </template>
+        </el-drawer>
+      </div>
     </div>
   </div>
 </template>
+
 <script>
 import "tui-image-editor/dist/tui-image-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
-import myImg from "../../assets/wallpaper.png";
 import ImageEditor from "tui-image-editor";
-// 引入 require
-require = import.meta.globEager("./path/to/your/require/module.js");
-
+import { ElMessage } from "element-plus";
 export default {
   data() {
     return {
@@ -25,19 +75,60 @@ export default {
       title: "图片处理",
       content:
         "针对云罐中Bucket存储的图片文件（Object），您可以在浏览器对图片进行在线编辑，保存后修改后图片将覆盖原图片。您可以将进行的操作包括添加图片水印、截图、绘画、调节亮度等。",
+
+      // 选择图片
+      drawer: false,
+      chooseSrc: "",
+      currentSrc:
+        "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA12s6NU.img",
+      a: true,
+      // 图片源列表
+      classList: [
+        {
+          id: "001",
+          coverImg:
+            "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE59yNZ?ver=d7f3",
+        },
+        {
+          id: "002",
+          coverImg:
+            "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE59gGS?ver=5bf1",
+        },
+        {
+          id: "003",
+          coverImg:
+            "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA12sapl.img",
+        },
+        {
+          id: "004",
+          coverImg:
+            "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA11N2LZ.img",
+        },
+        {
+          id: "005",
+          coverImg:
+            "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA11N9kp.img",
+        },
+        {
+          id: "006",
+          coverImg:
+            "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA11NbLD.img",
+        },
+      ],
     };
   },
   mounted() {
     this.init();
   },
   methods: {
+    // 图片处理组件数据初始化
     init() {
       this.instance = new ImageEditor(
         document.querySelector("#tui-image-editor"),
         {
           includeUI: {
             loadImage: {
-              path: require("../../assets/wallpaper.png"),
+              path: this.currentSrc,
               name: "image",
             },
             menu: [
@@ -68,20 +159,38 @@ export default {
 
     importImg() {
       //选择当前Bucket内的图片
+      const num = 1;
+      if (num == 0) {
+        ElMessage.error("当前Bucket中不存在图片");
+      } else {
+        this.drawer = true;
+      }
     },
 
     // 保存图片，并上传
     save() {
-      const base64String = this.instance.toDataURL(); // base64 文件
-      const data = window.atob(base64String.split(",")[1]);
-      const ia = new Uint8Array(data.length);
-      for (let i = 0; i < data.length; i++) {
-        ia[i] = data.charCodeAt(i);
+      // 调用组件官方方法，获取整个编辑后图片的base64数据
+      const base64String = this.instance.toDataURL();
+      alert(base64String);
+    },
+
+    changeList(id, coverImg) {
+      if (this.a == id) {
+        this.a = !this.a;
+      } else {
+        this.a = id;
+        this.chooseSrc = coverImg;
+        console.log(coverImg);
       }
-      const blob = new Blob([ia], { type: "image/png" }); // blob 文件
-      const form = new FormData();
-      form.append("image", blob);
-      // upload file
+    },
+    cancelClick() {
+      this.drawer = false;
+    },
+    chooseImg() {
+      this.currentSrc = this.chooseSrc;
+      this.init(); //重置操作图片
+      console.log(this.currentSrc);
+      this.drawer = false;
     },
   },
 };
@@ -254,12 +363,59 @@ const customTheme = {
 }
 
 .drawing-container {
+  width: 1300px;
   height: 750px;
   position: relative;
   .myBtn {
     position: absolute;
     right: 50px;
     top: 15px;
+  }
+}
+
+.circle {
+  position: relative;
+  width: 632px;
+  left: 15px;
+}
+.circle-ul {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: 532px;
+  padding: 0;
+  margin: 14px 0 0 50px;
+}
+.circle-li {
+  margin-right: 20px;
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.topic-shade {
+  display: none;
+}
+
+.changeBorder {
+  width: 115px;
+  height: 121px;
+  position: relative;
+  cursor: pointer;
+  border: 1px dashed #969696;
+  margin: -1px -8px 0 -8px;
+  .topic-shade {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: absolute;
+    top: 123.5px;
+    right: 0;
+    bottom: 0;
+    left: 86px;
+  }
+
+  .shade {
+    margin-bottom: 4px;
   }
 }
 </style>

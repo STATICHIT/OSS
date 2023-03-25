@@ -34,10 +34,10 @@
       <template #title>
         <span class="el-menu-font">数据处理</span>
       </template>
-      <el-menu-item index="/imageProcessing"
-        >图片处理</el-menu-item
-      > </el-sub-menu
-    ><el-sub-menu index="7" class="text">
+      <el-menu-item index="/imageProcessing">图片处理</el-menu-item> 
+      <el-menu-item index="/videoProcessing">视频处理</el-menu-item> 
+    </el-sub-menu>
+      <el-sub-menu index="7" class="text">
       <template #title>
         <span class="el-menu-font">Bucket配置</span>
       </template>

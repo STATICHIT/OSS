@@ -2,6 +2,7 @@
 <template>
   <div>
     <div>
+      <!-- 删除确认弹框 -->
       <el-dialog
         v-model="centerDialogVisible"
         title="删除Bucket"
@@ -15,6 +16,7 @@
         </div>
         <br />
         <br />
+        <!-- 暂用个图片凑合一下 -->
         <img src="../../assets/delete.png" />
         <template #footer>
           <span class="dialog-footer">

@@ -52,6 +52,7 @@ export default {
   },
   methods: {
     initEcharts() {
+      // 表格数据
       var option = {
         dataset: {
           source: [
@@ -86,6 +87,7 @@ export default {
           },
         ],
       };
+      
       echarts.registerTheme("theme", theme); //注册主题
       const myChart = echarts.init(document.getElementById("mychart"), "theme"); // 图标初始化
       myChart.setOption(option);
