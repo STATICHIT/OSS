@@ -2,19 +2,18 @@
   <div>
     <div class="main">
       <div class="left">
-        <div class="auth-brand text-lg-left">CloudCan云罐</div>
+        <div class="auth-brand">CloudCan云罐</div>
         <h4 class="mt-0">让存储无限量</h4>
         <!-- 声明子路由占位符 -->
         <router-view></router-view>
       </div>
       <div class="right">
-        <div class="content-front"></div>
-        <div class="login-description">
-          <p style="color: aliceblue">
-            让数据与智慧更高效地流动。
-            <br />  
-            CloudCan
-          </p>
+        <!--阴影层-->
+        <div class="shade"></div>
+        <div class="description">
+          让数据与智慧更高效地流动。
+          <br />
+          CloudCan
         </div>
       </div>
     </div>
@@ -32,35 +31,37 @@
   margin: 0;
 }
 
-.main .auth-brand {
+.auth-brand {
   margin: 4rem 0 4rem;
   font-size: 26px;
   width: 325px;
 }
 
 .left {
-  width: 350px;
+  width: 20%;
   padding: 60px;
-  text-align: left !important;
+  text-align: left;
 }
 .right {
+  width: 80%;
   padding: 6rem 3rem;
   flex: 1;
   position: relative;
   background-color: rgba(0, 0, 0, 0.3);
-  text-align: center !important;
+  text-align: center;
   background: url(../assets/wallpaper.png) center;
   background-size: cover;
 }
-.login-description {
+.description {
+  color: aliceblue;
   position: absolute;
   margin: 0 auto;
-  padding: 0 1.75rem;
-  bottom: 3rem;
+  padding: 0 20px;
+  bottom: 40px;
   left: 0;
   right: 0;
 }
-.content-front {
+.shade {
   position: absolute;
   left: 0;
   right: 0;

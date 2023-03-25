@@ -341,7 +341,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .left {
   float: left;
   width: 63%;
