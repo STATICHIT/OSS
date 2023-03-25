@@ -86,9 +86,22 @@ const routes = [
       },
       {
         //子用户管理
-        path: '/subUserManage',
-        component: () => import('../views/subpages/SubUserManage.vue'),
-        meta: { title: '子用户管理' },
+        path: '/sub',
+        redirect: '/userManage',
+        meta: { title: '子用户管理' ,hidden: true},
+        children: [
+          {
+            path:"/userManage",  //子用户管理
+            component: () => import('../views/subpages/SubUserManage.vue'),
+            meta: { title: '子用户管理' },
+          },{
+              path:"/createUser",   //创建子用户
+              component: ()=>import('../views/subpages/CreateUser.vue'),
+              meta: {
+                  title: '创建子用户'
+              },
+          },
+        ]
       },
       {
         //标签管理

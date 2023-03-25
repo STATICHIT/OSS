@@ -33,7 +33,7 @@
         <el-icon><TrendCharts /></el-icon>
         <span class="el-menu-font">资源管理</span>
       </template>
-      <el-menu-item index="/subUserManage">子用户管理</el-menu-item>
+      <el-menu-item index="/userManage">子用户管理</el-menu-item>
       <el-menu-item index="/labelManage">标签管理</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="5">
