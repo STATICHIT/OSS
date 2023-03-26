@@ -1,66 +1,89 @@
-<!-- 树形列表 -->
 <template>
-  <el-table :data="tableData" style="width: 900px">
-    <el-table-column type="expand">
-      <template v-slot="props">
-        <el-table :data="props.row.children" class="sub-table" >
-          <el-table-column prop="name" label="名称"></el-table-column>
-          <el-table-column prop="type" label="类型"></el-table-column>
-        </el-table>
-      </template>
-    </el-table-column>
-    <el-table-column prop="name" label="名称"></el-table-column>
-    <el-table-column prop="type" label="类型"></el-table-column>
-  </el-table>
+  <div>
+    <h1>Video Cutter Demo</h1>
+    <video ref="videoPlayer" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto"></video>
+    <div>
+      <button @click="play">Play</button>
+      <button @click="pause">Pause</button>
+      <button @click="stop">Stop</button>
+    </div>
+    <hr />
+    <div>
+      <button @click="startTrimming">Start Trimming</button>
+      <button @click="endTrimming">End Trimming</button>
+      <button @click="resetTrimming">Reset Trimming</button>
+      <button @click="saveTrimmedVideo">Save Trimmed Video</button>
+    </div>
+  </div>
 </template>
 
 <script>
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
+// import VideoCutter from 'video-cutter';
+
 export default {
+  name: 'VideoCutterDemo',
   data() {
     return {
-      tableData: [{
-        name: '计算机组成原理',
-        type: '专业课',
-        children: [{
-          name: '浮点数',
-          type: '必考点'
-        }, {
-          name: '存储器',
-          type: '必考点'
-        }]
-      }, {
-        name: '环境艺术设计',
-        type: '选修课',
-        children: [{
-          name: '环境透视',
-          type: '必考点'
-        }, {
-          name: '环境艺术导论',
-          type: '了解',
-          children: [{
-            name: '环境艺术设计历史',
-            type: '了解'
-          }]
-        }]
-      }, {
-        name: '漫画',
-        type: '娱乐',
-        children: [{
-          name: '朝花夕拾',
-          type: '快看漫画'
-        }, {
-          name: 'old先',
-          type: '耽美'
-        }]
-      }]
+      videoPlayer: null,
+      videoCutter: null,
     };
-  }
+  },
+  mounted() {
+    this.videoPlayer = videojs(this.$refs.videoPlayer);
+    this.videoPlayer.src({
+      type: 'video/mp4',
+      src: '/video.mp4',
+    });
+    this.videoPlayer.on('play', this.handlePlay);
+    this.videoPlayer.on('pause', this.handlePause);
+    this.videoPlayer.on('stop', this.handleStop);
+    this.videoCutter = new VideoCutter(this.videoPlayer);
+  },
+  methods: {
+    handlePlay() {
+      console.log('Playing...');
+    },
+    handlePause() {
+      console.log('Paused.');
+    },
+    handleStop() {
+      console.log('Stopped.');
+    },
+    play() {
+      this.videoPlayer.play();
+    },
+    pause() {
+      this.videoPlayer.pause();
+    },
+    stop() {
+      this.videoPlayer.trigger('stop');
+      this.videoPlayer.currentTime(0);
+      this.videoPlayer.pause();
+    },
+    startTrimming() {
+      this.videoCutter.startTrimming();
+    },
+    endTrimming() {
+      this.videoCutter.endTrimming();
+    },
+    resetTrimming() {
+      this.videoCutter.resetTrimming();
+    },
+    saveTrimmedVideo() {
+      const blob = this.videoCutter.getTrimmedVideoBlob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'trimmed_video.mp4';
+      link.click();
+      URL.revokeObjectURL(url);
+    },
+  },
+  beforeUnmount() {
+    this.videoPlayer.dispose();
+    this.videoCutter.dispose();
+  },
 };
 </script>
-
-<style lang="scss" scoped>
-.sub-table {
-  padding-left: 100px;
-  width: 900px;
-}
-</style>
