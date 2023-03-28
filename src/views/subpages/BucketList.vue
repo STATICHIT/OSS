@@ -8,7 +8,7 @@
         v-model="state.searchText"
         class="w-50 m-2"
         size="large"
-        style="margin-left: 2%; margin-bottom: 10px; height: 34px"
+        style="margin-left: 2%; margin-bottom: 10px; height: 34px;"
         placeholder="Bucket名称"
         :suffix-icon="Search"
       />
@@ -34,6 +34,7 @@
     size="large"
     status-icon
     label-position="left"
+    style="font-weight: bold;"
   >
         <el-form-item style="margin-left: -8px;" label="Bucket名称" prop="name">
       <el-input placeholder="创建成功后将不可修改" class="el-input" v-model="state.newBucket.name" />
@@ -46,7 +47,7 @@
         <el-radio label="冷归档存储" />
       </el-radio-group>
     </el-form-item>
-    <el-alert type="info" show-icon :closable="false" class="input-msg">
+    <el-alert type="info" :closable="false" class="input-msg">
         <span v-show="state.newBucket.storageLevel=='标准存储'">标准：高可靠、高可用、高性能，数据会经常被访问到。</span>
         <span v-show="state.newBucket.storageLevel=='低频访问存储'">低频访问：数据长期存储、较少访问，存储单价低于标准类型。</span>
         <span v-show="state.newBucket.storageLevel=='归档存储'">归档：数据长期存储、基本不访问，存储单价低于低频访问型。选择归档存储后，文件需要先解冻才能访问。</span>
@@ -56,7 +57,7 @@
     <el-form-item label="版本控制" prop="versionControl">
       <el-switch v-model="state.newBucket.versionControl" />
     </el-form-item>
-    <el-alert type="info" show-icon :closable="false" class="input-msg">
+    <el-alert type="info" :closable="false" class="input-msg">
         <span>开启版本控制后，针对数据的覆盖和删除操作将会以历史版本的形式保存下来，若不开启版本控制则数据删除或被覆盖将无法找回。</span>
         <span v-show="state.newBucket.versionControl==true" class="bucketAcl-text">开通该功能后，暂不支持关闭。</span>
         <span v-show="!state.newBucket.versionControl" class="bucketAcl-text">当前未开启版本控制功能，数据删除或被覆盖后将无法找回。</span>
@@ -68,7 +69,7 @@
         <el-radio border label="公共读写" />
       </el-radio-group>
     </el-form-item>
-      <el-alert type="info" show-icon :closable="false" class="input-msg">
+      <el-alert type="info" :closable="false" class="input-msg">
         <p v-show="state.newBucket.bucketAcl=='私有'">私有：对文件的所有访问操作需要进行身份验证。</p>
         <p v-show="state.newBucket.bucketAcl=='公共读'" class="bucketAcl-text">公共读：对文件写操作需要进行身份验证；可以对文件进行匿名读。</p>
         <span v-show="state.newBucket.bucketAcl=='公共读写'" class="bucketAcl-text">公共读写：所有人都可以对文件进行读写操作。</span>
@@ -105,21 +106,20 @@ import router from "../../router";
 const formSize = ref('default')
 
 const direction = ref('rtl')
+
 const drawer = ref(false)
 
 function cancelClick() {
   drawer.value = false
 }
 
-
-
 const rules = reactive({
   name: [
     { required: true, message: '请输入Bucket名称', trigger: 'blur' },
     { min: 3, message: '请输入长度至少大于3的字符', trigger: 'blur' },
   ],
-
 })
+
 function confirmClick() {
   ElMessageBox.confirm(`确定创建该Bucket吗?`)
     .then(() => {
@@ -130,6 +130,7 @@ function confirmClick() {
     .catch(() => {
     })
 }
+
 const state = reactive({
   searchText: "",
   title: "Bucket列表",
@@ -154,12 +155,14 @@ console.log(state.newBucket.versionControl);
   flex-direction: column;
   align-items: flex-start;
   padding: 10px 0;
-  width: 100%;
+  // width: 100%;
 }.input-msg{
   margin-bottom: 6%;
   width: 82%;
   margin-left: 20%;
   margin-top: -2%;
+  text-align: left;
+  font-weight: lighter;
 }
 ::v-deep el-form el-form-item{
   height: 10%;
@@ -186,7 +189,7 @@ console.log(state.newBucket.versionControl);
 }
 .bucketTable {
   margin-left: -10px;
-  width: 100%;
+  width: 98%;
 }
 .el-input{
  width: 75%;

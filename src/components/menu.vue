@@ -7,7 +7,7 @@
     @close="handleClose"
     router="true"
     style="
-      min-height: 90vh;
+      min-height: 90%;
       box-shadow: 10px 10px 10px -4px rgba(0, 0, 0, 0.06);
     "
   >
@@ -127,7 +127,9 @@ $second-color: #f0f1f8;
   color: #7e7e7e;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 240px;
+  min-width: 240px;
+  float: left;
+  max-width: 240px;
 }
 .el-menu-font {
   font-weight: bold;

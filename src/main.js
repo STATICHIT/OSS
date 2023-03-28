@@ -8,6 +8,11 @@ import { createPinia } from 'pinia'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
 import axios from 'axios'
+// import VideoPlayer from 'vue-video-player'
+// import 'vue-video-player/src/custom-theme.css'
+// import 'video.js/dist/video-js.css'
+
+
 
 //全局组件
 import TitleTip from './components/TitleTip.vue'
@@ -18,6 +23,7 @@ const app = createApp(App)
 app.use(router)
 app.use(ElementPlus)
 app.use(createPinia())
+// app.use(VideoPlayer)
 
 app.component('title-tip',TitleTip)
 
