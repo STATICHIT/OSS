@@ -61,7 +61,7 @@ apiFun.newRAM = params => {
 
 //获取桶信息
 apiFun.bucket.get = (bucketName) => {
-  return http.get('/bucket/getBucketInfo？bucketName='+bucketName)
+  return http.get('/bucket/getBucketInfo?bucketName='+bucketName)
 }
 
 //获取桶列表
@@ -76,7 +76,7 @@ apiFun.bucket.create = params => {
 
 //删除一个桶
 apiFun.bucket.delete = (name) => {
-  return http.delete('/bucket/deleteBucket？bucketName='+name)
+  return http.delete('/bucket/deleteBucket?bucketName='+name)
 }
 
 

@@ -1,8 +1,6 @@
 <!-- 子页面 ———— 数据复制 -->
 <template>
-  <div>
-
-  </div>
+  <div></div>
 </template>
 
 <script>

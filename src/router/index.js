@@ -24,7 +24,7 @@ const routes = [
         // RAM用户登录模块
         path: '/ramLogin',
         component: () => import('../views/RamLogin.vue')
-      }
+      },
     ]
   },
   {
@@ -33,14 +33,9 @@ const routes = [
     component: () => import('../views/treetable_test.vue')
   },
   {
-    //菜单控件
-    path: '/menu',
-    component: () => import('../components/menu.vue')
-  },
-  {
     //头部控件
     path: '/header',
-    component: () => import('../components/header.vue')
+    component: () => import('../components/Header.vue')
   },
   {
     //主菜单
@@ -51,11 +46,6 @@ const routes = [
     //bucket菜单
     path: '/inMenu',
     component: () => import('../components/InMenu.vue')
-  },
-  {
-    //头部
-    path: '/header',
-    component: () => import('../components/Header.vue')
   },
   {
     //客户端底页
@@ -77,9 +67,15 @@ const routes = [
         meta: { title: 'Bucket 列表' },
       },
       {
+        //列表模板，列表都可以拿这个组件用，到时候统一更改样式
+        path: '/tableModel',
+        component: () => import('../components/TableModel.vue'),
+        meta: { title: 'Bucket 列表' },
+      },
+      {
         //数据复制
         path: '/dataCopy',
-        component: () => import('../views/subpages/dataCopy.vue'),
+        component: () => import('../views/subpages/DataCopy.vue'),
         meta: { title: '数据复制' },
       },
       {
@@ -108,10 +104,10 @@ const routes = [
         ]
       },
       {
-        //标签管理
-        path: '/labelManage',
-        component: () => import('../views/subpages/LabelManage.vue'),
-        meta: { title: '标签管理' },
+        //上传
+        path: '/up',
+        component: () => import('../components/Upload.vue'),
+        meta: { title: '上传' },
       },
       {
         //Bucket(包含子菜单及子内页)
@@ -157,6 +153,12 @@ const routes = [
             meta: { title: '图片处理' },
           },
           {
+            //视频处理
+            path: '/videoProcessing',
+            component: () => import('../views/bucketSubpage/VideoProcessing.vue'),
+            meta: { title: '视频处理' }
+          },
+          {
             //Bucket标签
             path: '/bucketLabel',
             component: () => import('../views/bucketSubpage/BucketLabel.vue'),
@@ -167,6 +169,17 @@ const routes = [
             path: '/deleteBucket',
             component: () => import('../views/bucketSubpage/DeleteBucket.vue'),
             meta: { title: '删除Bucket' },
+          },
+          {
+            //文件表格测试
+            path: '/fileTable',
+            component: () => import('../components/FileTable.vue'),
+            meta: { title: '文件表格' },
+          },
+          {
+            //操作测试页面
+            path: '/actionTest',
+            component: () => import('../views/ActionTest.vue')
           },
         ]
       }

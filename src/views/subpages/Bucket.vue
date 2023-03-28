@@ -4,7 +4,7 @@
     <div class="container">
       <div class="aside">
         <menuVue style="z-index: 7"></menuVue>
-        <router-view style="z-index: 60" @change="change"></router-view>
+        <router-view style="z-index: 60"></router-view>
       </div>
     </div>
   </div>
@@ -15,7 +15,6 @@ import menuVue from "../../components/InMenu.vue";
 import "../../style/base.scss";
 import { ElMessage } from "element-plus";
 import apiFun from "../../utils/api";
-
 </script>
 
 <style lang="scss" scoped>

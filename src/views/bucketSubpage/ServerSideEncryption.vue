@@ -27,9 +27,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { watch } from "vue";
-import { ElMessage } from 'element-plus';
+import { ref, watch } from "vue";
+import { ElMessage } from "element-plus";
 const title = "服务器端加密";
 const content =
   "服务器端加密机制为静态数据提供保护。适合于对于文件存储有高安全性或者合规性要求的应用场景。例如，深度学习样本文件的存储、在线协作类文档数据的存储。";
@@ -37,30 +36,32 @@ var isHide = ref("已开启"); //未开启 已开启两种状态
 var changing = ref(false);
 var radio = ref("1");
 
+// 设置按钮点击事件
 let change = () => {
   changing.value = true;
 };
 
+// 保存修改按钮点击事件
 let save = () => {
   changing.value = false;
-  if(radio.value == "1"){
+  if (radio.value == "1") {
     ElMessage.success("已开启服务端加密");
-  }else{
+  } else {
     ElMessage.success("已关闭服务端加密");
   }
-
 };
 
 // 对单选框进行监听
 watch(
-  () => radio.value, (radio, prevradio) => {
-  if (radio == "1") {
-    isHide.value = "已开启";
-  } else if (radio == "2") {
-    isHide.value = "未开启";
+  () => radio.value,
+  (radio, prevradio) => {
+    if (radio == "1") {
+      isHide.value = "已开启";
+    } else if (radio == "2") {
+      isHide.value = "未开启";
+    }
   }
-});
-
+);
 </script>
 <style lang="scss" scoped>
 .box {
