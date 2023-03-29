@@ -43,7 +43,8 @@
       </template>
       <template #default>
         <div class="content-box">
-          <div class="look-box" v-show="objectInfo.isImg == 1 || 2">
+          <!-- 预览 -->
+          <div class="look-box" v-show="objectInfo.isImg == 1 || 2 && fileData.capacity=='标准存储' && fileData.fileStatus==0">
             <img
               style="height: 40%; width: 100%"
               v-show="objectInfo.isImg == 1"
@@ -57,6 +58,7 @@
               autoplay
             ></video>
           </div>
+          <div class="look-box look-box-msg" v-show="fileData.capacity!='标准存储'||fileData.fileStatus!=0"><el-icon color="rgb(255,203,3)"><InfoFilled /></el-icon>该Object处于归档/冷归档存储/解冻中，无法对其进行预览和下载，请先对其进行解冻。</div>
           <div class="box-items">
             <span class="file-text">文件名</span>
             <div class="file-text-child">
@@ -118,15 +120,6 @@
               >
             </div>
           </div>
-          <!-- <div class="box-items">
-            <span class="file-text">文件ACL</span>
-            <div class="file-text-child">
-              <span>{{ fileData.objectAcl }}</span>
-              <el-button type="text" size="small" @click="innerVisible = true"
-                >设置读写权限</el-button
-              >
-            </div>
-          </div> -->
           <div class="box-items">
             <span class="file-text">存储类型</span>
             <span class="file-text-child">{{ fileData.capacity }}</span>
@@ -246,16 +239,12 @@
     <el-form-item class="update-capacity" label="存储类型">
       <el-radio-group  v-model="updateFileListData.capacity">
         <el-radio  label="标准存储" />
-        <el-radio label="低频访问存储" />
         <el-radio label="归档存储" />
-        <el-radio label="冷归档存储" />
       </el-radio-group>
     </el-form-item>
     <el-alert type="info" :closable="false" class="input-msg">
         <span v-show="updateFileListData.capacity=='标准存储'">标准：高可靠、高可用、高性能，数据会经常被访问到。</span>
-        <span v-show="updateFileListData.capacity=='低频访问存储'">低频访问：数据长期存储、较少访问，存储单价低于标准类型。</span>
         <span v-show="updateFileListData.capacity=='归档存储'">归档：数据长期存储、基本不访问，存储单价低于低频访问型。选择归档存储后，文件需要先解冻才能访问。</span>
-        <span v-show="updateFileListData.capacity=='冷归档存储'">冷归档：数据长期存储、基本不访问，存储单价低于归档访问型。</span>
         <span class="objectAcl-text">Bucket创建成功后,存储类型不支持变更</span>
       </el-alert>
     </el-form>
@@ -274,12 +263,13 @@
 
 <script setup>
 import { Search, Tickets } from "@element-plus/icons-vue";
-import { computed, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import FileTable from "../../components/FileTable.vue";
 import TitleTip from "../../components/TitleTip.vue";
 import router from "../../router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import AddLabel from "../../components/action/addLabel.vue";
+import { useRoute } from "vue-router";
 
 var index = ref(); //获取的文件下标
 var fileData = reactive({}); //选择的文件的普通数据
@@ -313,8 +303,10 @@ const fileStatus = computed(()=>{
         return '正常';
         case 1:
         return '解冻中';
-        case 0:
-        return '已解冻';
+        case 2:
+        return '归档';
+        case 3:
+        return '已经归档';
     }
 })
 const deleteFile = (index) => {//删除文件夹
@@ -371,19 +363,6 @@ const onCopy = () => {
   });
 };
 
-const onPlay = (ev) => {
-  console.log("播放");
-};
-const onPause = (ev) => {
-  console.log(ev, "暂停");
-};
-
-const onTimeupdate = (ev) => {
-  console.log(ev, "时间更新");
-};
-const onCanplay = (ev) => {
-  console.log(ev, "可以播放");
-};
 
 const state = reactive({
   title: "文件列表",
@@ -393,6 +372,7 @@ const state = reactive({
   fileList: [
     /* 文件数据列表 */
     {
+      id:1,
       name: "sunsan",
       size: 32.3,
       capacity: "标准存储",
@@ -402,15 +382,17 @@ const state = reactive({
       fileStatus:0,
     },
     {
+      id:2,
       name: "img01.txt",
       size: 32.3,
       capacity: "标准存储",
       lastUpdateTime: "2021年3月21日",
       isFolder: false,
       objectAcl: "私有",
-      fileStatus:0,
+      fileStatus:1,
     },
     {
+      id:3,
       name: "img01.ppt",
       size: 32.3,
       capacity: "标准存储",
@@ -420,6 +402,7 @@ const state = reactive({
       fileStatus:0,
     },
     {
+      id:4,
       name: "img01.pdf",
       size: 32.3,
       capacity: "标准存储",
@@ -429,6 +412,7 @@ const state = reactive({
       fileStatus:0,
     },
     {
+      id:5,
       name: "img01.docx",
       size: 32.3,
       capacity: "标准存储",
@@ -438,6 +422,7 @@ const state = reactive({
       fileStatus:0,
     },
     {
+      id:6,
       name: "img01.xls",
       size: 32.3,
       capacity: "标准存储",
@@ -447,6 +432,7 @@ const state = reactive({
       fileStatus:0,
     },
     {
+      id:7,
       name: "img01.rar",
       size: 32.3,
       capacity: "标准存储",
@@ -456,6 +442,7 @@ const state = reactive({
       fileStatus:0,
     },
     {
+      id:8,
       name: "img01.mp4",
       size: 32.3,
       capacity: "标准存储",
@@ -470,11 +457,14 @@ const state = reactive({
   },
 });
 
+
+
 const goToFile = (index) => {
   /* 打开文件或文件夹 */
   fileData = state.fileList[index];
   if (fileData.isFolder == true) {
-    router.push({ path: "/fileList", query: { name: fileData.name } });
+    /* 当点击对象为文件时跳转进入文件夹，设置路由参数为点击文件夹的id */
+    router.push({ path: "/fileList", query: { parentObjectId: fileData.id, parentObjectName: fileData.name } });
   } else {
     drawer.value = true;
   }
@@ -490,7 +480,11 @@ const goToFile = (index) => {
   padding-left: 15px;
   box-sizing: border-box;
 }
-
+.look-box-msg{
+  background-color:#fff7d1;
+  text-align: center;
+  padding: 30px 10px;
+}
 .update-capacity{
   display:flex;
   flex-direction: row;

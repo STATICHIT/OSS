@@ -11,6 +11,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
+
       <el-table-column
         class-name="el-table-name"
         prop="name"
@@ -95,11 +96,12 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import apiFun from "../utils/api";
 import FileIcon from "./FileIcon.vue";
 import { computed } from "vue";
 import router from "../router";
+import { useRoute } from "vue-router";
 
 const prop = defineProps({
   //文件对象列表
@@ -107,6 +109,9 @@ const prop = defineProps({
     type:Array,
   default:()=>[],
 },
+// parentObjectId:{
+//   type:Number,
+// },
 })
 const multipleSelection = reactive([])
 const multipleTableRef = ref()
@@ -122,7 +127,6 @@ const changePage = (val) => {
 };
 const handleSelectionChange = (val) => {
   multipleSelection.value = val
-  console.log()
 }
 const toggleSelection = (rows) => {
   if (rows) {
@@ -134,6 +138,26 @@ const toggleSelection = (rows) => {
   }
 }
 
+onMounted(()=>{
+  getPre()
+})
+
+const route = useRoute()
+const parentObjectId = route.query['id']//路由参数获取objectId
+const parentObjectName = route.query['name']
+
+/* 对象列表加载 */
+function getPre(){
+  /* 如果没有父级文件夹 */
+  if(parentObjectId==null){
+
+  }
+  /* 如果有父级文件夹 */
+  else{
+    prop.tableData.shift({name:parentObjectName})
+    console.log(prop.tableData);
+  }
+}
 
 </script>
 <style scoped>

@@ -42,16 +42,12 @@
     <el-form-item label="存储类型" prop="storageLevel">
       <el-radio-group  v-model="state.newBucket.storageLevel">
         <el-radio  label="标准存储" />
-        <el-radio label="低频访问存储" />
         <el-radio label="归档存储" />
-        <el-radio label="冷归档存储" />
       </el-radio-group>
     </el-form-item>
     <el-alert type="info" :closable="false" class="input-msg">
         <span v-show="state.newBucket.storageLevel=='标准存储'">标准：高可靠、高可用、高性能，数据会经常被访问到。</span>
-        <span v-show="state.newBucket.storageLevel=='低频访问存储'">低频访问：数据长期存储、较少访问，存储单价低于标准类型。</span>
         <span v-show="state.newBucket.storageLevel=='归档存储'">归档：数据长期存储、基本不访问，存储单价低于低频访问型。选择归档存储后，文件需要先解冻才能访问。</span>
-        <span v-show="state.newBucket.storageLevel=='冷归档存储'">冷归档：数据长期存储、基本不访问，存储单价低于归档访问型。</span>
         <span class="bucketAcl-text">Bucket创建成功后,存储类型不支持变更</span>
       </el-alert>
     <el-form-item label="版本控制" prop="versionControl">
