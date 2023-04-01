@@ -1,15 +1,15 @@
 <!--
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-03-19 20:46:34
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-03-23 20:34:38
+ * @LastEditors: Fleurxxx 984209872@qq.com
+ * @LastEditTime: 2023-03-26 09:36:05
  * @FilePath: \OSS\src\views\subpages\CreateUser.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div class="main">
-    <div class="icon-return">
-      <el-icon size="30" @click="back"><Back /></el-icon>
+    <div class="icon-return" >
+      <el-icon size="30" @click="back"><Back /></el-icon> 
     </div>
     <div class="info">
       <h1 class="info-name">创建用户</h1>
@@ -25,7 +25,7 @@
             class="con-form"
         >
             <el-form-item label="登录名称" prop="name">
-                <el-input v-model="formlabel.name" style="width: 350px;">
+                <el-input v-model="formlabel.loginame" style="width: 350px;">
                   <template #suffix>
                     <span style="border: none;">@8475738355324.cloudcan.com</span>
                   </template>
@@ -34,21 +34,21 @@
             <el-form-item label="显示名称" prop="name">
                 <el-input v-model="formlabel.name" style="width: 350px;" ></el-input>
             </el-form-item>
-            <el-form-item label="标签"  prop="">
+            <!-- <el-form-item label="标签"  prop="">
               <p>未绑定标签</p>{{"\xa0\xa0"}}
               <el-icon  @click="edit" style="cursor:pointer;"><EditPen /></el-icon>
-            </el-form-item>
-            <p class="con-title">设置密码</p>
+            </el-form-item> -->
+            <p class="con-title" >设置密码</p>
             <div class="mb-2 flex items-center text-sm ">
-              <el-radio-group v-model="radio" class="ml-4 radio-container">
+              <!-- <el-radio-group v-model="radio" class="ml-4 radio-container">
                 <el-radio label="1" size="large">自动生成密码</el-radio>
                 <el-radio label="2" size="large">自定义密码</el-radio>
-              </el-radio-group>
+              </el-radio-group> -->
             </div>
-            <el-form-item label=""  prop="" style="padding-right: 75%">
-                <el-input v-model="formlabel.password"></el-input>
+            <el-form-item label=""  prop="password" class="form-input" >
+                <el-input v-model="formlabel.password" style="width: 250px;"></el-input>
             </el-form-item><br/>
-            <el-form-item style="padding: 12% 75% 0 0">
+            <el-form-item  class="form-button">
                 <el-button type="primary" @click="submit" style="width: 80px;">确认</el-button>
                 <el-button @click="reset" style="width: 80px;">返回</el-button>
             </el-form-item>
@@ -90,6 +90,7 @@ const data = reactive({
 })
 let formlabelref = ref()
 let formlabel = ref({
+    loginame:'',
     name: '',
     password: '',
 })
@@ -104,7 +105,7 @@ let rules= ref({
     password: [
     {
         required: true,
-        message: 'Please input password',
+        message: '该项不能为空',
         trigger: 'blur',
     },
     ],
@@ -114,6 +115,7 @@ const radio = ref('1') //单选框
 const submit = () =>{
   console.log("确认")
   ElMessage.success("确认成功")
+  history.go(-1) 
 }
 //返回
 const reset = () =>{
@@ -152,6 +154,7 @@ defineExpose({
     position: relative;
     top:28px;
     cursor:pointer;
+    z-index:999;
   }
   .info{
       position: relative;
@@ -174,22 +177,33 @@ defineExpose({
   .content{
     position: relative;
     .con-title{
-      padding-right: 88%;
+      padding-right: 86%;
       padding-bottom: 1%;
       padding-top: 1%;
       font-size:18px;
     }
     .con-form{
-      // width: 60%;
       margin:0 auto;
       float: left;
-      // padding-right: 30%;
+      .form-input{
+        padding-right: 65%;
+       
+      }
+      .form-button{
+        // $width: 750px;
+        // height: calc(100% - #{$width});
+        // height:calc(100vh-123px);
+        position: relative;
+        padding: 30% 75% 0 0; 
+      }
     }
     .radio-container {
       display: flex;
       flex-direction: column;
       align-items: flex-start; /* 控制每个el-radio在垂直方向上的对齐方式 */
       padding-left: 3%;
+      
+
     }
     
   }

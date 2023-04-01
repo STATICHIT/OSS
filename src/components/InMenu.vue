@@ -96,4 +96,5 @@ $second-color: #f0f1f8;
   font-weight: bold;
   color: #4e4e4e;
 }
+
 </style>

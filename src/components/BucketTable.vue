@@ -6,6 +6,7 @@
       class="bucketTable"
       highlight-current-row:true
       :header-row-class-name="'table-header-row'"
+      style="width:100%"
       size="large"
     >
       <el-table-column class-name="el-table-name" prop="name" label="Bucket名称" width="190" >
@@ -131,6 +132,7 @@ const changePage = (val) => {
 </script>
 <style scoped>
 .bucketTable {
+  width: 1350px;
   margin-left: 10px;
 }
 /* .bucketTable:first-line{

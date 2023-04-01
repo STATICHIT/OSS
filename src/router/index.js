@@ -104,10 +104,10 @@ const routes = [
         ]
       },
       {
-        //标签管理
-        path: '/labelManage',
-        component: () => import('../views/subpages/LabelManage.vue'),
-        meta: { title: '标签管理' },
+        //上传
+        path: '/up',
+        component: () => import('../components/Upload.vue'),
+        meta: { title: '上传' },
       },
       {
         //Bucket(包含子菜单及子内页)
