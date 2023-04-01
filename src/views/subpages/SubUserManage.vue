@@ -9,7 +9,7 @@
     <div class="manage-header">
         <div class="manage">
           <el-button size="mini"  type="goon" @click="createUser"><el-icon><Plus /></el-icon>{{"\xa0"}}创建用户</el-button>
-          <el-button type="" @click="deleteUser"><el-icon><Delete /></el-icon>{{"\xa0"}}删除用户</el-button>
+          <!-- <el-button type="" @click="deleteUser"><el-icon><Delete /></el-icon>{{"\xa0"}}删除用户</el-button> -->
         </div>
          <!-- 搜索模块-->
         <div class="search">
@@ -37,30 +37,33 @@
                 :tree-props="{ children: 'children', hasChildren: 'haschildren' }"
                 >
               <!-- 复选框 -->
-              <el-table-column type="selection" width="55" :selectable="selected"></el-table-column>
-              <el-table-column align="center" prop="" label="用户登录名称/显示名称" width="190">
+              <!-- <el-table-column type="selection" width="55" :selectable="selected"></el-table-column> -->
+              <el-table-column align="left" prop="" label="用户登录名称/显示名称" width="250">
                   <template #default="scope">
                       <!-- <router-link to="/users/subUser" style="color:#2177b8;">{{ scope.row.userName }}</router-link> -->
+                      <p class="buttonText" href="#/users/subUser" target="_blank">
+                          {{ scope.row.userid }}
+                      </p>
                       <p class="buttonText" href="#/users/subUser" target="_blank">
                           {{ scope.row.username }}
                       </p>
                   </template>
               </el-table-column>
-              <el-table-column align="center" prop="beizhu" label="备注" width="120">
+              <el-table-column align="left" prop="beizhu" label="备注" width="200">
               </el-table-column>
-              <el-table-column align="center" prop="type" label="同步类型" width="200">
+              <el-table-column align="left" prop="type" label="同步类型" width="200">
               </el-table-column>
-              <!-- <el-table-column align="center" prop="" label="标签" width="200">
+              <!-- <el-table-column align="left" prop="" label="标签" width="200">
                 <a><el-icon><PriceTag /></el-icon></a>
               </el-table-column> -->
-              <el-table-column align="center" prop="updateTime" label="最后登录时间" width="150">
+              <el-table-column align="left" prop="updateTime" label="最后登录时间" width="200">
               </el-table-column>
-              <el-table-column  align="center" prop="createTime" label="创建时间" width="150">
+              <el-table-column  align="left" prop="createTime" label="创建时间" width="200">
               </el-table-column>
               <!-- 自定义列 -->
-              <el-table-column align="center" label="操作" >
+              <el-table-column align="left" label="操作" >
                   <template #default="scope" >
-                      <a class="buttonText" href="javascript:void(0)" target="_blank" style="color:brown;" @click.prevent="handleDelete(scope.row)">
+                      <a class="buttonText"  target="_blank" style="color:red;" @click.prevent="handleDelete(scope.row)">
                           删除
                       </a>
                       <!-- <el-button style="padding-right: 15px" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button> -->
@@ -77,7 +80,6 @@
                         @current-change="changePage"
                       />
         </div>
-        
         <div>
           <el-dialog
                     v-model="data.dialogVisible"
@@ -104,11 +106,18 @@
                   <p>您可以到回收站彻底删除或回复用户身份,但以上已删除的信息不可恢复。</p>
                 </div><br/>
                 <p style="line-height:0.5;">如需删除该用户,请输入用户名称。</p><br/>
-                <el-input
-                  style="width: 95%"
-                  v-model="input"
-                  placeholder="Please input"
-                />
+                <el-form
+                        label-width="100px"
+                        ref="formlabelref"
+                        :rules="rules"
+                        :inline="true"
+                        :model="formlabel"
+                        class="con-form"
+                    >
+                    <el-form-item prop="id" style="width: 100%">
+                      <el-input style="width: 95%" v-model="formlabel.input" placeholder="请输入用户名称"/>
+                    </el-form-item>  
+                </el-form>
               </div>
               <template #footer>
                 <span class="dialog-footer">
@@ -118,7 +127,6 @@
               </template>
             </el-dialog>
         </div>
-        
     </div>
     <div id="next-page" style="visibility:hidden;" v-if="boolean2===false">
       <router-view></router-view>
@@ -169,6 +177,19 @@ const data = reactive({
   total: 200, // 总条数
   currentPage: 1, // 当前页
   pageSize: 8,
+})
+const disabled = ref(false)
+let rules= ref({
+    id: [
+    {
+        required: true,
+        message: '该项不能为空',
+        trigger: 'blur',
+    }
+    ],
+}) 
+let formlabel = ref({
+    input:'',
 })
 let boolean1 = ref(true)
 let boolean2 = ref(false)
@@ -313,6 +334,7 @@ a:hover{
         }
         .search{
           // float: left;
+          padding-left: 20%;
           .frame{
             .el-form-item {
               .el-input {
@@ -347,6 +369,9 @@ a:hover{
   }
   .innerBox{
     padding-top: 20px;
+  }
+  .con-form{
+    padding-left: 4%;
   }
   .el-dialog{
     .innerIcon{

@@ -122,7 +122,6 @@ function confirmClick() {
     })
     .catch(() => {});
 }
-
 const state = reactive({
   searchText: "",
   title: "Bucket列表",

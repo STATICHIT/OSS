@@ -6,6 +6,7 @@
       class="bucketTable"
       highlight-current-row:true
       :header-row-class-name="'table-header-row'"
+      style="width:100%"
       size="large"
     >
       <el-table-column class-name="el-table-name" prop="name" label="Bucket名称" width="190" >
@@ -19,7 +20,7 @@
       <el-table-column prop="encryption" label="加密存储" />
       <el-table-column prop="watermark" label="图片水印" />
       <el-table-column prop="bucketAcl" label="读写权限ACL" />
-      <el-table-column prop="updateTime" label="最后更新时间" width="200px"/>
+      <el-table-column prop="updateTime" label="最后更新时间" />
     </el-table>
     <el-pagination
       background
@@ -35,8 +36,7 @@
 <script setup>
 import { reactive } from "vue";
 import apiFun from "../utils/api";
-import Mock from "mockjs"
-
+import Mock from "mockjs";
 
 
 const state = reactive({
@@ -137,6 +137,7 @@ const changePage = (val) => {
 </script>
 <style scoped>
 .bucketTable {
+  width: 1350px;
   margin-left: 10px;
 }
 /* .bucketTable:first-line{

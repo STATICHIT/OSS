@@ -1,3 +1,11 @@
+/*
+ * @Author: Fleurxxx 984209872@qq.com
+ * @Date: 2023-03-24 17:42:59
+ * @LastEditors: Fleurxxx 984209872@qq.com
+ * @LastEditTime: 2023-03-25 22:21:41
+ * @FilePath: \OSS\mock\index.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 // 导入 mockjs ($ npm install mockjs)
 import Mock from 'mockjs'
 
@@ -10,7 +18,8 @@ import Mock from 'mockjs'
 let data1 = Mock.mock({
   "data|10": [ //生成10条数据 数组
     {
-      "id|+1": 1,//生成用户id，自增1
+      "userid":"fleur@135370023988.cloudcan.com",
+      "id|+1": 5370023988,//生成用户id，自增1
       "image": "@image('200x200','red','#fff','avatar')",
       "phone": /^1(5|3|7|8)[0-9]{9}$/,
       "type":"手动创建",
