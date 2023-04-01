@@ -7,10 +7,13 @@
       class="table"
       :data="tableData"
       size="large"
-      ref="multipleTable"
+
+      ref="multipleTableRef"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column type="selection"
+       width="55">
+       </el-table-column>
 
       <el-table-column
         class-name="el-table-name"
@@ -22,7 +25,7 @@
           <FileIcon :fileName="scope.row.name" :isFolder="scope.row.isFolder" @click="$emit('toFile',scope.$index)"></FileIcon>
         </template>
       </el-table-column>
-      <el-table-column prop="size" label="文件大小" />
+      <el-table-column prop="size" label="文件大小"  :formatter="formatSize" />
       <el-table-column prop="capacity" label="存储类型" />
       <el-table-column prop="lastUpdateTime" label="更新时间" />
       <!-- 操作 -->
@@ -32,19 +35,18 @@
         <template #default="scope">
           <!-- 加其他操作按钮的插槽 -->
           <el-button
-            v-if="!tableData.isFolder"
             @click="$emit('handleMsg',scope.$index)"
             type="text"
-            style="margin-left: -5%"
             size="small"
             width="250px"
+            v-show="!scope.row.isFolder"
             >详情</el-button
           >
           <el-button
-          v-if="!tableData.isFolder"
             @click="$emit('deleteFile',scope.$index)"
             text
             type="danger"
+            style="margin-left: -2px;"
             size="small"
             >彻底删除</el-button
           >
@@ -53,32 +55,31 @@
     </el-table>
     <div style="display: flex;flex-direction: row;">
     <div class="btn-list">
-      <el-button size="large">下载</el-button>
+      <el-button size="large" :disabled="btnDisabled">下载</el-button>
       <el-popconfirm
     width="220"
     confirm-button-text="确认"
     cancel-button-text="取消"
-    :icon="InfoFilled"
     icon-color="#626AEF"
     title="确认全部解冻吗？"
+    @confirm="$emit('getThaw',multipleSelection.value)"
   >
     <template #reference>
-      <el-button size="large" @click="$emit('getThaw')">解冻</el-button>
+      <el-button :disabled="btnDisabled" size="large">解冻</el-button>
     </template>
   </el-popconfirm>
-      <el-button size="large" @click="$emit('addLabel')">标签</el-button>
-      <el-button size="large" @click="$emit('updateCapacity')">修改存储类型</el-button>
-      <el-button size="large" @click="$emit('showUpdateAcl')">设置读写权限</el-button>
+      <el-button size="large" :disabled="btnDisabled" @click="$emit('addLabel')">标签</el-button>
+      <el-button size="large" :disabled="btnDisabled" @click="$emit('showUpdateAcl')">设置读写权限</el-button>
       <el-popconfirm
     width="220"
     confirm-button-text="确认"
     cancel-button-text="取消"
-    :icon="InfoFilled"
     icon-color="#626AEF"
     title="确认全部删除吗？"
+    @confirm="$emit('deleteMoreFile',multipleSelection.value)"
   >
     <template #reference>
-      <el-button size="large" @click="$emit('deleteMoreFile')">彻底删除</el-button>
+      <el-button size="large" :disabled="btnDisabledDel" >彻底删除</el-button>
     </template>
   </el-popconfirm>
     </div>
@@ -96,7 +97,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import apiFun from "../utils/api";
 import FileIcon from "./FileIcon.vue";
 import { computed } from "vue";
@@ -109,25 +110,59 @@ const prop = defineProps({
     type:Array,
   default:()=>[],
 },
-// parentObjectId:{
-//   type:Number,
-// },
+  state:{
+    type:Object,
+
+  }
 })
+
+
+/* 文件大小数据格式化 */
+function formatSize(row) {
+  const size = row.size
+  if (size === null) {
+    return "未知";
+  } else {
+    return `${size}KB`;
+  }
+}
+
 const multipleSelection = reactive([])
 const multipleTableRef = ref()
 
-const state = reactive({
-  total: 200, // 总条数
-  currentPage: 1, // 当前页
-  pageSize: 8, //一页的数据量
-});
-
 const changePage = (val) => {
-  state.currentPage = val;
+  $emit('getPage')
+  prop.state.currentPage = val;
 };
 const handleSelectionChange = (val) => {
   multipleSelection.value = val
 }
+/* 禁用按钮 */
+const btnDisabled = computed(()=>{
+  if(!multipleSelection.value){
+    return true;
+  }else{
+   if(multipleSelection.value.length==0){
+     return true
+   }else{
+    const hasFolder = multipleSelection.value.some((item) => {
+      return item.isFolder === true;
+    })
+    return hasFolder;
+   }
+  }
+})
+/* 禁用删除按钮 */
+const btnDisabledDel = computed(()=>{
+  if(!multipleSelection.value){
+    return true;
+  }else{
+   if(multipleSelection.value.length==0){
+     return true
+   }else
+   return false
+  }
+})
 const toggleSelection = (rows) => {
   if (rows) {
     rows.forEach((row) => {
@@ -138,32 +173,14 @@ const toggleSelection = (rows) => {
   }
 }
 
-onMounted(()=>{
-  getPre()
-})
-
-const route = useRoute()
-const parentObjectId = route.query['id']//路由参数获取objectId
-const parentObjectName = route.query['name']
-
-/* 对象列表加载 */
-function getPre(){
-  /* 如果没有父级文件夹 */
-  if(parentObjectId==null){
-
-  }
-  /* 如果有父级文件夹 */
-  else{
-    prop.tableData.shift({name:parentObjectName})
-    console.log(prop.tableData);
-  }
-}
-
 </script>
 <style scoped>
 
 ::v-deep .table th {
   background-color: #eff3f8;
+}
+::v-deep.table td{
+  text-align: left;
 }
 .option-class {
   display: flex;

@@ -65,8 +65,8 @@ apiFun.bucket.get = (bucketName) => {
 }
 
 //获取桶列表
-apiFun.bucket.getList = () => {
-  return http.get('/bucket/listBuckets')
+apiFun.bucket.getList = (pageNum,size,key) => {
+  return http.get('/bucket/listBuckets?pageNum='+pageNum+'&size='+size+'&key='+key)
 }
 
 //创建一个桶
@@ -75,14 +75,9 @@ apiFun.bucket.create = params => {
 }
 
 //删除一个桶
-apiFun.bucket.delete = (name) => {
-  return http.delete('/bucket/deleteBucket?bucketName='+name)
+apiFun.bucket.delete = (bucketName) => {
+  return http.delete('/bucket/deleteBucket?bucketName='+bucketName)
 }
-
-
-/**
- * 收藏接口 
- * */
 
 //用户收藏一个桶
 apiFun.bucket.collect = (name) =>{

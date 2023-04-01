@@ -6,8 +6,6 @@
 link
 type="primary"
 class="file-name"
-
-@click="toFile"
       >{{ fileName }}</el-button
     >
   </div>
@@ -25,20 +23,17 @@ const prop = defineProps({
   },
   //是否为文件夹，1为是，0为否
   isFolder:{
-    type:Number,
+    type:Boolean,
     default:false
   },
 });
 const fileIcon = computed(() => {
   let icon = "";
-  console.log(prop.isFolder)
   if(prop.isFolder==true){
     icon="src/assets/file-icon/folder.png";
   }
   else {
-    console.log(111)
   const fileAfter = prop.fileName.split(".").pop();
-  console.log(fileAfter)
   switch (fileAfter) {
     case "pdf":
       icon = "src/assets/file-icon/pdf.png";
@@ -84,7 +79,6 @@ const fileIcon = computed(() => {
 return icon;
 });
 
-console.log(fileIcon.value);
 
 </script>
 
@@ -93,7 +87,8 @@ console.log(fileIcon.value);
   display: flex;
   flex-direction: row;
   justify-content: center;
-  height:35px
+  height:35px;
+  width:fit-content
 }
 
 .file-name{

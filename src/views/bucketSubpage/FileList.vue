@@ -6,6 +6,15 @@
       content="对象（Object）是OSS存储数据的基本单元，也被称为OSS的文件。和传统的文件系统不同，Object没有文件目录层级结构的关系。"
     ></TitleTip>
     <div class="btn-list">
+      <el-button
+        v-show="parentObjectId != null"
+        size="large"
+        style="margin-left: "
+        @click="returnParent"
+        ><el-icon><ArrowLeftBold /></el-icon>&nbsp; /{{
+          parentObjectName
+        }}/</el-button
+      >
       <el-button type="primary" size="large">上传文件</el-button>
       <el-button type="warning" size="large" @click="newFileDialog = true"
         >新建目录</el-button
@@ -21,15 +30,19 @@
     </div>
     <FileTable
       :table-data="state.fileList"
+      @deleteMoreFile="deleteMoreFile"
       @toFile="goToFile"
       @handleMsg="goToFile"
       @deleteFile="deleteFile"
+      @getThaw="getThaw"
       class="fileTable"
-      @updateCapacity = "updateCapacityDialog = true"
-      @showUpdateAcl = "innerVisible = true"
-      @addLabel = "showLabelVue = true"
+      @updateCapacity="updateCapacityDialog = true"
+      @showUpdateAcl="innerVisible = true"
+      @addLabel="showLabelVue = true"
+      :state="page"
+      @getPage="getPage"
     ></FileTable>
-    
+
     <!-- 文件详情对话框 -->
     <el-dialog
       v-model="drawer"
@@ -44,7 +57,13 @@
       <template #default>
         <div class="content-box">
           <!-- 预览 -->
-          <div class="look-box" v-show="objectInfo.isImg == 1 || 2 && fileData.capacity=='标准存储' && fileData.fileStatus==0">
+          <div
+            class="look-box"
+            v-show="
+              objectInfo.isImg == 1 ||
+              (2 && fileData.capacity == '标准存储' && fileData.fileStatus == 0)
+            "
+          >
             <img
               style="height: 40%; width: 100%"
               v-show="objectInfo.isImg == 1"
@@ -58,7 +77,13 @@
               autoplay
             ></video>
           </div>
-          <div class="look-box look-box-msg" v-show="fileData.capacity!='标准存储'||fileData.fileStatus!=0"><el-icon color="rgb(255,203,3)"><InfoFilled /></el-icon>该Object处于归档/冷归档存储/解冻中，无法对其进行预览和下载，请先对其进行解冻。</div>
+          <div
+            class="look-box look-box-msg"
+            v-show="fileData.capacity != '标准存储' || fileData.fileStatus != 0"
+          >
+            <el-icon color="rgb(255,203,3)"><InfoFilled /></el-icon
+            >该Object处于归档/冷归档存储/解冻中，无法对其进行预览和下载，请先对其进行解冻。
+          </div>
           <div class="box-items">
             <span class="file-text">文件名</span>
             <div class="file-text-child">
@@ -87,7 +112,9 @@
           <div class="box-items">
             <span class="file-text">状态</span>
             <div class="file-text-child">
-              <span class="file-text-child" style="color: #0064c8;">{{ fileStatus }}</span>
+              <span class="file-text-child" style="color: #0064c8">{{
+                fileStatus
+              }}</span>
             </div>
           </div>
           <div class="box-items">
@@ -122,7 +149,24 @@
           </div>
           <div class="box-items">
             <span class="file-text">存储类型</span>
-            <span class="file-text-child">{{ fileData.capacity }}</span>
+            <div class="file-text-child">
+              <span>{{ fileData.capacity }}</span>
+              <!-- 当对象不为正常状态时，不能设置存储类型，只能解冻 -->
+              <el-button
+                v-show="fileData.fileStatus == 0"
+                type="text"
+                size="small"
+                @click="updateCapacityDialog = true"
+                >设置存储类型</el-button
+              >
+              <el-button
+                v-show="fileData.fileStatus == 3 && fileData.capacity != 1"
+                type="text"
+                size="small"
+                @click="updateCapacityDialog = true"
+                >解冻</el-button
+              >
+            </div>
           </div>
           <div class="box-items">
             <span class="file-text">更新时间</span>
@@ -135,55 +179,50 @@
             }}</span>
           </div>
         </div>
-        
       </template>
     </el-dialog>
     <!-- 设置读写权限 -->
     <el-dialog
-          v-model="innerVisible"
-          width="45%"
-          title="设置读写权限"
-          append-to-body
+      v-model="innerVisible"
+      width="60%"
+      title="设置读写权限"
+      append-to-body
+    >
+      <el-form-item class="objectAcl-form" label="读写权限" prop="objectAcl">
+        <el-radio-group style="margin-left: 30px" v-model="fileData.objectAcl">
+          <el-radio border label="继承Bucket" />
+          <el-radio border label="私有" />
+          <el-radio border label="RAM读" />
+          <el-radio border label="公共读" />
+          <el-radio border label="RAM读写" />
+          <el-radio border label="公共读写" />
+        </el-radio-group>
+      </el-form-item>
+      <el-alert type="info" :closable="false" class="input-msg-acl el-alert">
+        <p v-show="fileData.objectAcl == '继承Bucket'">
+          继承 Bucket：单个文件的读写权限以 Bucket 的读写权限为准。
+        </p>
+        <p v-show="fileData.objectAcl == '私有'">
+          私有：对文件的所有访问操作需要进行身份验证。
+        </p>
+        <p v-show="fileData.objectAcl == '公共读'" class="objectAcl-text">
+          公共读：对文件写操作需要进行身份验证；可以对文件进行匿名读。
+        </p>
+        <span v-show="fileData.objectAcl == '公共读写'" class="objectAcl-text"
+          >公共读写：所有人都可以对文件进行读写操作。</span
         >
-          <el-form-item
-            class="objectAcl-form"
-            label="读写权限"
-            prop="objectAcl"
+        <span v-show="fileData.objectAcl=='RAM读写'" class="objectAcl-text">RAM读写:用户和子用户都可以对文件进行读写操作。</span>
+        <span v-show="fileData.objectAcl=='RAM读'" class="bucketAcl-text">RAM读:只有该Bucket的拥有者与其子用户可以对文件进行写操作，任何人都可以对该文件进行读操作。</span>
+      </el-alert>
+      <template #footer>
+        <div style="flex: auto; justify-content: center">
+          <el-button size="large" type="primary" @click="confirmClickAcl"
+            >确定</el-button
           >
-            <el-radio-group
-              style="margin-left: 30px"
-              v-model="fileData.objectAcl"
-            >
-              <el-radio border label="继承Bucket" />
-              <el-radio border label="私有" />
-              <el-radio border label="公共读" />
-              <el-radio border label="公共读写" />
-            </el-radio-group>
-          </el-form-item>
-          <el-alert type="info" :closable="false" class="input-msg-acl el-alert">
-            <p v-show="fileData.objectAcl == '继承Bucket'">
-              继承 Bucket：单个文件的读写权限以 Bucket 的读写权限为准。
-            </p>
-            <p v-show="fileData.objectAcl == '私有'">
-              私有：对文件的所有访问操作需要进行身份验证。
-            </p>
-            <p v-show="fileData.objectAcl == '公共读'" class="objectAcl-text">
-              公共读：对文件写操作需要进行身份验证；可以对文件进行匿名读。
-            </p>
-            <span
-              v-show="fileData.objectAcl == '公共读写'"
-              class="objectAcl-text"
-              >公共读写：所有人都可以对文件进行读写操作。</span
-            >
-          </el-alert>
-          <template #footer>
-      <div style="flex: auto;justify-content: center;">
-        <el-button size="large" type="primary" @click="confirmClickAcl">确定</el-button>
-        <el-button size="large" @click="cancelClickAcl">取消</el-button>
-      </div>
-    </template>
-          </el-dialog
-        >
+          <el-button size="large" @click="cancelClickAcl">取消</el-button>
+        </div>
+      </template>
+    </el-dialog>
     <!-- 新建目录对话框 -->
     <el-dialog
       v-model="newFileDialog"
@@ -210,11 +249,13 @@
         </div>
       </el-form-item>
       <template #footer>
-      <div style="flex: auto;justify-content: center;">
-        <el-button size="large" type="primary" @click="confirmClick">确定</el-button>
-        <el-button size="large" @click="cancelClick">取消</el-button>
-      </div>
-    </template>
+        <div style="flex: auto; justify-content: center">
+          <el-button size="large" type="primary" @click="confirmClick"
+            >确定</el-button
+          >
+          <el-button size="large" @click="cancelClick">取消</el-button>
+        </div>
+      </template>
     </el-dialog>
     <!-- 修改存储类型对话框 -->
     <el-dialog
@@ -223,41 +264,59 @@
       title="修改存储类型"
       append-to-body
     >
-    <template #default>
+      <template #default>
         <el-form
-    label-width="120px"
-    class="demo-ruleForm"
-    size="large"
-    status-icon
-    label-position="left"
-    style="font-weight: bold;"
-  >
-  <el-form-item class="update-capacity" style="white-space:nowrap" label="保留用户自定义元数据">
-      <el-switch v-model="updateFileListData.reserveData"/>
-    </el-form-item>
+          label-width="120px"
+          class="demo-ruleForm"
+          size="large"
+          status-icon
+          label-position="left"
+          style="font-weight: bold"
+        >
+          <el-form-item
+            class="update-capacity"
+            style="white-space: nowrap"
+            label="保留用户自定义元数据"
+          >
+            <el-switch v-model="updateFileListData.reserveData" />
+          </el-form-item>
 
-    <el-form-item class="update-capacity" label="存储类型">
-      <el-radio-group  v-model="updateFileListData.capacity">
-        <el-radio  label="标准存储" />
-        <el-radio label="归档存储" />
-      </el-radio-group>
-    </el-form-item>
-    <el-alert type="info" :closable="false" class="input-msg">
-        <span v-show="updateFileListData.capacity=='标准存储'">标准：高可靠、高可用、高性能，数据会经常被访问到。</span>
-        <span v-show="updateFileListData.capacity=='归档存储'">归档：数据长期存储、基本不访问，存储单价低于低频访问型。选择归档存储后，文件需要先解冻才能访问。</span>
-        <span class="objectAcl-text">Bucket创建成功后,存储类型不支持变更</span>
-      </el-alert>
-    </el-form>
-    </template>
+          <el-form-item class="update-capacity" label="存储类型">
+            <el-radio-group v-model="updateFileListData.capacity">
+              <el-radio label="标准存储" />
+              <el-radio label="归档存储" />
+            </el-radio-group>
+          </el-form-item>
+          <el-alert type="info" :closable="false" class="input-msg">
+            <span v-show="updateFileListData.capacity == '标准存储'"
+              >标准：高可靠、高可用、高性能，数据会经常被访问到。</span
+            >
+            <span v-show="updateFileListData.capacity == '归档存储'"
+              >归档：数据长期存储、基本不访问，存储单价低于低频访问型。选择归档存储后，文件需要先解冻才能访问。</span
+            >
+            <span class="objectAcl-text"
+              >Bucket创建成功后,存储类型不支持变更</span
+            >
+          </el-alert>
+        </el-form>
+      </template>
       <template #footer>
-      <div style="flex: auto;justify-content: center;">
-        <el-button size="large" type="primary" @click="confirmClickCapacity">确定</el-button>
-        <el-button size="large" @click="cancelClickCapacity">取消</el-button>
-      </div>
-    </template>
+        <div style="flex: auto; justify-content: center">
+          <el-button size="large" type="primary" @click="confirmClickCapacity"
+            >确定</el-button
+          >
+          <el-button size="large" @click="cancelClickCapacity">取消</el-button>
+        </div>
+      </template>
     </el-dialog>
     <!-- 添加标签对话框 -->
-    <AddLabel v-model="showLabelVue" @cancelClick="showLabelVue=false" @confirmClick="addLabel"></AddLabel>
+    <AddLabel
+      v-model="showLabelVue"
+      @cancelClick="showLabelVue = false"
+      @confirmClick="addLabel"
+    ></AddLabel>
+    <!-- 添加限制解冻警告对话框 -->
+    <FileLimitThaw v-model="showLimitThaw"></FileLimitThaw>
   </div>
 </template>
 
@@ -270,87 +329,164 @@ import router from "../../router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import AddLabel from "../../components/action/addLabel.vue";
 import { useRoute } from "vue-router";
+import FileLimitThaw from "../../components/action/FileLimitThaw.vue";
+import apiFun from "../../utils/api";
 
 var index = ref(); //获取的文件下标
 var fileData = reactive({}); //选择的文件的普通数据
-const updateFileList = reactive([/* 更改的文件列表 */
-
-])
+const updateFileList = reactive([
+  /* 更改的文件列表 */
+]);
+const route = useRoute();
+const query = route.query; //路由参数获取objectId
+var bucketName = query['bucketName']
+var parentObjectId = query["parentObjectId"];
+var parentObjectName = query["parentObjectName"];
 const objectInfo = reactive({
   //选择的文件的元数据
   isImg: 2,
   src: "src/assets/海浪浪花.mp4",
   isPsw: "0",
-  etag:'8276D07FA5E5728303D56301A9B55986',
+  etag: "8276D07FA5E5728303D56301A9B55986",
   url: "https://picture-sunsan.oss-cn-hangzhou.aliyuncs.com/5%20%E5%87%BD%E6%95%B0%E7%BB%83%E4%B9%A0.xlsx?Expires=1679731122&OSSAccessKeyId=TMP.3KfWcA49z5jHTFsayA73uBsxF73CXqbjvyojha35jbiAkYagNc6LeQgPMDfYV9szsHSecZ5DN1xpgi3sMwFPNBVCScM2o7&Signature=kfRiFkW01nDzuWuhhD%2BGQkBKsis%3D",
 });
 const innerVisible = ref(false); //设置文件读写权限对话框
 //0为普通文件，1为图片文件，2为视频文件
 const drawer = ref(false); //文件详情对话框
-const showLabelVue = ref(false)
+const showLabelVue = ref(false);
 const newFileDialog = ref(false); //新建目录对话框
 const num = ref(300); //过期时间
 const useHttps = ref(true); //使用https
-const updateCapacityDialog = ref(false)//修改存储类型对话框
-const updateFileListData = reactive({//将要更改的文件数据
-      capacity: "标准存储",
-      reserveData:1,//* 是否保留用户自定义元数据 */
-      objectAcl: "私有",
-})
-const fileStatus = computed(()=>{
-    switch(fileData.fileStatus){
-      case 0:
-        return '正常';
-        case 1:
-        return '解冻中';
-        case 2:
-        return '归档';
-        case 3:
-        return '已经归档';
-    }
-})
-const deleteFile = (index) => {//删除文件夹
-  state.fileList.splice(index,1)
+const updateCapacityDialog = ref(false); //修改存储类型对话框
+const showLimitThaw = ref(false); //限制解冻警告对话框
+const updateFileListData = reactive({
+  //将要更改的文件数据
+  capacity: "标准存储",
+  reserveData: 1, //* 是否保留用户自定义元数据 */
+  objectAcl: "私有",
+});
 
+// onMounted(()=>{
+//   Pre()
+// })
+
+const page = reactive({
+  total: 200, // 总条数
+  currentPage: 1, // 当前页
+  pageSize: 8, //一页的数据量
+})
+
+// const Pre = () => {
+//   console.log(bucketName)
+//   if(bucketName!=null){
+//     if(!parentObjectId){
+//       console.log(state.searchText)
+//       console.log(parentObjectId)
+//     console.log(page)
+//       apiFun.object.objectList(bucketName,state.searchText,page.currentPage,page.pageSize).then((res)=>{
+//     console.log(res)
+//     // page.total=res.data.totalCount
+//     // state.fileList=res.data.rows
+//   })
+//     }else{
+    
+//   apiFun.object.objectList(bucketName,state.searchText,page.currentPage,page.pageSize,parentObjectId).then((res)=>{
+//     console.log(res)
+//     // page.total=res.data.totalCount
+//     // state.fileList=res.data.rows
+//   })
+// }
+// }
+// }
+/* 翻页 */
+const getPage = () => {
+  console.log(page.currentPage)
+  if(!bucketName){
+    if(!parentObjectId){
+      parentObjectId=null
+    }
+  apiFun.object.objectList(bucketName,state.searchText,page.currentPage,page.pageSize,parentObjectId).then((res)=>{
+    console.log(res)
+    // page.total=res.data.totalCount
+    // state.fileList=res.data.rows
+  })
 }
+}
+/* 文件状态 */
+const fileStatus = computed(() => {
+  switch (fileData.fileStatus) {
+    case 0:
+      return "正常";
+    case 1:
+      return "解冻中";
+    case 2:
+      return "归档中";
+    case 3:
+      return "已经归档";
+  }
+});
+/* 返回上一级 */
+const returnParent = () => {
+  router.back;
+};
+/* 文件解冻 */
+const getThaw = (objectList) => {
+  objectList.forEach((item) => {
+    /* 只有当选中的所有文件状态为归档时 */
+    if (item.fileStatus != 3) {
+      showLimitThaw.value = true;
+      return;
+    } else {
+    }
+  });
+};
+
+const deleteFile = (index) => {
+  //删除文件夹
+  state.fileList.splice(index, 1);
+};
 const handleChange = (value) => {
   console.log(value);
 };
 function cancelClick() {
-  newFileDialog.value = false
+  newFileDialog.value = false;
 }
-function confirmClick() {//创建目录
+
+function confirmClick() {
+  //创建目录
   ElMessageBox.confirm(`确定创建该目录吗?`)
     .then(() => {
-      newFileDialog.value = false
-      ElMessage.success('创建成功！')
+      state.fileList.unshift(state.newFolder);
+      newFileDialog.value = false;
+      ElMessage.success("创建成功！");
       // router.push({path:'/bucket',query:{name:state.newBucket.name}})
     })
-    .catch(() => {
-    })
+    .catch(() => {});
 }
 
 function cancelClickAcl() {
-  innerVisible.value = false
+  innerVisible.value = false;
 }
-function confirmClickAcl() {//设置存储类型
-      innerVisible.value = false
-      ElMessage.success('设置成功！')
-      // router.push({path:'/bucket',query:{name:state.newBucket.name}})
+function confirmClickAcl() {
+  //设置存储类型
+  innerVisible.value = false;
+  ElMessage.success("设置成功！");
+  // router.push({path:'/bucket',query:{name:state.newBucket.name}})
 }
 function cancelClickCapacity() {
-  updateCapacityDialog.value = false
+  updateCapacityDialog.value = false;
 }
-function confirmClickCapacity() {//设置存储类型
-  updateCapacityDialog.value = false
-      ElMessage.success('设置成功！')
-      // router.push({path:'/bucket',query:{name:state.newBucket.name}})
+function confirmClickCapacity() {
+  //设置存储类型
+  updateCapacityDialog.value = false;
+  ElMessage.success("设置成功！");
+  // router.push({path:'/bucket',query:{name:state.newBucket.name}})
 }
-const addLabel = (labels) => {/* 添加标签 */
-  showLabelVue.value=false
-  ElMessage.success('操作成功！')
-  
-}
+const addLabel = (labels) => {
+  /* 添加标签 */
+  showLabelVue.value = false;
+  ElMessage.success("操作成功！");
+};
 
 const copyFilename = () => {
   navigator.clipboard.writeText(fileData.name).then(() => {
@@ -363,6 +499,12 @@ const onCopy = () => {
   });
 };
 
+/* 删除多个文件 */
+const deleteMoreFile = (fileList) => {
+  fileList.forEach((item) => {
+    state.fileList.splice(item, 1);
+  });
+};
 
 const state = reactive({
   title: "文件列表",
@@ -370,101 +512,102 @@ const state = reactive({
     "对象(Object)是OSS存储数据的基本单元,也被称为OSS的文件。和传统的文件系统不同,Object没有文件目录层级结构的关系。",
   searchText: "" /* 搜索框搜索内容 */,
   fileList: [
-    /* 文件数据列表 */
-    {
-      id:1,
-      name: "sunsan",
-      size: 32.3,
-      capacity: "标准存储",
-      lastUpdateTime: "2021年3月21日",
-      isFolder: true,
-      objectAcl: "私有",
-      fileStatus:0,
-    },
-    {
-      id:2,
-      name: "img01.txt",
-      size: 32.3,
-      capacity: "标准存储",
-      lastUpdateTime: "2021年3月21日",
-      isFolder: false,
-      objectAcl: "私有",
-      fileStatus:1,
-    },
-    {
-      id:3,
-      name: "img01.ppt",
-      size: 32.3,
-      capacity: "标准存储",
-      lastUpdateTime: "2021年3月21日",
-      isFolder: false,
-      objectAcl: "私有",
-      fileStatus:0,
-    },
-    {
-      id:4,
-      name: "img01.pdf",
-      size: 32.3,
-      capacity: "标准存储",
-      lastUpdateTime: "2021年3月21日",
-      isFolder: false,
-      objectAcl: "私有",
-      fileStatus:0,
-    },
-    {
-      id:5,
-      name: "img01.docx",
-      size: 32.3,
-      capacity: "标准存储",
-      lastUpdateTime: "2021年3月21日",
-      lastUpdater: false,
-      objectAcl: "私有",
-      fileStatus:0,
-    },
-    {
-      id:6,
-      name: "img01.xls",
-      size: 32.3,
-      capacity: "标准存储",
-      lastUpdateTime: "2021年3月21日",
-      isFolder: false,
-      objectAcl: "私有",
-      fileStatus:0,
-    },
-    {
-      id:7,
-      name: "img01.rar",
-      size: 32.3,
-      capacity: "标准存储",
-      lastUpdateTime: "2021年3月21日",
-      isFolder: false,
-      objectAcl: "私有",
-      fileStatus:0,
-    },
-    {
-      id:8,
-      name: "img01.mp4",
-      size: 32.3,
-      capacity: "标准存储",
-      lastUpdateTime: "2021年3月21日",
-      isFolder: false,
-      objectAcl: "私有",
-      fileStatus:0,
-    },
+  {
+    id: 1,
+    name: "sunsan",
+    size: 32.3,
+    capacity: "标准存储",
+    lastUpdateTime: "2021年3月21日",
+    isFolder: true,
+    objectAcl: "私有",
+    fileStatus: 0,
+  },{
+    id: 2,
+    name: "img.xsl",
+    size: 32.3,
+    capacity: "标准存储",
+    lastUpdateTime: "2021年3月21日",
+    isFolder: false,
+    objectAcl: "私有",
+    fileStatus: 0,
+  },{
+    id: 3,
+    name: "img.docx",
+    size: 32.3,
+    capacity: "标准存储",
+    lastUpdateTime: "2021年3月21日",
+    isFolder: false,
+    objectAcl: "私有",
+    fileStatus: 0,
+  },{
+    id: 4,
+    name: "img.mp4",
+    size: 32.3,
+    capacity: "标准存储",
+    lastUpdateTime: "2021年3月21日",
+    isFolder: false,
+    objectAcl: "私有",
+    fileStatus: 0,
+  },{
+    id: 5,
+    name: "img.mp3",
+    size: 32.3,
+    capacity: "标准存储",
+    lastUpdateTime: "2021年3月21日",
+    isFolder: false,
+    objectAcl: "私有",
+    fileStatus: 0,
+  },{
+    id: 6,
+    name: "img.jpg",
+    size: 32.3,
+    capacity: "标准存储",
+    lastUpdateTime: "2021年3月21日",
+    isFolder: false,
+    objectAcl: "私有",
+    fileStatus: 0,
+  },{
+    id: 7,
+    name: "img.ppt",
+    size: 32.3,
+    capacity: "标准存储",
+    lastUpdateTime: "2021年3月21日",
+    isFolder: false,
+    objectAcl: "私有",
+    fileStatus: 0,
+  },{
+    id: 8,
+    name: "img.pdf",
+    size: 32.3,
+    capacity: "标准存储",
+    lastUpdateTime: "2021年3月21日",
+    isFolder: false,
+    objectAcl: "私有",
+    fileStatus: 0,
+  },
   ],
+  /* 新建目录 */
   newFolder: {
+    id: 8,
     name: "",
+    size: 32.3,
+    capacity: "标准存储",
+    lastUpdateTime: "2021年3月21日",
+    isFolder: true,
+    objectAcl: "私有",
+    fileStatus: 0,
   },
 });
-
-
 
 const goToFile = (index) => {
   /* 打开文件或文件夹 */
   fileData = state.fileList[index];
   if (fileData.isFolder == true) {
     /* 当点击对象为文件时跳转进入文件夹，设置路由参数为点击文件夹的id */
-    router.push({ path: "/fileList", query: { parentObjectId: fileData.id, parentObjectName: fileData.name } });
+    router.push({
+      path: "/fileList",
+      query: { parentObjectId: fileData.id, parentObjectName: fileData.name },
+    });
   } else {
     drawer.value = true;
   }
@@ -476,17 +619,17 @@ const goToFile = (index) => {
   display: flex;
   flex-direction: column;
   text-align: left;
-  width: 82%;
+  width: 84%;
   padding-left: 15px;
   box-sizing: border-box;
 }
-.look-box-msg{
-  background-color:#fff7d1;
+.look-box-msg {
+  background-color: #fff7d1;
   text-align: center;
   padding: 30px 10px;
 }
-.update-capacity{
-  display:flex;
+.update-capacity {
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   gap: 60px;
@@ -502,7 +645,7 @@ const goToFile = (index) => {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 0px 10px;
+  padding: 20px 10px;
 }
 .btn-list {
   display: flex;
@@ -510,13 +653,14 @@ const goToFile = (index) => {
   justify-content: flex-start;
   margin-top: 20px;
   margin-bottom: 20px;
+  margin-left: -11px;
 }
 .newFile-text {
   text-align: left;
   color: #808080;
   font-size: 12px;
   margin-left: 30px;
-  font-weight:lighter;
+  font-weight: lighter;
   gap: -20px;
   margin-top: 15px;
 }
@@ -563,15 +707,14 @@ const goToFile = (index) => {
   margin-top: -2%;
   text-align: left;
   width: 67%;
-  font-weight:lighter
+  font-weight: lighter;
 }
-.input-msg-acl{
+.input-msg-acl {
   margin-bottom: 6%;
-  margin-left: 14.5%;
-  margin-top: -2%;
+  margin-left: 10.5%;
   text-align: left;
-  width: 71%;
-  font-weight:lighter
+  width: 82%;
+  font-weight: lighter;
 }
 .file-text {
   font-weight: bold;

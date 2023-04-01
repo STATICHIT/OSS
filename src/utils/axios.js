@@ -5,7 +5,7 @@ import router from '../router/index'
 import { localGet } from './index'
 
 
-let baseURL = 'http://101.35.43.156:8080/' //后端开发环境地址(部署后端到本机后只需修改此地址)
+let baseURL = 'http://192.168.50.236:8080/' //后端开发环境地址(部署后端到本机后只需修改此地址)
 let config = {
   baseURL: baseURL,
   timeout: 30000    //设置最大请求时间
@@ -29,6 +29,7 @@ const _axios = axios.create(config);
 //   }
 //   return res.data
 // })
+const header = { 'Content-Type': 'application/json;charset=UTF-8', 'Authorization':'eyJ0eXBlIjoiSnd0IiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJjdXJyZW50VGltZSI6MTY4MDM0ODgyNTQ1OCwicGFzc3dvcmQiOiIxIiwiaWQiOiIzIiwiZXhwIjoxNjgwMzQ4ODI1LCJ1c2VybmFtZSI6IjEifQ.HqPFNUcdYXmZ7JAtA9y_cXKFmFh1djEppriXDJUOGa4' }
 
 // 封装post,get,post,delete方法
 const http = {
@@ -37,7 +38,7 @@ const http = {
       _axios({
         url,
         params,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8', 'token': localGet('token') },
+        headers: header,
         method: 'GET'
       }).then(res => {
         resolve(res.data)
@@ -52,7 +53,7 @@ const http = {
       _axios({
         url,
         data: qs.parse(params),
-        headers: { 'Content-Type': 'application/json;charset=UTF-8', 'token': localGet('token') },
+        headers: header,
         method: 'POST'
       }).then(res => {
         resolve(res.data)
@@ -68,7 +69,7 @@ const http = {
         url,
         data: params,
         params: qs.parse(params),
-        headers: { 'Content-Type': 'application/json;charset=UTF-8', 'token': localGet('token') },
+        headers: header,
         method: 'PUT'
       }).then(res => {
         resolve(res.data)
@@ -83,7 +84,7 @@ const http = {
       _axios({
         url,
         data: params,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8', 'token': localGet('token') },
+        headers: header,
         method: 'DELETE'
       }).then(res => {
         resolve(res.data)

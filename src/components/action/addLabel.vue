@@ -1,3 +1,4 @@
+<!-- 设置对象标签对话框 -->
 <template>
   <el-dialog width="45%" title="标签" append-to-body style="padding: 0px 15px">
     <template #default>

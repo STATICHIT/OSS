@@ -13,7 +13,10 @@
         :suffix-icon="Search"
       />
     </div>
-    <BucketTableVue class="bucketTable"></BucketTableVue>
+    <BucketTableVue
+     class="bucketTable"
+     :searchText="state.searchText"
+     ></BucketTableVue>
     <el-drawer
     v-model="drawer"
     title="I am the title"
@@ -36,42 +39,43 @@
     label-position="left"
     style="font-weight: bold;"
   >
-        <el-form-item style="margin-left: -8px;" label="Bucket名称" prop="name">
-      <el-input placeholder="创建成功后将不可修改" class="el-input" v-model="state.newBucket.name" />
+        <el-form-item style="margin-left: -8px;" label="Bucket名称" prop="bucketName">
+      <el-input placeholder="创建成功后将不可修改" class="el-input" v-model="state.newBucket.bucketName" />
     </el-form-item>
     <el-form-item label="存储类型" prop="storageLevel">
       <el-radio-group  v-model="state.newBucket.storageLevel">
-        <el-radio  label="标准存储" />
-        <el-radio label="归档存储" />
+        <el-radio :label="1">标准存储</el-radio>
+        <el-radio :label="2">归档存储</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-alert type="info" :closable="false" class="input-msg">
-        <span v-show="state.newBucket.storageLevel=='标准存储'">标准：高可靠、高可用、高性能，数据会经常被访问到。</span>
-        <span v-show="state.newBucket.storageLevel=='归档存储'">归档：数据长期存储、基本不访问，存储单价低于低频访问型。选择归档存储后，文件需要先解冻才能访问。</span>
+        <span v-show="state.newBucket.storageLevel==1">标准：高可靠、高可用、高性能，数据会经常被访问到。</span>
+        <span v-show="state.newBucket.storageLevel==2">归档：数据长期存储、基本不访问，存储单价低于低频访问型。选择归档存储后，文件需要先解冻才能访问。</span>
         <span class="bucketAcl-text">Bucket创建成功后,存储类型不支持变更</span>
-      </el-alert>
-    <el-form-item label="版本控制" prop="versionControl">
-      <el-switch v-model="state.newBucket.versionControl" />
-    </el-form-item>
-    <el-alert type="info" :closable="false" class="input-msg">
-        <span>开启版本控制后，针对数据的覆盖和删除操作将会以历史版本的形式保存下来，若不开启版本控制则数据删除或被覆盖将无法找回。</span>
-        <span v-show="state.newBucket.versionControl==true" class="bucketAcl-text">开通该功能后，暂不支持关闭。</span>
-        <span v-show="!state.newBucket.versionControl" class="bucketAcl-text">当前未开启版本控制功能，数据删除或被覆盖后将无法找回。</span>
       </el-alert>
     <el-form-item label="读写权限" prop="bucketAcl">
       <el-radio-group v-model="state.newBucket.bucketAcl">
-        <el-radio border label="私有" />
-        <el-radio border label="公共读" />
-        <el-radio border label="公共读写" />
+        <div style="display: flex;flex-direction: row;justify-content: space-around;">
+        <el-radio border :label="5">私有</el-radio>
+        <el-radio border :label="4" >RAM读</el-radio>
+        <el-radio border :label="3" >公共读</el-radio>
+      </div>
+        <el-radio border :label="2" style="margin-top: 10px;">RAM读写</el-radio>
+        <el-radio border :label="1" style="margin-top: 10px;">公共读写</el-radio>
       </el-radio-group>
     </el-form-item>
       <el-alert type="info" :closable="false" class="input-msg">
-        <p v-show="state.newBucket.bucketAcl=='私有'">私有：对文件的所有访问操作需要进行身份验证。</p>
-        <p v-show="state.newBucket.bucketAcl=='公共读'" class="bucketAcl-text">公共读：对文件写操作需要进行身份验证；可以对文件进行匿名读。</p>
-        <span v-show="state.newBucket.bucketAcl=='公共读写'" class="bucketAcl-text">公共读写：所有人都可以对文件进行读写操作。</span>
+        <p v-show="state.newBucket.bucketAcl==5">私有：对文件的所有访问操作需要进行身份验证。</p>
+        <p v-show="state.newBucket.bucketAcl==3" >公共读：对文件写操作需要进行身份验证；可以对文件进行匿名读。</p>
+        <span v-show="state.newBucket.bucketAcl==1" class="bucketAcl-text">公共读写：所有人都可以对文件进行读写操作。</span>
+        <span v-show="state.newBucket.bucketAcl==2" class="bucketAcl-text">RAM读写:用户和子用户都可以对该Bucket内的文件进行读写操作。</span>
+        <span v-show="state.newBucket.bucketAcl==4">RAM读:只有该Bucket的拥有者与其子用户可以对该Bucket内的文件进行写操作，任何人都可以对该Bucket中的文件进行读操作。</span>
       </el-alert>
-    <el-form-item label="加密存储" prop="encryption">
-      <el-switch v-model="state.newBucket.encryption" />
+      <el-form-item label="加密方式">
+      <el-radio-group v-model="state.newBucket.secret">
+        <el-radio :label="null">无加密</el-radio>
+        <el-radio :label="1" >SM4加密</el-radio>
+      </el-radio-group>
     </el-form-item>
     </el-form>
       </div>
@@ -91,11 +95,12 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import apiFun from "../../utils/api";
 //引入面包屑和地板基本样式
 import "../../style/subPage.scss";
-import { reactive, ref } from "vue";
-import { Search } from "@element-plus/icons-vue";
+import { onMounted, reactive, ref } from "vue";
+import { Present, Search } from "@element-plus/icons-vue";
 import BucketTableVue from "../../components/BucketTable.vue";
 import TitleTip from "../../components/TitleTip.vue";
 import router from "../../router";
+import { localSet } from "../../utils";
 
 const formSize = ref("default");
 
@@ -107,38 +112,44 @@ function cancelClick() {
 }
 
 const rules = reactive({
-  name: [
+  bucketName: [
     { required: true, message: "请输入Bucket名称", trigger: "blur" },
     { min: 3, message: "请输入长度至少大于3的字符", trigger: "blur" },
   ],
 })
 
+
 function confirmClick() {
   ElMessageBox.confirm(`确定创建该Bucket吗?`)
     .then(() => {
       drawer.value = false;
+      state.newBucket.createTime=new Date()
+      state.newBucket.updateTime=new Date()
+      console.log(state.newBucket)
+       apiFun.bucket.create(state.newBucket).then((res)=>{
+        console.log(res)
+       })
       ElMessage.success("创建成功！");
-      router.push({ path: "/bucket", query: { name: state.newBucket.name } });
+      location.reload()
     })
     .catch(() => {});
 }
+
+
 
 const state = reactive({
   searchText: "",
   title: "Bucket列表",
   content: "统计 Bucket 合计数据，平均延迟 1~3 小时。不作为计量数据，仅作参考",
   newBucket: {
-    name: "bucket1",
-    storageLevel: "标准存储",
-    capacity: "476.12MB",
-    versionControl: "已开启",
-    encryption: "是",
-    watermark: "有",
-    bucketAcl: "私有",
-    updateTime: "2023年03月19日 19:38",
+    bucketName: "",
+    storageLevel: 1,
+    secret: null,
+    bucketAcl: 1,
+    createTime:'',
+    updateTime:''
   },
 });
-console.log(state.newBucket.versionControl);
 </script>
 
 <style lang="scss" scoped>
@@ -151,7 +162,7 @@ console.log(state.newBucket.versionControl);
 }.input-msg{
   margin-bottom: 6%;
   width: 82%;
-  margin-left: 20%;
+  margin-left: 21.5%;
   margin-top: -2%;
   text-align: left;
   font-weight: lighter;
