@@ -181,6 +181,11 @@ const routes = [
             path: '/actionTest',
             component: () => import('../views/ActionTest.vue')
           },
+          {
+            //文件图标
+            path: '/fileIcon',
+            component: () => import('../components/FileIcon.vue'),
+          },
         ]
       }
     ]

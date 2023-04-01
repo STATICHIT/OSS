@@ -51,8 +51,8 @@
     </el-menu-item>
   </el-menu>
 </template>
-  
-  <script setup>
+
+<script setup>
 import { ref } from "vue";
 import {
   Document,
@@ -68,17 +68,24 @@ const handleClose = (key, keyPath) => {
   console.log(key, keyPath);
 };
 </script>
-  
+
 <style lang="scss" scoped>
 $primary-color: #6477b7;
 $back-color: #f0f2f8;
 $second-color: #f0f1f8;
 
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
+.el-menu-vertical-demo {
+  min-height: 87vh;
+  min-width: 200px;
+  max-width: 200px;
+  position: relative;
+  margin-left: -2.4%;
+  border: 0;
+  border-right: 1px solid #d3d4d5;
 }
 .el-menu-font {
   font-weight: bold;
   color: #4e4e4e;
 }
+
 </style>
