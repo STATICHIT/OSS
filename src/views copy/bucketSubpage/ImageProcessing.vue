@@ -1,0 +1,421 @@
+<template>
+  <div>
+    <div class="box">
+      <title-tip :title="this.title" :content="this.content"></title-tip>
+      <div class="buttons">
+        <el-button class="myBtn" @click="importImg" plain>选择图片</el-button>
+        <el-button class="myBtn" @click="save" plain>保存更改</el-button>
+      </div>
+
+      <!-- 图片处理组件 -->
+      <div class="drawing-container">
+        <div id="tui-image-editor"></div>
+      </div>
+
+      <!-- 选择图片抽屉组件 -->
+      <div>
+        <el-drawer v-model="drawer" direction="rtl" size="40%">
+          <!-- 头部 -->
+          <template #header>
+            <h3 style="text-align: left">选择图片</h3>
+          </template>
+          <!-- 内容 -->
+          <template #default>
+            <h3>请选择您要进行处理的图片文件</h3>
+            <div class="circle">
+              <ul class="circle-ul">
+                <li v-for="item of classList" :key="item.id" class="circle-li">
+                  <div
+                    v-on:click="changeList(item.id, item.coverImg)"
+                    v-bind:class="{ changeBorder: item.id == a }"
+                    value="change!"
+                  >
+                    <img
+                      :src="item.coverImg"
+                      style="width: 100px; height: 100px; padding-top: 5px"
+                      alt
+                    />
+                    <div>{{ item.id }}</div>
+                    <div class="topic-shade">
+                      <div class="shade">
+                        <img
+                          src="../../assets/select.png"
+                          style="width: 14px; height: 14px"
+                          alt
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </template>
+          <!-- 尾部 -->
+          <template #footer>
+            <div style="flex: auto">
+              <el-button @click="cancelClick">取消</el-button>
+              <el-button type="primary" @click="chooseImg">确定</el-button>
+            </div>
+          </template>
+        </el-drawer>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import "tui-image-editor/dist/tui-image-editor.css";
+import "tui-color-picker/dist/tui-color-picker.css";
+import ImageEditor from "tui-image-editor";
+import { ElMessage } from "element-plus";
+export default {
+  data() {
+    return {
+      instance: null,
+      title: "图片处理",
+      content:
+        "针对云罐中Bucket存储的图片文件（Object），您可以在浏览器对图片进行在线编辑，保存后修改后图片将覆盖原图片。您可以将进行的操作包括添加图片水印、截图、绘画、调节亮度等。",
+
+      // 选择图片
+      drawer: false,
+      chooseSrc: "",
+      currentSrc:
+        "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA12s6NU.img",
+      a: true,
+      // 图片源列表
+      classList: [
+        {
+          id: "001",
+          coverImg:
+            "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE59yNZ?ver=d7f3",
+        },
+        {
+          id: "002",
+          coverImg:
+            "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE59gGS?ver=5bf1",
+        },
+        {
+          id: "003",
+          coverImg:
+            "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA12sapl.img",
+        },
+        {
+          id: "004",
+          coverImg:
+            "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA11N2LZ.img",
+        },
+        {
+          id: "005",
+          coverImg:
+            "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA11N9kp.img",
+        },
+        {
+          id: "006",
+          coverImg:
+            "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA11NbLD.img",
+        },
+      ],
+    };
+  },
+  mounted() {
+    this.init();
+  },
+  methods: {
+    // 图片处理组件数据初始化
+    init() {
+      this.instance = new ImageEditor(
+        document.querySelector("#tui-image-editor"),
+        {
+          includeUI: {
+            loadImage: {
+              path: this.currentSrc,
+              name: "image",
+            },
+            menu: [
+              "resize",
+              "crop",
+              "rotate",
+              "draw",
+              "shape",
+              "icon",
+              "text",
+              "filter",
+            ], // 底部菜单按钮列表 隐藏镜像flip和遮罩mask
+            // initMenu: "draw", // 默认关闭菜单项
+            menuBarPosition: "bottom", // 菜单所在的位置
+            locale: locale_zh, // 本地化语言为中文
+            theme: customTheme, // 自定义样式
+          },
+          cssMaxWidth: 1000, // canvas 最大宽度
+          cssMaxHeight: 600, // canvas 最大高度
+        }
+      );
+      document.getElementsByClassName("tui-image-editor-main")[0].style.top =
+        "45px"; // 调整图片显示位置
+      document.getElementsByClassName(
+        "tie-btn-reset tui-image-editor-item help"
+      )[0].style.display = "none"; // 隐藏顶部重置按钮
+    },
+
+    importImg() {
+      //选择当前Bucket内的图片
+      const num = 1;
+      if (num == 0) {
+        ElMessage.error("当前Bucket中不存在图片");
+      } else {
+        this.drawer = true;
+      }
+    },
+
+    // 保存图片，并上传
+    save() {
+      // 调用组件官方方法，获取整个编辑后图片的base64数据
+      const base64String = this.instance.toDataURL();
+      alert(base64String);
+    },
+
+    changeList(id, coverImg) {
+      if (this.a == id) {
+        this.a = !this.a;
+      } else {
+        this.a = id;
+        this.chooseSrc = coverImg;
+        console.log(coverImg);
+      }
+    },
+    cancelClick() {
+      this.drawer = false;
+    },
+    chooseImg() {
+      this.currentSrc = this.chooseSrc;
+      this.init(); //重置操作图片
+      console.log(this.currentSrc);
+      this.drawer = false;
+    },
+  },
+};
+
+//汉化
+const locale_zh = {
+  ZoomIn: "放大",
+  ZoomOut: "缩小",
+  Hand: "手掌",
+  History: "历史",
+  Resize: "调整宽高",
+  Crop: "裁剪",
+  DeleteAll: "全部删除",
+  Delete: "删除",
+  Undo: "撤销",
+  Redo: "反撤销",
+  Reset: "重置",
+  Flip: "镜像",
+  Rotate: "旋转",
+  Draw: "画",
+  Shape: "形状标注",
+  Icon: "图标标注",
+  Text: "文字标注",
+  Mask: "遮罩",
+  Filter: "滤镜",
+  Bold: "加粗",
+  Italic: "斜体",
+  Underline: "下划线",
+  Left: "左对齐",
+  Center: "居中",
+  Right: "右对齐",
+  Color: "颜色",
+  "Text size": "字体大小",
+  Custom: "自定义",
+  Square: "正方形",
+  Apply: "应用",
+  Cancel: "取消",
+  "Flip X": "X 轴",
+  "Flip Y": "Y 轴",
+  Range: "区间",
+  Stroke: "描边",
+  Fill: "填充",
+  Circle: "圆",
+  Triangle: "三角",
+  Rectangle: "矩形",
+  Free: "曲线",
+  Straight: "直线",
+  Arrow: "箭头",
+  "Arrow-2": "箭头2",
+  "Arrow-3": "箭头3",
+  "Star-1": "星星1",
+  "Star-2": "星星2",
+  Polygon: "多边形",
+  Location: "定位",
+  Heart: "心形",
+  Bubble: "气泡",
+  "Custom icon": "自定义图标",
+  "Load Mask Image": "加载蒙层图片",
+  Grayscale: "灰度",
+  Blur: "模糊",
+  Sharpen: "锐化",
+  Emboss: "浮雕",
+  "Remove White": "除去白色",
+  Distance: "距离",
+  Brightness: "亮度",
+  Noise: "噪音",
+  "Color Filter": "彩色滤镜",
+  Sepia: "棕色",
+  Sepia2: "棕色2",
+  Invert: "负片",
+  Pixelate: "像素化",
+  Threshold: "阈值",
+  Tint: "色调",
+  Multiply: "正片叠底",
+  Blend: "混合色",
+  Width: "宽度",
+  Height: "高度",
+  "Lock Aspect Ratio": "锁定宽高比例",
+};
+
+//样式主题配置
+const customTheme = {
+  "common.bi.image": "", // 左上角logo图片
+  "common.bisize.width": "0px",
+  "common.bisize.height": "0px",
+  "common.backgroundImage": "none",
+  "common.backgroundColor": "#f3f4f6",
+  "common.border": "0px",
+
+  // header
+  "header.backgroundImage": "none",
+  "header.backgroundColor": "#f3f4f6",
+  "header.border": "0px",
+
+  // load button
+  "loadButton.backgroundColor": "#fff",
+  "loadButton.border": "1px solid #ddd",
+  "loadButton.color": "#222",
+  "loadButton.fontFamily": "NotoSans, sans-serif",
+  "loadButton.fontSize": "12px",
+  "loadButton.display": "none", // 隐藏
+
+  // download button
+  "downloadButton.backgroundColor": "#fdba3b",
+  "downloadButton.border": "1px solid #fdba3b",
+  "downloadButton.color": "#fff",
+  "downloadButton.fontFamily": "NotoSans, sans-serif",
+  "downloadButton.fontSize": "12px",
+  "downloadButton.display": "none", // 隐藏
+
+  // icons default
+  "menu.normalIcon.color": "#8a8a8a",
+  "menu.activeIcon.color": "#555555",
+  "menu.disabledIcon.color": "#ccc",
+  "menu.hoverIcon.color": "#e9e9e9",
+  "submenu.normalIcon.color": "#8a8a8a",
+  "submenu.activeIcon.color": "#e9e9e9",
+
+  "menu.iconSize.width": "24px",
+  "menu.iconSize.height": "24px",
+  "submenu.iconSize.width": "32px",
+  "submenu.iconSize.height": "32px",
+
+  // submenu primary color
+  "submenu.backgroundColor": "#1e1e1e",
+  "submenu.partition.color": "#858585",
+
+  // submenu labels
+  "submenu.normalLabel.color": "#858585",
+  "submenu.normalLabel.fontWeight": "lighter",
+  "submenu.activeLabel.color": "#fff",
+  "submenu.activeLabel.fontWeight": "lighter",
+
+  // checkbox style
+  "checkbox.border": "1px solid #ccc",
+  "checkbox.backgroundColor": "#fff",
+
+  // rango style
+  "range.pointer.color": "#fff",
+  "range.bar.color": "#666",
+  "range.subbar.color": "#d1d1d1",
+
+  "range.disabledPointer.color": "#414141",
+  "range.disabledBar.color": "#282828",
+  "range.disabledSubbar.color": "#414141",
+
+  "range.value.color": "#fff",
+  "range.value.fontWeight": "lighter",
+  "range.value.fontSize": "11px",
+  "range.value.border": "1px solid #353535",
+  "range.value.backgroundColor": "#ffffff",
+  "range.title.color": "#fff",
+  "range.title.fontWeight": "lighter",
+
+  // colorpicker style
+  "colorpicker.button.border": "1px solid #1e1e1e",
+  "colorpicker.title.color": "#fff",
+};
+</script>
+
+<style lang="scss" scoped>
+.box {
+  width: 100%;
+  height: 100%;
+  padding: 5px 15px;
+  text-align: left;
+}
+.buttons {
+  margin-bottom: 10px;
+}
+
+.drawing-container {
+  width: 1300px;
+  height: 750px;
+  position: relative;
+  .myBtn {
+    position: absolute;
+    right: 50px;
+    top: 15px;
+  }
+}
+
+.circle {
+  position: relative;
+  width: 632px;
+  left: 15px;
+}
+.circle-ul {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: 532px;
+  padding: 0;
+  margin: 14px 0 0 50px;
+}
+.circle-li {
+  margin-right: 20px;
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.topic-shade {
+  display: none;
+}
+
+.changeBorder {
+  width: 115px;
+  height: 121px;
+  position: relative;
+  cursor: pointer;
+  border: 1px dashed #969696;
+  margin: -1px -8px 0 -8px;
+  .topic-shade {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: absolute;
+    top: 123.5px;
+    right: 0;
+    bottom: 0;
+    left: 86px;
+  }
+
+  .shade {
+    margin-bottom: 4px;
+  }
+}
+</style>

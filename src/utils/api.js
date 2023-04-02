@@ -12,9 +12,20 @@ let apiFun = {
   test:{},
 };
 
-/**
- * 测试接口（按需添加，可删）
- * */
+//测试接口（按需添加，可删）
+
+apiFun.test.createChunkToken = (params) =>{
+  return http.post('/ossObject/createChunkToken?bucketName='+params.mybucket+'&objectName='+params.fileName+'&etag='+params.etag+'&size='+params.size+'&chunks=4')
+}
+
+// apiFun.merge = (params) =>{
+//   return http.filePost('/ossObject/merge?blockToken='+params.blockToken,params.ip,params.port)
+// }
+
+apiFun.test.mergefile = (params) =>{
+  return http.post('/ossObject/merge?blockToken='+params.blockToken)
+}
+
 
 //前后端链接测试
 apiFun.test.test = () =>{
