@@ -25,6 +25,7 @@ const app = createApp(App)
 app.use(router)
 app.use(ElementPlus)
 app.use(createPinia())
+// app.use(VideoPlayer)
 
 app.component('title-tip',TitleTip)
 

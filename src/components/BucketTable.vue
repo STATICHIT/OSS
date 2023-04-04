@@ -11,16 +11,14 @@
     >
       <el-table-column class-name="el-table-name" prop="name" label="Bucket名称" width="190" >
         <template #default="{row}">
-      <router-link :to="{ path: '/bucket', query: { id: row.id } }" class="el-table-link">{{ row.name }}</router-link>
+      <router-link :to="{ path: '/bucket', query: { bucketName: row.name } }" class="el-table-link">{{ row.name }}</router-link>
     </template>
       </el-table-column>
-      <el-table-column prop="storageLevel"  label="存储类型" />
-      <el-table-column prop="capacity" label="容量" />
-      <el-table-column prop="versionControl" label="版本控制" />
-      <el-table-column prop="encryption" label="加密存储" />
-      <el-table-column prop="watermark" label="图片水印" />
-      <el-table-column prop="bucketAcl" label="读写权限ACL" />
-      <el-table-column prop="updateTime" label="最后更新时间" />
+      <el-table-column prop="storageLevel"  label="存储类型" :formatter="formatStorageLevel"/>
+      <el-table-column prop="secret" label="加密存储" :formatter="formatEncryption"/>
+      <el-table-column prop="bucketAcl" label="读写权限ACL" :formatter="formatAcl" />
+      <el-table-column prop="createTime" label="创建时间" width="200px"/>
+      <el-table-column prop="updateTime" label="最后更新时间" width="200px"/>
     </el-table>
     <el-pagination
       background
@@ -34,104 +32,102 @@
   </div>
 </template>
 <script setup>
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import apiFun from "../utils/api";
+import { ElMessage } from "element-plus";
 
-
+/* 存储类型数据格式化 */
+function formatStorageLevel(row) {
+  const storageLevel = row.storageLevel
+  if (storageLevel === null) {
+    return "未知";
+  } else {
+    if(storageLevel==1){
+      return '标准存储'
+    }
+    else{
+      return '归档存储'
+    }
+  }
+}
+/* 读写权限数据格式化 */
+function formatAcl(row) {
+  const acl = row.bucketAcl
+  if (acl === null) {
+    return "未知";
+  } else {
+    if(acl==1){
+      return '公共读写'
+    } else if(acl==2){
+      return 'RAM读写'
+    }else if(acl==3){
+      return '公共读'
+    }else if(acl==4){
+      return 'RAM读'
+    }else if(acl==5){
+      return '私有'
+    }
+  }
+}
+/* 加密存储数据格式化 */
+function formatEncryption(row){
+  const acl = row.secret
+  if (acl === null) {
+    return "无加密";
+  } else {
+    if(acl==1){
+      return 'SM4加密'
+    } else if(acl==2){
+      return 'AES256加密'
+    }
+  }
+}
 const state = reactive({
-  tableData: [
-    {
-      name: "bucket1",
-      storageLevel: "标准存储1",
-      capacity: "476.12MB",
-      versionControl: "已开启",
-      encryption: "是",
-      watermark: "有",
-      bucketAcl: "只读",
-      updateTime: "2023年03月19日 19:38",
-    },
-    {
-      name: "bucket1",
-      storageLevel: "标准存储1",
-      capacity: "476.12MB",
-      versionControl: "已开启",
-      encryption: "是",
-      watermark: "有",
-      bucketAcl: "只读",
-      updateTime: "2023年03月19日 19:38",
-    },
-    {
-      name: "bucket1",
-      storageLevel: "标准存储1",
-      capacity: "476.12MB",
-      versionControl: "已开启",
-      encryption: "是",
-      watermark: "有",
-      bucketAcl: "只读",
-      updateTime: "2023年03月19日 19:38",
-    },
-    {
-      name: "bucket1",
-      storageLevel: "标准存储1",
-      capacity: "476.12MB",
-      versionControl: "已开启",
-      encryption: "是",
-      watermark: "有",
-      bucketAcl: "只读",
-      updateTime: "2023年03月19日 19:38",
-    },
-    {
-      name: "bucket1",
-      storageLevel: "标准存储1",
-      capacity: "476.12MB",
-      versionControl: "已开启",
-      encryption: "是",
-      watermark: "有",
-      bucketAcl: "只读",
-      updateTime: "2023年03月19日 19:38",
-    },
-    {
-      name: "bucket1",
-      storageLevel: "标准存储1",
-      capacity: "476.12MB",
-      versionControl: "已开启",
-      encryption: "是",
-      watermark: "有",
-      bucketAcl: "只读",
-      updateTime: "2023年03月19日 19:38",
-    },
-    {
-      name: "bucket1",
-      storageLevel: "标准存储1",
-      capacity: "476.12MB",
-      versionControl: "已开启",
-      encryption: "是",
-      watermark: "有",
-      bucketAcl: "只读",
-      updateTime: "2023年03月19日 19:38",
-    },
-    {
-      name: "bucket1",
-      storageLevel: "标准存储1",
-      capacity: "476.12MB",
-      versionControl: "已开启",
-      encryption: "是",
-      watermark: "有",
-      bucketAcl: "只读",
-      updateTime: "2023年03月19日 19:38",
-    },
-  ],
+  tableData: [],
   total: 200, // 总条数
   currentPage: 1, // 当前页
   pageSize: 8,
 });
-
-defineProps({
-  bucketList: Object,
+const props = defineProps({
+  searchText:{
+    type:String,
+    default:''
+  }
 });
+
+onMounted(()=>{
+  Pre()
+})
+
+function Pre(){
+  if(props.searchText!=null){
+  apiFun.bucket.getList(state.currentPage,state.pageSize,props.searchText).then((res)=>{
+   if(res.code==200){
+    console.log(res)
+    state.tableData=res.data.rows
+    state.total=res.data.totalCount
+   }
+   else
+   ElMessage.error(res.msg)
+  })
+}
+}
+
+
 
 const changePage = (val) => {
   state.currentPage = val;
+  if(props.searchText!=null){
+    console.log(state)
+  apiFun.bucket.getList(state.currentPage,state.pageSize,props.searchText).then((res)=>{
+   if(res.code==200){
+    state.tableData=res.data.rows
+    state.total=res.data.totalCount
+   }
+   else
+   ElMessage.error(res.msg)
+  })
+}
 };
 </script>
 <style scoped>
