@@ -36,5 +36,5 @@ export default ({ mode }) => defineConfig({
         prependData: `@import "@/style/base.scss";`
       }
     }
-  },
+  }
 })

@@ -88,7 +88,7 @@ const routes = [
         //子用户管理
         path: '/sub',
         redirect: '/userManage',
-        meta: { title: '子用户管理' ,hidden: true},
+        meta: { title: '资源管理' ,hidden: true},
         children: [
           {
             path:"/userManage",  //子用户管理
@@ -102,12 +102,6 @@ const routes = [
               },
           },
         ]
-      },
-      {
-        //上传
-        path: '/up',
-        component: () => import('../components/Upload.vue'),
-        meta: { title: '上传' },
       },
       {
         //Bucket(包含子菜单及子内页)
