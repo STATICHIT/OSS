@@ -36,7 +36,6 @@
 <script setup>
 import { reactive } from "vue";
 import apiFun from "../utils/api";
-import Mock from "mockjs";
 
 
 const state = reactive({
