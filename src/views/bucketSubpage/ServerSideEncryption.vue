@@ -10,8 +10,8 @@
     <div class="radio-group" v-if="changing">
       <div class="mb-2 flex items-center text-sm">
         <el-radio-group v-model="radio" class="ml-4">
-          <el-radio label="1" size="large">开启</el-radio>
-          <el-radio label="2" size="large">关闭</el-radio>
+          <el-radio label="1" size="large">SM4</el-radio>
+          <el-radio label="2" size="large">无加密</el-radio>
         </el-radio-group>
       </div>
     </div>
@@ -32,7 +32,7 @@ import { ElMessage } from "element-plus";
 const title = "服务器端加密";
 const content =
   "服务器端加密机制为静态数据提供保护。适合于对于文件存储有高安全性或者合规性要求的应用场景。例如，深度学习样本文件的存储、在线协作类文档数据的存储。";
-var isHide = ref("已开启"); //未开启 已开启两种状态
+var isHide = ref("SM4"); //SM4 无加密两种状态
 var changing = ref(false);
 var radio = ref("1");
 
@@ -45,7 +45,7 @@ let change = () => {
 let save = () => {
   changing.value = false;
   if (radio.value == "1") {
-    ElMessage.success("已开启服务端加密");
+    ElMessage.success("已开启SM4服务端加密");
   } else {
     ElMessage.success("已关闭服务端加密");
   }
@@ -56,9 +56,9 @@ watch(
   () => radio.value,
   (radio, prevradio) => {
     if (radio == "1") {
-      isHide.value = "已开启";
+      isHide.value = "SM4";
     } else if (radio == "2") {
-      isHide.value = "未开启";
+      isHide.value = "无加密";
     }
   }
 );
