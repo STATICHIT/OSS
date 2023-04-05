@@ -4,7 +4,9 @@
       <title-tip :title="this.title" :content="this.content"></title-tip>
       <div class="buttons">
         <el-button class="myBtn" @click="importImg" plain>选择图片</el-button>
-        <el-button class="myBtn" @click="save" plain>保存更改</el-button>
+        <el-button class="myBtn" @click="save" plain :disabled="could"
+          >保存更改</el-button
+        >
       </div>
 
       <!-- 图片处理组件 -->
@@ -68,49 +70,56 @@ import "tui-image-editor/dist/tui-image-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import ImageEditor from "tui-image-editor";
 import { ElMessage } from "element-plus";
+import FileMd5 from "../../models/file-md5.js";
+import apiFun from "../../utils/api";
+import axios from "axios";
+import { threadId } from "worker_threads";
 export default {
   data() {
     return {
+      tip: "http://192.168.50.236:5555/object/preview-image/mybucket/tip.png",
+      could: true, //是否能够保存图片
       instance: null,
       title: "图片处理",
       content:
         "针对云罐中Bucket存储的图片文件（Object），您可以在浏览器对图片进行在线编辑，保存后修改后图片将覆盖原图片。您可以将进行的操作包括添加图片水印、截图、绘画、调节亮度等。",
-
       // 选择图片
       drawer: false,
       chooseSrc: "",
+      // currentSrc:
+      //   "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA12s6NU.img",
       currentSrc:
-        "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA12s6NU.img",
-      a: true,
+        "http://192.168.50.236:5555/object/preview-image/mybucket/tip.png",
+      a: "",
       // 图片源列表
       classList: [
         {
-          id: "001",
+          id: "001.jpg",
           coverImg:
             "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE59yNZ?ver=d7f3",
         },
         {
-          id: "002",
+          id: "002.jpg",
           coverImg:
             "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE59gGS?ver=5bf1",
         },
         {
-          id: "003",
+          id: "003.jpg",
           coverImg:
             "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA12sapl.img",
         },
         {
-          id: "004",
+          id: "004.jpg",
           coverImg:
             "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA11N2LZ.img",
         },
         {
-          id: "005",
+          id: "005.jpg",
           coverImg:
             "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA11N9kp.img",
         },
         {
-          id: "006",
+          id: "006.jpg",
           coverImg:
             "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA11NbLD.img",
         },
@@ -120,6 +129,16 @@ export default {
   mounted() {
     this.init();
   },
+  watch: {
+    currentSrc: function (newTip, oldTip) {
+      if (newTip == this.tip) {
+        this.could = true; //禁用
+      } else {
+        this.could = false; //可用
+      }
+    },
+  },
+
   methods: {
     // 图片处理组件数据初始化
     init() {
@@ -164,23 +183,127 @@ export default {
         ElMessage.error("当前Bucket中不存在图片");
       } else {
         this.drawer = true;
+        // apiFun.object
+        //   .objectList(
+        //     "myBucket", //bucketName
+        //     "key", //桶名的关键字
+        //     1, //第一页
+        //     100, //每页的大小
+        //     "", //父文件
+        //     true //筛选出图片
+        //   )
+        //   .then((res) => {
+        //     const imgList=res.data.rows;
+        //     // this.classList=imgList;
+        //   });
       }
     },
-
     // 保存图片，并上传
-    save() {
+    async save() {
       // 调用组件官方方法，获取整个编辑后图片的base64数据
-      const base64String = this.instance.toDataURL();
-      alert(base64String);
+      const base64 = this.instance.toDataURL();
+      var file = this.blobToFile(this.dataURLtoBlob(base64), this.a);
+      file["id"] = this.uuidv4(); // 生成唯一 ID
+      //确保md5计算完成后再进行上传操作
+      const md5 = await this.computeMd5(file);
+      await this.uploadFile(file, md5); // 计算 MD5 并上传
     },
+    //上传文件
+    async uploadFile(file) {
+      const promises = [];
+      let bucketName = "myBucket";
+      // 申请上传并获取上传令牌
+      if (file.size < 5 * 1024 * 1024) {
+        console.log("我小于5MB~~~~~~~~~~~");
+        //文件大小小于5MB
+        const formData = new FormData();
+        formData.append("file", file);
+        let parentObjectId = "";
+        let objectAcl = "";
+        const res0 = await axios.put(
+          "http://192.168.50.236:8080/ossObject/putSmallObject?bucketName=" +
+            bucketName +
+            "&objectName=" +
+            file.name +
+            "&etag=" +
+            file["etag"] +
+            "&parentObjectId=" +
+            parentObjectId +
+            "&objectAcl=" +
+            objectAcl,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        console.log("小于4MB上传文件返回值：", res0);
+        if (res0.data.code === 200) {
+          //上传成功
+          this.initTipImg();
+        } else {
+          //上传失败
+          ElMessage.error("保存失败");
+        }
+      } else {
+        console.log("我大于5MB！！！！！！！！！");
+        const res = await apiFun.file.createChunkToken({
+          bucketName: bucketName,
+          objectName: file.name,
+          etag: file["etag"],
+          size: file.size,
+          chunks: file["chunks"],
+        });
+        console.log("大于4MB上传文件请求上传返回值：", res);
+        const blockToken = res.data.blockToken;
+        const ip = res.data.ip;
+        const port = res.data.port;
+        // 分片上传
+        const count = file["chunks"];
+        for (let i = 0; i < count; i++) {
+          console.log("正在上传第", i + 1, "片");
+          const chunkSize = 4194304; // 即4MB 即 4 * 1024 * 1024
+          const start = i * chunkSize;
+          const end = Math.min(start + chunkSize, file.size);
+          const chunk = file.slice(start, end);
+          const formData = new FormData();
+          formData.append("file", chunk);
+          const promise = axios.post(
+            `http://${ip}:${port}/object/append_file?chunk=${i}&blockToken=${blockToken}&bucketName=${bucketName}`,
+            formData,
+            { headers: { "Content-Type": "multipart/form-data" } }
+          );
+          promises.push(promise);
+        }
 
+        // 等待所有分片上传完成
+        await Promise.all(promises);
+
+        // 合并分片
+        await apiFun.file
+          .mergefile({
+            bucketName: bucketName,
+            blockToken: blockToken,
+          })
+          .then((res) => {
+            console.log("大于4MB上传文件合并文件返回值：", res);
+            if (res.code === 200) {
+              this.initTipImg();
+            } else {
+              ElMessage.error("保存失败");
+            }
+          });
+      }
+    },
+    initTipImg() {
+      ElMessage.success("已保存更改");
+      this.currentSrc = this.tip;
+      this.a = "";
+      this.init(); //重置操作图片
+    },
     changeList(id, coverImg) {
       if (this.a == id) {
         this.a = !this.a;
       } else {
         this.a = id;
         this.chooseSrc = coverImg;
-        console.log(coverImg);
       }
     },
     cancelClick() {
@@ -189,8 +312,48 @@ export default {
     chooseImg() {
       this.currentSrc = this.chooseSrc;
       this.init(); //重置操作图片
-      console.log(this.currentSrc);
       this.drawer = false;
+    },
+    //将base64转换为blob
+    dataURLtoBlob: function (dataurl) {
+      var arr = dataurl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], { type: mime });
+    },
+    //将blob转换为file
+    blobToFile: function (blob, filename) {
+      return new File([blob], filename, { type: "image/jpeg" });
+    },
+    computeMd5(file) {
+      return new Promise((resolve, reject) => {
+        // 计算 MD5
+        FileMd5(file, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            file["etag"] = data.etag;
+            file["chunks"] = data.chunks;
+            file["blockToken"] = "";
+            resolve(data.etag); // 传递 MD5 值
+          }
+        });
+      });
+    },
+    uuidv4() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+          const r = (Math.random() * 16) | 0,
+            v = c == "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        }
+      );
     },
   },
 };
