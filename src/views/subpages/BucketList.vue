@@ -30,15 +30,15 @@
     <template #default>
       <div class="default-box">
         <el-form
-              :model="state.newBucket"
-              :rules="rules"
-              label-width="120px"
-              class="demo-ruleForm"
-              size="large"
-              status-icon
-              label-position="left"
-              style="font-weight: bold;"
-            >
+    :model="state.newBucket"
+    :rules="rules"
+    label-width="120px"
+    class="demo-ruleForm"
+    size="large"
+    status-icon
+    label-position="left"
+    style="font-weight: bold;"
+  >
         <el-form-item style="margin-left: -8px;" label="Bucket名称" prop="bucketName">
       <el-input placeholder="创建成功后将不可修改" class="el-input" v-model="state.newBucket.bucketName" />
     </el-form-item>

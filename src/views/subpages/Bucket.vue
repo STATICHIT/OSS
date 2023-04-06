@@ -13,8 +13,6 @@
 <script setup>
 import menuVue from "../../components/InMenu.vue";
 import "../../style/base.scss";
-import { ElMessage } from "element-plus";
-import apiFun from "../../utils/api";
 </script>
 
 <style lang="scss" scoped>
