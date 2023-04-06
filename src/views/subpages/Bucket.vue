@@ -3,7 +3,7 @@
   <div>
     <div class="container">
       <div class="aside">
-        <menuVue style="z-index: 7"></menuVue>
+        <menuVue style="z-index: 7;max-width: 200px;min-width: 200px;"></menuVue>
         <router-view style="z-index: 60"></router-view>
       </div>
     </div>

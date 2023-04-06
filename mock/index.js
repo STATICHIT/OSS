@@ -2,7 +2,7 @@
  * @Author: Fleurxxx 984209872@qq.com
  * @Date: 2023-03-24 17:42:59
  * @LastEditors: Fleurxxx 984209872@qq.com
- * @LastEditTime: 2023-03-25 22:21:41
+ * @LastEditTime: 2023-04-03 23:01:41
  * @FilePath: \OSS\mock\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -44,6 +44,36 @@ Mock.mock('/api/getSubUserList', (req) => {
 
 
 
+
+/**
+ * 碎片管理
+ */
+let data2 = Mock.mock({
+  "data|15": [ //生成10条数据 数组
+    {
+      "etag":"8276D07FA5E5728303D56301A9B55986",
+      "blockToken": 5370023988,//生成用户id，自增1
+      'size|1-999999999':0,
+      "ip": '@ip',
+      "port":"192.168.1.5",
+      "objectName": "@cname()",
+      "secret": "@cname()",
+      "objectAcl": "@date()",
+      "chunkNum": "@integer(1, 30)"
+    }
+  ]
+})
+
+//subuser数据
+Mock.mock('/api/getFragment', (req) => {
+  // 输出请求参数
+  console.log(req)
+  // let json = JM.getJsonFile('./user.json5')
+  // 返回数据
+  return {
+    data2
+  }
+})
 
 
 

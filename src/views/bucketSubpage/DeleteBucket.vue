@@ -35,9 +35,18 @@
 import { ref } from "vue";
 import router from "../../router/index";
 import { ElMessage } from "element-plus";
+import { useRoute } from "vue-router";
+import apiFun from "../../utils/api";
 const centerDialogVisible = ref(true);
 const disabled = ref(false);
+const route = useRoute()
+const query = route.query
+
 let save = () => {
+  const name = query['bucketName']
+  apiFun.bucket.delete(name).then((res)=>{
+    console.log(res)
+  })
   centerDialogVisible.value = false;
   ElMessage.success("修改成功");
   router.push("/bucketList");
