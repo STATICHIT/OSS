@@ -11,30 +11,55 @@
       <div class="mb-2 flex items-center text-sm">
         <el-radio-group v-model="radio" class="ml-4">
           <el-radio label="1" size="large">SM4</el-radio>
-          <el-radio label="2" size="large">无加密</el-radio>
+          <el-radio label="0" size="large">无加密</el-radio>
         </el-radio-group>
       </div>
     </div>
-    <div class="state" v-if="!changing">{{ isHide }}</div>
+    <div class="state" v-if="!changing">{{ curSecret }}</div>
     <br />
     <el-button plain class="btn1" @click="change" v-if="!changing"
       >设置</el-button
     >
     <div v-if="changing">
       <el-button plain class="btn1" @click="save">保存</el-button>
+      <el-button plain type="info" class="btn2" @click="cancel">取消</el-button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { ElMessage } from "element-plus";
+import { useRoute } from "vue-router";
+import apiFun from "../../utils/api";
+const route = useRoute();
+const query = route.query;
+const bucketName = query["bucketName"];
 const title = "服务器端加密";
 const content =
   "服务器端加密机制为静态数据提供保护。适合于对于文件存储有高安全性或者合规性要求的应用场景。例如，深度学习样本文件的存储、在线协作类文档数据的存储。";
-var isHide = ref("SM4"); //SM4 无加密两种状态
+
+var secret = ref("");
+var curSecret = ref("SM4加密"); //SM4加密 无加密两种状态
+
 var changing = ref(false);
 var radio = ref("1");
+
+onMounted(() => {
+  init();
+});
+
+let init = () => {
+  apiFun.bucket.get(bucketName).then((res) => {
+    console.log(res);
+    secret.value = res.data.secret;
+    if (secret.value == "0") {
+      radio.value = "0";
+    } else {
+      radio.value = "1";
+    }
+  });
+};
 
 // 设置按钮点击事件
 let change = () => {
@@ -43,26 +68,46 @@ let change = () => {
 
 // 保存修改按钮点击事件
 let save = () => {
-  changing.value = false;
+  const bucketName = query["bucketName"];
   if (radio.value == "1") {
-    ElMessage.success("已开启SM4服务端加密");
+    apiFun.bucket.updateSecret(bucketName, 1).then((res) => {
+      console.log(res);
+      secret.value = "1";
+      changing.value = false;
+      ElMessage.success("已开启SM4服务端加密");
+    });
   } else {
-    ElMessage.success("已关闭服务端加密");
+    apiFun.bucket.updateSecret(bucketName, "").then((res) => {
+      console.log(res);
+      secret.value = "0";
+      changing.value = false;
+      ElMessage.success("已关闭服务端加密");
+    });
   }
 };
 
-// 对单选框进行监听
+let cancel = () => {
+  changing.value = false;
+  if (secret.value == "0") {
+    radio.value = "0";
+  } else {
+    radio.value = "1";
+  }
+};
+
+// 对secret进行监听
 watch(
-  () => radio.value,
-  (radio, prevradio) => {
-    if (radio == "1") {
-      isHide.value = "SM4";
-    } else if (radio == "2") {
-      isHide.value = "无加密";
+  () => secret.value,
+  (secret, preSecret) => {
+    if (secret == "1") {
+      curSecret.value = "SM4加密";
+    } else if (secret == "0") {
+      curSecret.value = "无加密";
     }
   }
 );
 </script>
+
 <style lang="scss" scoped>
 .box {
   width: 100%;

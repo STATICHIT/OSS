@@ -15,18 +15,30 @@ let apiFun = {
 
 //测试接口（按需添加，可删）
 
-apiFun.file.createChunkToken = (params) => {
-  return http.post('/ossObject/createChunkToken?bucketName=' + params.bucketName + '&objectName=' + params.fileName + '&etag=' + params.etag + '&size=' + params.size + '&chunks=' + params.chunks)
-}
-
-apiFun.file.mergefile = (params) => {
-  return http.post('/ossObject/merge?bucketName=' + params.bucketName + '&blockToken=' + params.blockToken)
-}
 
 
 //前后端链接测试
 apiFun.test.test = () => {
   return http.get('/test/demo')
+}
+
+/**
+ * 文件接口
+ * */
+
+//分片上传申请
+apiFun.file.createChunkToken = (params) => {
+  return http.post('/ossObject/createChunkToken?bucketName=' + params.bucketName + '&objectName=' + params.fileName + '&etag=' + params.etag + '&size=' + params.size + '&chunks=' + params.chunks)
+}
+
+//合并文件申请
+apiFun.file.mergefile = (params) => {
+  return http.post('/ossObject/merge?bucketName=' + params.bucketName + '&blockToken=' + params.blockToken)
+}
+
+//小文件上传
+apiFun.file.smallFile = (params) =>{
+  return http.post('/ossObject/putSmallObject?bucketName='+params.bucketName+'&objectName='+params.objectName+'&etag='+params.etag+'&parentObjectId='+params.parentObjectId+'&objectAcl='+params.objectAcl)
 }
 
 //测试文件预览
@@ -120,9 +132,21 @@ apiFun.bucket.authorize.delete = (bucketName, authorizeId) => {
   return http.delete('/authorize/deleteAuthorize?bucketName=' + bucketName + '&authorizeId=' + authorizeId)
 }
 
+//更新bucketAcl(1:SM4加密；2：AES256加密；null：不加密)
+apiFun.bucket.updateBucketAcl = (params) =>{
+  return http.put('/bucket/updateBucketAcl?bucketName='+params.bucketName+'&bucketAcl='+params.bucketAcl)
+}
+
+//更新Secret服务器端加密
+apiFun.bucket.updateSecret = (bucketName,secret) =>{
+  return http.put('/bucket/updateSecret?bucketName='+bucketName+'&secret='+secret)
+}
+
+//从桶中获取一个对象的元数据
 apiFun.object.metadata = (objectName, bucketName) => {
   return http.get('/ossObject/getObjectInfo?objectName=' + objectName + '&bucketName=' + bucketName)
 }
+
 /**
  * 对象接口
  *  */
@@ -159,8 +183,8 @@ apiFun.object.delete = (bucketName, objectName) => {
 }
 
 //获取对象列表
-apiFun.object.objectList = (bucketName, key, pagenum, size, parentObjectId) => {
-  return http.get('/ossObject/listObjects?bucketName=' + bucketName + '&key=' + key + '&pagenum=' + pagenum + '&size=' + size + '&parentObjectId=' + parentObjectId)
+apiFun.object.objectList = (bucketName, key, pagenum, size, parentObjectId,isImages) => {
+  return http.get('/ossObject/listObjects?bucketName=' + bucketName + '&key=' + key + '&pagenum=' + pagenum + '&size=' + size + '&parentObjectId=' + parentObjectId +'&isImages='+isImages)
 }
 
 /**

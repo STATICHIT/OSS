@@ -153,10 +153,22 @@ const routes = [
             meta: { title: '视频处理' }
           },
           {
+            //Bucket配置
+            path: '/bucketSetting',
+            component: () => import('../views/bucketSubpage/BucketSetting.vue'),
+            meta: { title: 'Bucket配置' },
+          },
+          {
             //Bucket标签
             path: '/bucketLabel',
             component: () => import('../views/bucketSubpage/BucketLabel.vue'),
             meta: { title: 'Bucket标签' },
+          },
+          {
+            //文件上传设置
+            path: '/fileUploadSetting',
+            component: () => import('../views/bucketSubpage/FileUploadSetting.vue'),
+            meta: { title: '文件上传设置' },
           },
           {
             //删除Bucket

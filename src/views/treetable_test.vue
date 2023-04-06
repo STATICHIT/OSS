@@ -149,109 +149,151 @@ export default {
     },
     //上传文件
     async uploadFile(file) {
+      const promises = [];
       let bucketName = "myBucket";
-      let blockToken = "";
-      let ip = "";
-      let port = "";
-      // console.log(file);
+      let blockToken, ip, port;
       // 申请上传并获取上传令牌
       console.log(file.name);
       console.log(file["etag"]);
       console.log(file["chunks"]);
       console.log(file.size);
-      const res = await apiFun.file.createChunkToken({
-        bucketName: bucketName,
-        objectName: file.name,
-        etag: file["etag"],
-        size: file.size,
-        chunks: file["chunks"],
-      });
-      const exist = res.data.exist;
-      console.log(res);
-      // console.log(exist);
-      if (exist) {
-        //如果文件已经存在，直接秒传
-        console.log(file);
-        console.log(file.id);
 
-        this.updateTableData(file.id, {
-          status: 2, //开始上传
-        });
-        setTimeout(() => {
-          this.updateTableData(file.id, {
-            status: 2,
-            percent: 100,
-          });
-        }, 500);
-        console.log("1");
-        setTimeout(() => {
-          // 定时器回调函数中重新启用按钮
-          this.updateTableData(file.id, {
-            status: 5, // 计算 MD5 完成，准备上传
-          });
-        }, 600);
-        return;
-      } else {
-        blockToken = res.data.blockToken;
-        ip = res.data.ip;
-        port = res.data.port;
+      if (file.size < 5 * 1024 * 1024) {
+        console.log("我小于5MB~~~~~~~~~~~");
+        //文件大小小于5MB
         this.updateTableData(file.id, {
           status: 2,
+          percent: 0,
         });
-      }
-      console.log(blockToken);
-      console.log(ip);
-      console.log(port);
-      // 分片上传
-      const promises = [];
-      const count = file["chunks"];
-      for (let i = 0; i < count; i++) {
-        console.log("正在上传第", i + 1, "片");
-        let percent = Math.floor((i / count) * 100);
-        this.updateTableData(file.id, {
-          percent: percent,
-        });
-        const chunkSize = 4194304; // 即4MB 即 4 * 1024 * 1024
-        const start = i * chunkSize;
-        const end = Math.min(start + chunkSize, file.size);
-        const chunk = file.slice(start, end);
         const formData = new FormData();
-        formData.append("file", chunk);
-        const promise = axios.post(
-          `http://${ip}:${port}/object/append_file?chunk=${i}&blockToken=${blockToken}&bucketName=${bucketName}`,
+        formData.append("file", file);
+        let parentObjectId = "";
+        let objectAcl = "";
+        const res0 = await axios.put(
+          "http://192.168.50.236:8080/ossObject/putSmallObject?bucketName=" +
+            bucketName +
+            "&objectName=" +
+            file.name +
+            "&etag=" +
+            file["etag"] +
+            "&parentObjectId=" +
+            parentObjectId +
+            "&objectAcl=" +
+            objectAcl,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
-        promises.push(promise);
-      }
-
-      // 等待所有分片上传完成
-      await Promise.all(promises);
-
-      // 合并分片
-      await apiFun.file
-        .mergefile({
-          bucketName: bucketName,
-          blockToken: blockToken,
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.code === 200) {
+        console.log(res0);
+        if (res0.data.code === 200) {
+          this.updateTableData(file.id, {
+            percent: 100,
+          });
+          setTimeout(() => {
+            // 定时器回调函数中重新启用按钮
             this.updateTableData(file.id, {
+              status: 5, // 已上传
+            });
+          }, 500);
+        } else {
+          this.updateTableData(file.id, {
+            status: 4, // 上传失败
+          });
+        }
+      } else {
+        console.log("我大于5MB！！！！！！！！！");
+        const res = await apiFun.file.createChunkToken({
+          bucketName: bucketName,
+          objectName: file.name,
+          etag: file["etag"],
+          size: file.size,
+          chunks: file["chunks"],
+        });
+        const exist = res.data.exist;
+        console.log(res);
+        // console.log(exist);
+        if (exist) {
+          //如果文件已经存在，直接秒传
+          console.log(file);
+          console.log(file.id);
+
+          this.updateTableData(file.id, {
+            status: 2, //开始上传
+          });
+          setTimeout(() => {
+            this.updateTableData(file.id, {
+              status: 2,
               percent: 100,
             });
-            setTimeout(() => {
-              // 定时器回调函数中重新启用按钮
-              this.updateTableData(file.id, {
-                status: 5, // 已上传
-              });
-            }, 500);
-          } else {
+          }, 500);
+          console.log("1");
+          setTimeout(() => {
+            // 定时器回调函数中重新启用按钮
             this.updateTableData(file.id, {
-              status: 4, // 上传失败
+              status: 5, // 计算 MD5 完成，准备上传
             });
-          }
-        });
+          }, 600);
+          return;
+        } else {
+          blockToken = res.data.blockToken;
+          ip = res.data.ip;
+          port = res.data.port;
+          this.updateTableData(file.id, {
+            status: 2,
+          });
+        }
+        console.log(blockToken);
+        console.log(ip);
+        console.log(port);
+        // 分片上传
+        const count = file["chunks"];
+        for (let i = 0; i < count; i++) {
+          console.log("正在上传第", i + 1, "片");
+          let percent = Math.floor((i / count) * 100);
+          this.updateTableData(file.id, {
+            percent: percent,
+          });
+          const chunkSize = 4194304; // 即4MB 即 4 * 1024 * 1024
+          const start = i * chunkSize;
+          const end = Math.min(start + chunkSize, file.size);
+          const chunk = file.slice(start, end);
+          const formData = new FormData();
+          formData.append("file", chunk);
+          const promise = axios.post(
+            `http://${ip}:${port}/object/append_file?chunk=${i}&blockToken=${blockToken}&bucketName=${bucketName}`,
+            formData,
+            { headers: { "Content-Type": "multipart/form-data" } }
+          );
+          promises.push(promise);
+        }
+
+        // 等待所有分片上传完成
+        await Promise.all(promises);
+
+        // 合并分片
+        await apiFun.file
+          .mergefile({
+            bucketName: bucketName,
+            blockToken: blockToken,
+          })
+          .then((res) => {
+            console.log(res);
+            if (res.code === 200) {
+              this.updateTableData(file.id, {
+                percent: 100,
+              });
+              setTimeout(() => {
+                // 定时器回调函数中重新启用按钮
+                this.updateTableData(file.id, {
+                  status: 5, // 已上传
+                });
+              }, 500);
+            } else {
+              this.updateTableData(file.id, {
+                status: 4, // 上传失败
+              });
+            }
+          });
+      }
     },
 
     //点击【开始上传】按钮
