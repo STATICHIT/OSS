@@ -7,7 +7,7 @@
     @close="handleClose"
     router
     style="
-      min-height: 87vh;
+     min-height: 87vh;
       position: relative;
       margin-left: -2.4%;
       border: 0;
@@ -88,6 +88,9 @@
     >
       <template #title>删除Bucket</template>
     </el-menu-item>
+    <el-menu-item index="/fragment" class="el-menu-font" :route="{path:'/fragment',query:{bucketName:bucketName}}">
+      <template #title>碎片管理</template>
+    </el-menu-item>
     <el-menu-item index="actionTest" class="el-menu-font">
       <template #title>操作测试页</template>
     </el-menu-item>
@@ -137,4 +140,5 @@ $second-color: #f0f1f8;
   font-weight: bold;
   color: #4e4e4e;
 }
+
 </style>

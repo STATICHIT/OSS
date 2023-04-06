@@ -192,6 +192,11 @@ const routes = [
             path: '/fileIcon',
             component: () => import('../components/FileIcon.vue'),
           },
+          {
+            //碎片管理
+            path: '/fragment',
+            component: () => import('../views/bucketSubpage/Fragment.vue'),
+          },
         ]
       }
     ]
