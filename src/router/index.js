@@ -38,6 +38,11 @@ const routes = [
     component: () => import('../views/test2.vue')
   },
   {
+    //关于视频压缩的测试
+    path: '/test3',
+    component: () => import('../views/test3.vue')
+  },
+  {
     //头部控件
     path: '/header',
     component: () => import('../components/Header.vue')
