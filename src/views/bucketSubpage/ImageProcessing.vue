@@ -73,7 +73,6 @@ import { ElMessage } from "element-plus";
 import FileMd5 from "../../models/file-md5.js";
 import apiFun from "../../utils/api";
 import axios from "axios";
-import { threadId } from "worker_threads";
 export default {
   data() {
     return {
@@ -211,7 +210,7 @@ export default {
     //上传文件
     async uploadFile(file) {
       const promises = [];
-      let bucketName = "myBucket";
+      let bucketName = this.$route.query.bucketName;
       // 申请上传并获取上传令牌
       if (file.size < 5 * 1024 * 1024) {
         console.log("我小于5MB~~~~~~~~~~~");

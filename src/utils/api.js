@@ -132,9 +132,21 @@ apiFun.bucket.authorize.delete = (bucketName, authorizeId) => {
   return http.delete('/authorize/deleteAuthorize?bucketName=' + bucketName + '&authorizeId=' + authorizeId)
 }
 
+//更新bucketAcl(1:SM4加密；2：AES256加密；null：不加密)
+apiFun.bucket.updateBucketAcl = (params) =>{
+  return http.put('/bucket/updateBucketAcl?bucketName='+params.bucketName+'&bucketAcl='+params.bucketAcl)
+}
+
+//更新Secret服务器端加密
+apiFun.bucket.updateSecret = (bucketName,secret) =>{
+  return http.put('/bucket/updateSecret?bucketName='+bucketName+'&secret='+secret)
+}
+
+//从桶中获取一个对象的元数据
 apiFun.object.metadata = (objectName, bucketName) => {
   return http.get('/ossObject/getObjectInfo?objectName=' + objectName + '&bucketName=' + bucketName)
 }
+
 /**
  * 对象接口
  *  */
