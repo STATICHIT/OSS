@@ -68,17 +68,19 @@ let change = () => {
 
 // 保存修改按钮点击事件
 let save = () => {
-  changing.value = false;
+  const bucketName = query["bucketName"];
   if (radio.value == "1") {
     apiFun.bucket.updateSecret(bucketName, 1).then((res) => {
       console.log(res);
       secret.value = "1";
+      changing.value = false;
       ElMessage.success("已开启SM4服务端加密");
     });
   } else {
     apiFun.bucket.updateSecret(bucketName, "").then((res) => {
       console.log(res);
       secret.value = "0";
+      changing.value = false;
       ElMessage.success("已关闭服务端加密");
     });
   }
