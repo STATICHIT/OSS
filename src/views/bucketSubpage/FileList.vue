@@ -15,7 +15,7 @@
           parentObjectName
         }}/</el-button
       >
-      <el-button type="primary" size="large">上传文件</el-button>
+      <el-button type="primary" size="large" @click="uploadFiles()">上传文件</el-button>
       <el-button type="warning" size="large" @click="newFileDialog = true"
         >新建目录</el-button
       >
@@ -543,6 +543,16 @@ const handleChange = (value) => {
 };
 function cancelClick() {
   newFileDialog.value = false;
+}
+
+function uploadFiles() {
+  console.log("1:",parentObjectId)
+  console.log("2:",parentObjectName)
+  //上传文件
+  router.push({
+    path:'/uploadFiles',
+    query:{bucketName:bucketName,parentObjectId:parentObjectId,parentObjectName:parentObjectName}
+  })
 }
 
 function confirmClick() {

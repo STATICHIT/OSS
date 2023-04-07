@@ -25,7 +25,7 @@
         <tr>
           <td>
             <span class="key">创建时间</span>
-            <span class="value">202年月11日 20:13</span>
+            <span class="value">2023年11月11日 20:13</span>
           </td>
           <td>
             <span class="key">读写权限</span> <span class="value">私有</span>
