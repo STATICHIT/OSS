@@ -10,6 +10,14 @@
     <el-button type="primary" style="margin-left: 16px" @click="goto">
       进入文件上传页面
     </el-button>
+    <br><br><br>
+    <el-button type="primary" style="margin-left: 16px" @click="goto2">
+      进入图片压缩页面
+    </el-button>
+    <br><br><br>
+    <el-button type="primary" style="margin-left: 16px" @click="goto3">
+      进入视频压缩页面
+    </el-button>
   </div>
 </template>
 
@@ -20,6 +28,14 @@ const title = "测试页面";
 const content = "成员进行组件测试时可以在此编辑触发按钮";
 let goto = () => {
   router.push("/test");
+};
+
+let goto2 = () => {
+  router.push("/test2");
+};
+
+let goto3 = () => {
+  router.push("/test3");
 };
 </script>
 

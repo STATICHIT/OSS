@@ -28,9 +28,19 @@ const routes = [
     ]
   },
   {
-    //关于树形列表的测试
+    //关于上传文件的测试
     path: '/test',
-    component: () => import('../views/treetable_test.vue')
+    component: () => import('../views/test1.vue')
+  },
+  {
+    //关于图片压缩的测试
+    path: '/test2',
+    component: () => import('../views/test2.vue')
+  },
+  {
+    //关于视频压缩的测试
+    path: '/test3',
+    component: () => import('../views/test3.vue')
   },
   {
     //头部控件
@@ -123,6 +133,12 @@ const routes = [
             meta: { title: '文件列表' },
           },
           {
+            //上传文件列表
+            path: '/uploadFiles',
+            component: () => import('../views/bucketSubpage/UploadFiles.vue'),
+            meta: { title: '上传文件' },
+          },
+          {
             //权限控制
             path: '/permissionControl',
             component: () => import('../views/bucketSubpage/PermissionControl.vue'),
@@ -163,12 +179,6 @@ const routes = [
             path: '/bucketLabel',
             component: () => import('../views/bucketSubpage/BucketLabel.vue'),
             meta: { title: 'Bucket标签' },
-          },
-          {
-            //文件上传设置
-            path: '/fileUploadSetting',
-            component: () => import('../views/bucketSubpage/FileUploadSetting.vue'),
-            meta: { title: '文件上传设置' },
           },
           {
             //删除Bucket

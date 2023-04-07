@@ -35,12 +35,16 @@
         <span><b>Bucket ACL</b></span>
         <div class="radio-group">
           <div class="mb-2 flex items-center text-sm">
-            <el-radio-group v-model="radio" class="ml-4" :disabled="disabled">
-              <el-radio label="1" size="large">私有</el-radio>
-              <el-radio label="2" size="large">公共读</el-radio>
-              <el-radio label="3" size="large">公共读写</el-radio>
+            <el-radio-group
+              v-model="bucketAcl"
+              class="ml-4"
+              :disabled="!changing"
+            >
+              <el-radio label="1" size="large">公共读写</el-radio>
+              <el-radio label="2" size="large">RAM读写</el-radio>
+              <el-radio label="3" size="large">公共读</el-radio>
               <el-radio label="4" size="large">RAM读</el-radio>
-              <el-radio label="5" size="large">RAM读写</el-radio>
+              <el-radio label="5" size="large">私有</el-radio>
             </el-radio-group>
           </div>
         </div>
@@ -65,9 +69,7 @@
           <span>⚠ 权限列表的展示有延迟，将在设置成功15分钟内更新。</span>
         </div>
         <br />
-        <el-button class="btn3" type="primary" @click="add"
-          >新增授权</el-button
-        >
+        <el-button class="btn3" type="primary" @click="add">新增授权</el-button>
 
         <!-- 权限表格 -->
         <div>
@@ -260,39 +262,52 @@
 </template>
 
 <script setup>
-import { reactive, computed, ref,watch } from "vue";
+import { reactive, computed, ref, watch, onMounted } from "vue";
 import { ElMessage } from "element-plus";
-//横向导航当前选中（1为读写权限；2为Bucket授权策略）
-const activeIndex = ref("1");
-//now为当前显示子页
-const now = ref(true);
+import { useRoute } from "vue-router";
+import apiFun from "../../utils/api";
+const activeIndex = ref("1"); //横向导航当前选中（1为读写权限；2为Bucket授权策略）
+const now = ref(true); //now为当前显示子页
+const route = useRoute();
+const query = route.query;
+const bucketName = query["bucketName"];
 //横向导航选择与子页面显示的绑定
 const handleSelect = (key, keyPath) => {
-  console.log(key);
   if (key == "1") {
     now.value = true;
   } else {
     now.value = false;
   }
 };
-//是否正在编辑读写权限
-var changing = ref(false);
-//控制读写权限单选框的可编辑性
-var disabled = ref(true);
-//读写权限单选框当前选择
-var radio = ref("1");
+
+var changing = ref(false); //是否正在编辑读写权限
+var bucketAcl = ref("1"); //读写权限单选框当前选择也是当前桶读写权限ACL
+
+onMounted(() => {
+  init();
+});
+
+let init = () => {
+  apiFun.bucket.get(bucketName).then((res) => {
+    console.log(res);
+    bucketAcl.value = res.data.bucketAcl.toString();
+  });
+};
 
 //设置按钮点击方法
 let change = () => {
   changing.value = true;
-  disabled.value = false;
 };
 
-//保存按钮点击方法
+//保存按钮点击方法(bucketAcl)
 let save = () => {
   changing.value = false;
-  disabled.value = true;
-  ElMessage.success("修改成功");
+  apiFun.bucket.updateBucketAcl(bucketName, bucketAcl.value).then((res) => {
+    console.log(res);
+    if (res.code == 200) {
+      ElMessage.success("修改成功");
+    }
+  });
 };
 
 // 以下是表格数据（具体数据暂时是假的）
@@ -305,10 +320,11 @@ const filterTableData = computed(() =>
       data.name.toLowerCase().includes(search.value.toLowerCase())
   )
 );
+
 //子项编辑按钮点击方法
 const handleEdit = (index, row) => {
   console.log(index, row);
-  nowTitle.value == "编辑授权";
+  nowTitle.value = "编辑授权";
   drawer.value = true;
 };
 
@@ -376,7 +392,6 @@ const state = reactive({
 const changePage = (val) => {
   state.currentPage = val;
 };
-
 
 //确定按钮点击事件
 const save2 = () => {

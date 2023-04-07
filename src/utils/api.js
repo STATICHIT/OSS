@@ -132,12 +132,12 @@ apiFun.bucket.authorize.delete = (bucketName, authorizeId) => {
   return http.delete('/authorize/deleteAuthorize?bucketName=' + bucketName + '&authorizeId=' + authorizeId)
 }
 
-//更新bucketAcl(1:SM4加密；2：AES256加密；null：不加密)
-apiFun.bucket.updateBucketAcl = (params) =>{
-  return http.put('/bucket/updateBucketAcl?bucketName='+params.bucketName+'&bucketAcl='+params.bucketAcl)
+//更新bucketAcl(1:公共读写；2：RAM读写；3：公共读；4：RAM写；5：私有)
+apiFun.bucket.updateBucketAcl = (bucketName,bucketAcl) =>{
+  return http.put('/bucket/updateBucketAcl?bucketName='+bucketName+'&bucketAcl='+bucketAcl)
 }
 
-//更新Secret服务器端加密
+//更新Secret服务器端加密(1:SM4加密；2：AES256加密；null：不加密)
 apiFun.bucket.updateSecret = (bucketName,secret) =>{
   return http.put('/bucket/updateSecret?bucketName='+bucketName+'&secret='+secret)
 }
