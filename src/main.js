@@ -1,11 +1,3 @@
-/*
- * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @Date: 2023-03-19 15:53:44
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-03-19 20:19:31
- * @FilePath: \OSS\src\main.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/index'
@@ -22,6 +14,14 @@ import locale from 'element-plus/lib/locale/lang/zh-cn';
 
 //全局组件
 import TitleTip from './components/TitleTip.vue'
+import * as buffer from "buffer"
+
+if(typeof(window ).global === "undefined"){
+  (window).grobal = window;
+}
+if(typeof(window).Buffer ==="undefined"){
+  (window).Buffer = buffer.Buffer;
+}
 
 // 生成 Vue 实例 app
 const app = createApp(App)

@@ -206,7 +206,7 @@ const state = reactive({
   padding: 10px 0;
   // width: 100%;
 }
-.input-msg {
+.input-msg{
   margin-bottom: 6%;
   width: 82%;
   margin-left: 21.5%;

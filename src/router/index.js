@@ -88,7 +88,7 @@ const routes = [
         //子用户管理
         path: '/sub',
         redirect: '/userManage',
-        meta: { title: '子用户管理' ,hidden: true},
+        meta: { title: '资源管理' ,hidden: true},
         children: [
           {
             path:"/userManage",  //子用户管理
@@ -102,12 +102,6 @@ const routes = [
               },
           },
         ]
-      },
-      {
-        //上传
-        path: '/up',
-        component: () => import('../components/Upload.vue'),
-        meta: { title: '上传' },
       },
       {
         //Bucket(包含子菜单及子内页)
@@ -159,10 +153,22 @@ const routes = [
             meta: { title: '视频处理' }
           },
           {
+            //Bucket配置
+            path: '/bucketSetting',
+            component: () => import('../views/bucketSubpage/BucketSetting.vue'),
+            meta: { title: 'Bucket配置' },
+          },
+          {
             //Bucket标签
             path: '/bucketLabel',
             component: () => import('../views/bucketSubpage/BucketLabel.vue'),
             meta: { title: 'Bucket标签' },
+          },
+          {
+            //文件上传设置
+            path: '/fileUploadSetting',
+            component: () => import('../views/bucketSubpage/FileUploadSetting.vue'),
+            meta: { title: '文件上传设置' },
           },
           {
             //删除Bucket
@@ -187,19 +193,9 @@ const routes = [
             component: () => import('../components/FileIcon.vue'),
           },
           {
-            //accesskey表格测试
-            path: '/accessKey',
-            component: () => import('../components/SecretTable.vue'),
-          },
-          {
-            //备份文件对话框测试
-            path: '/backup',
-            component: () => import('../components/action/Backup.vue'),
-          },
-          {
-            //备份文件对话框测试
-            path: '/backup',
-            component: () => import('../components/action/Backup.vue'),
+            //碎片管理
+            path: '/fragment',
+            component: () => import('../views/bucketSubpage/Fragment.vue'),
           },
         ]
       }

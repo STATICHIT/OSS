@@ -15,7 +15,7 @@
         <div class="search">
             <el-form :model="searchForm" :rules="searchForm" ref="searchForm" :inline="true" class="frame">
                 <el-form-item style="margin-right: 17px;">
-                    <el-input v-model="data.searchForm.name" placeholder="输入登录名、显示名、用户ID或AccessKey ID"></el-input>
+                    <el-input v-model="data.keyword" placeholder="输入登录名"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button  @click="search"><el-icon><Search /></el-icon></el-button>
@@ -38,30 +38,30 @@
                 >
               <!-- 复选框 -->
               <!-- <el-table-column type="selection" width="55" :selectable="selected"></el-table-column> -->
-              <el-table-column align="left" prop="" label="用户登录名称/显示名称" width="250">
+              <el-table-column  prop="" label="" width="20">
+                </el-table-column>
+              <el-table-column align="left" prop="" label="用户登录名称" width="600">
                   <template #default="scope">
                       <!-- <router-link to="/users/subUser" style="color:#2177b8;">{{ scope.row.userName }}</router-link> -->
-                      <p class="buttonText" href="#/users/subUser" target="_blank">
+                      <!-- <p class="buttonText" href="#/users/subUser" target="_blank">
                           {{ scope.row.userid }}
-                      </p>
+                      </p> -->
                       <p class="buttonText" href="#/users/subUser" target="_blank">
                           {{ scope.row.username }}
                       </p>
                   </template>
               </el-table-column>
-              <el-table-column align="left" prop="beizhu" label="备注" width="200">
-              </el-table-column>
-              <el-table-column align="left" prop="type" label="同步类型" width="200">
-              </el-table-column>
+              <!-- <el-table-column align="left" prop="beizhu" label="备注" width="">
+              </el-table-column> -->
               <!-- <el-table-column align="left" prop="" label="标签" width="200">
                 <a><el-icon><PriceTag /></el-icon></a>
               </el-table-column> -->
-              <el-table-column align="left" prop="updateTime" label="最后登录时间" width="200">
+              <el-table-column align="left" prop="updateTime" label="更新时间" width="">
               </el-table-column>
-              <el-table-column  align="left" prop="createTime" label="创建时间" width="200">
+              <el-table-column  align="left" prop="createTime" label="创建时间" width="">
               </el-table-column>
               <!-- 自定义列 -->
-              <el-table-column align="left" label="操作" >
+              <el-table-column align="left" label="操作" width="170">
                   <template #default="scope" >
                       <a class="buttonText"  target="_blank" style="color:red;" @click.prevent="handleDelete(scope.row)">
                           删除
@@ -108,23 +108,21 @@
                 <p style="line-height:0.5;">如需删除该用户,请输入用户名称。</p><br/>
                 <el-form
                         label-width="100px"
-                        ref="formlabelref"
+                        ref="ruleFormRef"
+                        :model="formlabel"
                         :rules="rules"
                         :inline="true"
-                        :model="formlabel"
                         class="con-form"
                     >
-                    <el-form-item prop="id" style="width: 100%">
+                    <el-form-item prop="input" style="width: 100%">
                       <el-input style="width: 95%" v-model="formlabel.input" placeholder="请输入用户名称"/>
-                    </el-form-item>  
+                    </el-form-item> 
+                    <div class="del-but">
+                      <el-button type="info" @click="submit(ruleFormRef)" :disabled="disabled" style="width:100px;">移入回收站</el-button>
+                      <el-button @click="closeDialog" style="width:80px;">取 消</el-button>
+                    </div>
                 </el-form>
               </div>
-              <template #footer>
-                <span class="dialog-footer">
-                  <el-button type="info" @click="submit" :disabled="disabled" style="width:100px;">移入回收站</el-button>
-                  <el-button @click="closeDialog" style="width:80px;">取 消</el-button>
-                </span>
-              </template>
             </el-dialog>
         </div>
     </div>
@@ -140,7 +138,7 @@ import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios'
 import { ElMessageBox,ElMessage } from 'element-plus';
-import apiFun from "../../utils/api";
+import req from '../../utils/api';
 /**
 * 仓库
 */
@@ -163,6 +161,7 @@ const data = reactive({
   tableData:[],
   //表单是否打开
   dialogVisible:false,
+  keyname:'',
   username:'',
   id:'',
   state:'',
@@ -170,40 +169,48 @@ const data = reactive({
   email:'',
   phone:'',
   // 搜索框表单
-  searchForm: {
-      name: ''
-  },
+  keyword:'',
   //分页
-  total: 200, // 总条数
+  total: 100, // 总条数
   currentPage: 1, // 当前页
   pageSize: 8,
 })
 const disabled = ref(false)
+//自定义昵称校验规则
+const checkeNickName = (rule, value,callback) => {
+  if (value === "") {
+    callback(new Error("该项不能为空"));
+  } else if (value !== data.keyname) {
+    callback(new Error("输入信息与被删除用户不匹配!"));
+  } else {
+    callback();
+  }
+}
+let ruleFormRef = ref(null)
 let rules= ref({
-    id: [
-    {
-        required: true,
-        message: '该项不能为空',
-        trigger: 'blur',
-    }
-    ],
+  input: [
+    { validator: checkeNickName, trigger: "blur" },        
+    { required: true, message: '该项不能为空', trigger: 'blur' }
+  ],
 }) 
 let formlabel = ref({
     input:'',
 })
 let boolean1 = ref(true)
 let boolean2 = ref(false)
-const ruleFormRef = ref()
+
 
 //重置
 const resetForm =()=>{
-ruleFormRef.value.resetFields();
+  ruleFormRef.value.resetFields();
 }
 
 
 //搜索
 const search = async()=>{
-  console.log("都可以")
+  console.log(data.keyword)
+  initData()
+  
 }
 //创建用户V
 const createUser = async()=>{
@@ -234,49 +241,75 @@ const deleteUser = async()=>{
 
 //获取子用户列表
 const initData = () => {
-//写请求接口
-axios.get( "/api/getSubUserList").then(res=>{
-  console.log(res)
-  console.log(res.data.data1.data.length)
-  data.tableData = res.data.data1.data
-  console.log(data.tableData)
-  for(let i=0; i<res.data.data1.data.length; i++){
-      // console.log(res.data.data.data[i].phone)
-  }
-}).catch(err =>{
-  console.log(err)
-})
+  //写请求接口
+  // axios.get( "/api/getSubUserList").then(res=>{
+  //   console.log(res)
+  //   console.log(res.data.data1.data.length)
+  //   data.tableData = res.data.data1.data
+  //   console.log(data.tableData)
+  //   for(let i=0; i<res.data.data1.data.length; i++){
+  //       // console.log(res.data.data.data[i].phone)
+  //   }
+  // }).catch(err =>{
+  //   console.log(err)
+  // })\
+
+  console.log(data.currentPage)
+  console.log(typeof data.pageSize)
+  req.user.getSubUsers(data.keyword,data.currentPage,data.pageSize).then(res=>{
+      console.log(res)
+      if(res.code===200){
+        data.tableData = res.data.rows
+        data.total = res.data.totalCount
+      }
+  }).catch(err=>{
+      console.log(err)
+      ElMessage.error("加载失败")
+  })
 }
 //分页
 const changePage = (val) => {
-  state.currentPage = val;
-};
+  data.currentPage = val;
+  initData()
+}
 
 //删除
 const handleDelete = (index) => {
-  console.log(index.id)
-  let data={
-      id:index.id
-  }
+  data.keyname = index.username
+  data.id = index.id
   openForm()
 }
 // 打开表单
 const openForm = () => {
-    data.dialogVisible = true
-    console.log(data.dialogVisible)
+  data.dialogVisible = true
+  console.log(data.dialogVisible)
 }
 // 关闭表单
 const closeDialog = () =>{
     data.dialogVisible = false
+    ruleFormRef.value.resetFields();
+    formlabel.index = ''
 }
 //提交表单
-const submit = () =>{
-    // 先重置
-    // this.$refs.form.resetFields()
-    // this.$refs[formRef].resetFields();
-    // 后关闭
-    data.dialogVisible = false
-    ElMessage.success("删除成功")
+const submit = async (formEl) =>{
+  await formEl.validate((valid, fields) => {
+    console.log(valid)
+      if(valid){
+        // 验证成功
+        req.user.deleteSubUser(data.id).then(res=>{
+          console.log(res)
+          if(res.code===200){
+              ElMessage.success({
+                  message: '删除成功!'
+              });
+              initData()
+          }
+        }).catch(err=>{
+            console.log(err)
+        })
+        data.dialogVisible = false
+      }
+  })
 }
 onBeforeMount(() => {
 //console.log('2.组件挂载页面之前执行----onBeforeMount')
@@ -372,6 +405,9 @@ a:hover{
   }
   .con-form{
     padding-left: 4%;
+  }
+  .del-but{
+    padding-left: 288px;
   }
   .el-dialog{
     .innerIcon{
