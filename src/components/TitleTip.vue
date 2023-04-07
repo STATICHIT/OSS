@@ -1,6 +1,6 @@
 <template>
   <div class="titleTip">
-    <h4 class="title">{{ title }}</h4>
+    <h3 class="title">{{ title }}</h3>
     <el-popover
       class="more"
       placement="top-start"

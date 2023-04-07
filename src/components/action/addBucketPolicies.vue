@@ -141,12 +141,12 @@ var nowTitle = ref("新增授权");
 var radio = ref("1");
 
 function add() {
-  nowTitle.value == "新增授权";
+  nowTitle.value = "新增授权";
   drawer.value = true;
 }
 
 function edit() {
-  nowTitle.value == "编辑授权";
+  nowTitle.value = "编辑授权";
   drawer.value = true;
 }
 
@@ -159,7 +159,7 @@ function confirmClick() {
   if (nowTitle.value == "新增授权") {
     ElMessage.success("新增成功");
   } else if (nowTitle.value == "编辑授权") {
-    ElMessage.success == "编辑成功";
+    ElMessage.success("编辑成功");
   }
 }
 
