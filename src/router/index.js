@@ -186,6 +186,21 @@ const routes = [
             path: '/fileIcon',
             component: () => import('../components/FileIcon.vue'),
           },
+          {
+            //accesskey表格测试
+            path: '/accessKey',
+            component: () => import('../components/SecretTable.vue'),
+          },
+          {
+            //备份文件对话框测试
+            path: '/backup',
+            component: () => import('../components/action/Backup.vue'),
+          },
+          {
+            //备份文件对话框测试
+            path: '/backup',
+            component: () => import('../components/action/Backup.vue'),
+          },
         ]
       }
     ]

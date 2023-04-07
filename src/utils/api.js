@@ -5,9 +5,11 @@ let apiFun = {
   user:{},
   bucket:{
     authorize:{},
+    tag:{},
   },
   object:{
     tag:{},
+    accessKey:{},
   },
   test:{},
 };
@@ -84,7 +86,7 @@ apiFun.bucket.collect = (name) =>{
   return http.put('/favorite/putUserFavorite?bucketName='+name)
 }
 
-//用户删除一个桶
+//用户取消收藏一个桶
 apiFun.bucket.userDelete = (name) => {
   return http.delete('/favorite/deleteUserFavorite?bucketName='+name)
 }
@@ -115,10 +117,29 @@ apiFun.bucket.authorize.delete =(bucketName,authorizeId) =>{
 apiFun.object.metadata = (objectName,bucketName) => {
   return http.get('/ossObject/getObjectInfo?objectName='+objectName+'&bucketName='+bucketName)
 }
+
+/**
+ * bucket标签接口
+ */
+
+//获取bucket标签列表
+apiFun.bucket.tag.getTags= (bucketName) => {
+  return http.get(`/bucketTag/getBucketTag?bucketName=${bucketName}`)
+}
+//删除bucket标签
+apiFun.bucket.tag.deleteTag= (bucketName,tagId) => {
+  return http.delete(`deleteBucketTag?bucketName=${bucketName}&TagId=${tagId}`)
+}
+//添加bucket标签
+apiFun.bucket.tag.addTag= params => {
+  return http.put(`/bucketTag/putBucketTag`,params)
+}
+
+
+
 /**
  * 对象接口
  *  */
-//获取用户收藏的桶
 
 //从桶中获取一个对象的元数据
 apiFun.object.metadata = (objectName,bucketName) => {
@@ -132,6 +153,9 @@ apiFun.object.dataInfo = (objectName,bucketName) => {
 
 //在桶中添加一个文件夹
 apiFun.object.add = (bucketName,objectName,parentObject) =>{
+  if(parentObject==null){
+  return http.put('/ossObject/putFolder?bucketName='+bucketName+'&objectName='+objectName)
+  }else 
   return http.put('/ossObject/putFolder?bucketName='+bucketName+'&objectName='+objectName+'&parentObjectId='+parentObject)
 }
 
@@ -152,26 +176,89 @@ apiFun.object.delete = (bucketName,objectName) => {
 
 //获取对象列表
 apiFun.object.objectList = (bucketName,key,pagenum,size,parentObjectId) => {
+  if(!parentObjectId){
+    if(!key)
+  return http.get('/ossObject/listObjects?bucketName='+bucketName+'&pagenum='+pagenum+'&size='+size)
+    else 
+  return http.get('/ossObject/listObjects?bucketName='+bucketName+'&key='+key+'&pagenum='+pagenum+'&size='+size)
+  }else{
+    if(!key)
+  return http.get('/ossObject/listObjects?bucketName='+bucketName+'&pagenum='+pagenum+'&size='+size+'&parentObjectId='+parentObjectId)
+  else
   return http.get('/ossObject/listObjects?bucketName='+bucketName+'&key='+key+'&pagenum='+pagenum+'&size='+size+'&parentObjectId='+parentObjectId)
+  }
 }
 
+//获取对象状态
+apiFun.object.getStatus = (objectName,bucketName) => {
+  return http.get('/ossObject/getState?objectName='+objectName+'&bucketName='+bucketName)
+}
+
+//获取对象的元数据
+apiFun.object.getInfo = (objectName,bucketName) => {
+  return http.get('/ossObject/getObjectInfo?objectName='+objectName+'&bucketName='+bucketName)
+}
+
+//解冻一个对象
+apiFun.object.unfreeze = (bucketName,objectName) => {
+  return http.post(`/ossObject/unfreeze?bucketName=${bucketName}&objectName=${objectName}`)
+}
+
+//备份一个对象
+apiFun.object.backupObject = (bucketName,objectName,targetBucketName,newObjectName) => {
+  return http.post('/ossObject/backup?bucketName='+bucketName+'&objectName='+objectName+'&targetBucketName='+targetBucketName+'&newObjectName='+newObjectName)
+}
+//复原一个对象
+apiFun.object.backupRecoveryObject = (bucketName,objectName) => {
+  return http.post('/ossObject/backupRecovery?bucketName='+bucketName+'&objectName='+objectName)
+}
+//归档一个对象
+apiFun.object.freeze = (bucketName,objectName) => {
+  return http.post(`/ossObject/freeze?bucketName=${bucketName}&objectName=${objectName}`)
+}
+//批量删除对象
+apiFun.object.deleteMore = (bucketName,params) => {
+  return http.delete(`/ossObject/batchDeletion?bucketName=${bucketName}`,params)
+}
+
+//更新objectAcl
+ apiFun.object.updateAcl = (bucketName,objectName,bucketAcl) => {
+  return http.put(`/ossObject/updateObjectAcl?bucketName=${bucketName}&objectName=${objectName}&newtName=${bucketAcl}`)
+ }
+
+
+/**
+ * 对象accessKey接口
+ */
+//获取accessKey
+apiFun.object.accessKey.get=(objectId)=>{
+  return http.get(`/accessKey/getAccessKeys?objectId=${objectId}`)
+}
+//删除accessKey
+apiFun.object.accessKey.delete=params=>{
+  return http.delete(`/accessKey/deleteAccessKey`,params)
+}
+//创建accessKey
+apiFun.object.accessKey.create=(objectId,survivalTime)=>{
+  return http.post(`/accessKey/createAccessKey?objectId=${objectId}&survivalTime=${survivalTime}`)
+}
 /**
  * 对象标签接口
  */
 
 //获取对象标签
-apiFun.object.tag.get =(objectName) =>{
-  return http.get('/objectTag/getObjectTag?objectName='+objectName)
+apiFun.object.tag.get =(bucketName,objectName) =>{
+  return http.get(`/objectTag/getObjectTag?bucketName=${bucketName}&objectName=${objectName}`)
 }
 
 //添加对象标签
-apiFun.object.tag.add =(objectName) =>{
-  return http.put('/objectTag/putObjectTag?objectName='+objectName)
+apiFun.object.tag.add = params =>{
+  return http.put(`/objectTag/putObjectTag`,params)
 }
 
 //删除对象标签
-apiFun.object.tag.delete =(objectName,key) =>{
-  return http.delete('/objectTag/deleteObjectTag?objectName='+objectName+'&key='+key)
+apiFun.object.tag.delete =(bucketName,objectName,TagId) =>{
+  return http.delete(`/objectTag/deleteObjectTag?bucketName=${bucketName}&objectName=${objectName}&TagId=${TagId}`)
 }
 
 export default apiFun;

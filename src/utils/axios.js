@@ -5,7 +5,8 @@ import router from '../router/index'
 import { localGet } from './index'
 
 
-let baseURL = 'http://192.168.50.236:8080/' //后端开发环境地址(部署后端到本机后只需修改此地址)
+let baseURL = 'http://192.168.50.236:8080/'
+// 'http://192.168.50.35:8080/' //后端开发环境地址(部署后端到本机后只需修改此地址)
 let config = {
   baseURL: baseURL,
   timeout: 30000    //设置最大请求时间
@@ -67,8 +68,7 @@ const http = {
     return new Promise((resolve, reject) => {
       _axios({
         url,
-        data: params,
-        params: qs.parse(params),
+        data: qs.parse(params),
         headers: header,
         method: 'PUT'
       }).then(res => {

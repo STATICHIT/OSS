@@ -27,7 +27,6 @@
       <el-menu-item index="/dataCopy">数据复制</el-menu-item>
       <el-menu-item index="/dataImport">数据导入</el-menu-item>
     </el-sub-menu>
-
     <el-sub-menu index="4">
       <template #title>
         <el-icon><TrendCharts /></el-icon>
@@ -39,19 +38,30 @@
     <el-sub-menu index="5">
       <template #title>
         <el-icon><Star /></el-icon>
-        <span class="el-menu-font">收藏路径</span>
+        <span class="el-menu-font">收藏Bucket</span>
       </template>
       <el-menu-item
+      class="collectList"
         v-for="collectBucket in state.collectBuckets"
         :key="collectBucket.id"
+        @click="toBucket(collectBucket.name)"
         index=""
-        >{{ collectBucket.name }}</el-menu-item
+        >{{ collectBucket.name }}
+        <el-button
+        @click="deleteCollect(collectBucket.name)"
+      link
+      >
+        <el-icon class="delete"><Close /></el-icon></el-button>
+        </el-menu-item
       >
       <el-menu-item
-        ><el-icon><Plus /></el-icon>新建路径</el-menu-item
+      @click="openCollectBucket"
+      index=""
+        ><el-icon 
+        ><Plus /></el-icon>新增Bucket</el-menu-item
       >
     </el-sub-menu>
-    <button class="open-btn" @click="isCollapse = !isCollapse">
+    <button class="open-btn">
       <el-icon class="open-icon" v-show="isCollapse"
         ><ArrowRightBold
       /></el-icon>
@@ -59,6 +69,41 @@
         ><ArrowLeftBold class="open-icon"
       /></el-icon>
     </button>
+    <el-dialog
+    v-model="isVisit"
+    width="45%"
+     title="收藏bucket"
+      append-to-body
+      >
+      <template #default>
+        <el-form label-width="120px">
+        <el-form-item style="font-weight: bold;" label="添加方式">
+      <el-radio-group v-model="collectBucketWay">
+        <el-radio label="1" >从我的Bucket添加</el-radio>
+        <el-radio label="2" >从其他已授权Bucket添加</el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item v-if="collectBucketWay==1" style="font-weight: bold;" required label="Bucket">
+      <el-select v-model="state.selectBucketName" style="width: 60%;" placeholder="请选择要收藏的Bucket">
+        <el-option v-for="bucket in state.myBucket" :key="bucket.name" :label="bucket.name" :value="bucket.name"/>
+      </el-select>
+    </el-form-item>
+    <el-form-item v-if="collectBucketWay==2" style="font-weight: bold;" required label="Bucket">
+      <el-input style="width: 60%;" placeholder="请输入你要收藏的Bucket名字" v-model="state.selectBucketName" />
+    </el-form-item>
+    </el-form>
+      </template>
+      <template #footer>
+        <div style="flex: auto; justify-content: center">
+        <el-button type="primary" @click="confirmClick"
+          >确定</el-button
+        >
+        <el-button @click="isVisit=false"
+          >取消</el-button
+        >
+      </div>
+      </template>
+      </el-dialog>
   </el-menu>
 </template>
 
@@ -69,23 +114,85 @@ import {
   Location,
   Setting,
 } from "@element-plus/icons-vue";
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import "@/style/base.scss";
 import apiFun from "../utils/api";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import router from "../router";
 
+const collectBucketWay = ref('1')
+const isVisit = ref(false)//新增bucket收藏弹窗
 const state = reactive({
   collectBuckets: [],
+  myBucket:[],
+  selectBucketName:'',//用户选择收藏的bucket
 });
 
-//  apiFun.bucket.getCollect().then((res)=>{
-//   if(res.code==200){
-//     state.collectBuckets=res.data
-//   }
-//   else
-//   ElMessage.error(res.msg)
-//  })
+onMounted(()=>{
+  pre()
+})
+const deleteCollect = (name) => {
+  ElMessageBox.confirm(`确定取消收藏该Bukcet吗?`, {
+      type: 'warning',
+    })
+    .then(() => {
+      apiFun.bucket.userDelete(name).then(res=>{
+    state.collectBuckets=res.data
+    ElMessage.success('操作成功！')
+  })
+    })
+    .catch(() => {});
 
+}
+const openCollectBucket = () => {
+  isVisit.value=true
+  apiFun.bucket.getList(1,200,'').then((res)=>{
+    console.log(res)
+   if(res.code==200){
+    state.myBucket=res.data.rows
+    console.log(state.myBucket)
+   }
+   else
+   ElMessage.error(res.msg)
+  })
+}
+function pre(){
+  apiFun.bucket.getCollect().then((res)=>{
+    console.log(res)
+   if(res.code==200){
+     state.collectBuckets=res.data
+   }
+   else
+   ElMessage.error(res.msg)
+  })
+}
+/* 进入Bucket */
+const toBucket = (name) => {
+  router.push({path:'/fileList',query:{
+    bucketName:name
+  }})
+}
+/* 确认收藏 */
+const confirmClick = () => {
+  /* 判断是否已被收藏 */
+  for(let index=0;index<state.collectBuckets.length;index++){
+    let item = state.collectBuckets[index]
+    if(state.selectBucketName==item.name){
+      ElMessage.warning('该bucket已被收藏!')
+      return
+    }
+  }
+  apiFun.bucket.collect(state.selectBucketName).then(res=>{
+    if(res.code==200){
+    console.log(res)
+    isVisit.value=false
+    ElMessage.success('操作成功！')
+    state.collectBuckets=res.data
+    }else{
+      ElMessage.error(res.msg)
+    }
+  })
+}
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath);
 };
@@ -102,6 +209,10 @@ $second-color: #f0f1f8;
 
 .el-menu.el-menu-item {
   font-size: 10px;
+}.collectList{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 .open-btn {
   border-radius: 0;
@@ -137,5 +248,12 @@ $second-color: #f0f1f8;
 }
 .plus-icon {
   margin-left: 10px;
-}
+}.dialog{
+       width: 34%;
+} .delete {
+    opacity: 0; /* 设置默认透明度 */
+  }
+  .delete:hover {
+    opacity: 1; /* 设置鼠标悬浮时的不透明度 */
+  }
 </style>

@@ -15,7 +15,7 @@
           <span style="margin-left: -18%">值</span>
         </div>
         <div
-          v-for="(label, index) in state.labels"
+          v-for="(label, index) in labels"
           :key="index"
           class="label-input"
         >
@@ -30,7 +30,7 @@
     </template>
     <template #footer>
       <div style="flex: auto; justify-content: center">
-        <el-button size="large" type="primary" @click="$emit('confirmClick',state.labels)"
+        <el-button size="large" type="primary" @click="$emit('confirmClick',labels)"
           >确定</el-button
         >
         <el-button size="large" @click="$emit('cancelClick')">取消</el-button>
@@ -40,37 +40,64 @@
 </template>
 
 <script setup>
-import { computed, reactive } from "vue";
+import { computed, onMounted, reactive } from "vue";
+import { useRoute } from "vue-router";
+import apiFun from "../../utils/api";
 
 const prop = defineProps({
-
+    objectName:{
+      type:String
+    },
+    labels:{
+      type:Number,
+      default:()=>[{
+        id:0,
+    key:'',
+    value:''
+      }]
+    },
 });
+
+
+
+const route = useRoute()
+const query = route.query
+const bucketName = query['bucketName']
 
 const state = reactive({
-  /* 标签数组 */
-  labels: [
-    {
-      key: "",
-      value: "",
-    },
-  ],
-});
+  labels:[{
+    id:0,
+    key:'',
+    value:''
+    }],
+})
 
 const addInput = computed(()=>{
-    console.log(state.labels[state.labels.length-1])
-    if(state.labels[state.labels.length-1].key==''||state.labels[state.labels.length-1].value==''){
+    if(prop.labels.length!=0&&(prop.labels[prop.labels.length-1].key==''||prop.labels[prop.labels.length-1].value=='')){
         return true;
     }
     else return false
 })
-
+//   onMounted(()=>{
+//     pre()
+//   })
+//  function pre(){
+//    console.log(prop.objectName+bucketName)
+//    if(prop.objectName!=''){
+//    apiFun.object.tag.get(bucketName,prop.objectName).then(res=>{
+//      console.log(res)
+//        prop.secret=res.data
+//    })
+// }
+//  }
 const deleteLabel = (index) => {
   /* 删除标签 */
-  state.labels.splice(index, 1);
+  prop.labels.splice(index, 1);
 };
 const addLabel = (index) => {
   /* 添加标签 */
-  state.labels.push({ key: "", value: "" });
+  console.log(state.labels) 
+  prop.labels.push({ id:0, key: "", value: "" });
 };
 
 </script>

@@ -17,6 +17,8 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
 import axios from 'axios'
 import "../mock/index.js"
+import locale from 'element-plus/lib/locale/lang/zh-cn';
+
 
 //全局组件
 import TitleTip from './components/TitleTip.vue'
@@ -25,7 +27,7 @@ import TitleTip from './components/TitleTip.vue'
 const app = createApp(App)
 
 app.use(router)
-app.use(ElementPlus)
+app.use(ElementPlus,{locale})
 app.use(createPinia())
 // app.use(VideoPlayer)
 

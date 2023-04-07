@@ -30,4 +30,5 @@ import apiFun from "../../utils/api";
   display: flex;
   flex-direction: row;
 }
+
 </style>
