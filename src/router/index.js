@@ -133,6 +133,12 @@ const routes = [
             meta: { title: '文件列表' },
           },
           {
+            //上传文件列表
+            path: '/uploadFiles',
+            component: () => import('../views/bucketSubpage/UploadFiles.vue'),
+            meta: { title: '上传文件' },
+          },
+          {
             //权限控制
             path: '/permissionControl',
             component: () => import('../views/bucketSubpage/PermissionControl.vue'),
