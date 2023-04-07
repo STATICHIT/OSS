@@ -187,7 +187,9 @@
     <!-- 操作选项组 -->
     <div class="btnGroup">
       <el-button type="danger" @click="uploadMyFiles">开始上传</el-button>
-      <el-button @click="cancelUpload">取消上传</el-button>
+      <el-button @click="cancelUpload"
+        >&nbsp;&nbsp;取消&nbsp;&nbsp;</el-button
+      >
     </div>
   </div>
 </template>
@@ -201,8 +203,9 @@ export default {
     return {
       bucketName: "", //当前bucket名
       parentObjectId: "", //所在文件夹的Id
+      parentObjectName: "", //所在文件夹的名字(自带末尾的斜杠)
       tableData: [], //上传列表
-      curpath: "mybucket/", //当前目录
+      curpath: "", //当前目录
       disabled: true,
       radio: "1", //上传到
       afterPath: "", //指定目录
@@ -229,7 +232,13 @@ export default {
   methods: {
     init() {
       this.bucketName = this.$route.query.bucketName;
-      this.parentObjectId=this.$route.query.parentObjectId;
+      this.parentObjectId = this.$route.query.parentObjectId;
+      this.parentObjectName = this.$route.query.parentObjectName;
+      console.log(this.parentObjectName);
+      this.curpath =
+        this.parentObjectName == ""
+          ? this.bucketName + "/"
+          : this.bucketName + "/" + this.parentObjectName;
     },
     fackBtn() {
       document.getElementById("fileInput").click();
@@ -326,7 +335,7 @@ export default {
     async uploadFile(file) {
       const promises = [];
       const bucketName = this.bucketName;
-      console.log("afterPath:",this.afterPath)
+      console.log("afterPath:", this.afterPath);
       let objectName = this.afterPath + file.name;
       let parentObjectId = this.parentObjectId; //当前所在目录id
       let objectAcl = this.fileAcl == "0" ? "" : this.fileAcl; //对象acl
