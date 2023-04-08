@@ -70,6 +70,7 @@ apiFun.user.deleteSubUser =(userId) =>{
   return http.delete('/user/deleteSubUser?userId='+userId)
 }
 
+
 /**
  * bucket接口
  *  */
