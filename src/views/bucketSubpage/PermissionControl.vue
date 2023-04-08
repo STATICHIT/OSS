@@ -79,16 +79,15 @@
             style="width: 100%"
             :header-cell-style="{ background: '#eff1f7', color: '#606266' }"
           >
-            <el-table-column type="selection" width="55" />
-            <el-table-column label="授权资源" prop="date" />
-            <el-table-column label="授权操作" prop="name" />
-            <el-table-column label="授权用户" prop="address" />
+            <el-table-column label="授权资源" prop="target" />
+            <el-table-column label="授权操作" prop="action" />
+            <el-table-column label="授权用户" prop="users" />
             <el-table-column align="right">
               <template #header>
                 <el-input
                   v-model="search"
                   size="small"
-                  placeholder="Type to search"
+                  placeholder="请输入关键字查询相关授权资源"
                 />
               </template>
               <template #default="scope">
@@ -288,10 +287,15 @@ onMounted(() => {
 });
 
 let init = () => {
+  console.log(bucketName);
   apiFun.bucket.get(bucketName).then((res) => {
-    console.log(res);
+    console.log("bucket.get(bucketName):",res);
     bucketAcl.value = res.data.bucketAcl.toString();
   });
+
+  // apiFun.bucket.authorize.getList(bucketName).then((res) => {
+  //   console.log("bucket.authorize.getList(bucketName)", res);
+  // });
 };
 
 //设置按钮点击方法
@@ -302,8 +306,9 @@ let change = () => {
 //保存按钮点击方法(bucketAcl)
 let save = () => {
   changing.value = false;
+  // 修改当前bucket的bucketAcl
   apiFun.bucket.updateBucketAcl(bucketName, bucketAcl.value).then((res) => {
-    console.log(res);
+    // console.log(res);
     if (res.code == 200) {
       ElMessage.success("修改成功");
     }
@@ -317,7 +322,9 @@ const filterTableData = computed(() =>
   state.tableData.filter(
     (data) =>
       !search.value ||
-      data.name.toLowerCase().includes(search.value.toLowerCase())
+      data.target.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.action.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.users.toLowerCase().includes(search.value.toLowerCase())
   )
 );
 
@@ -337,49 +344,49 @@ const state = reactive({
   //表格（fake）数据
   tableData: [
     {
-      date: "bucket1",
-      name: "只读",
-      address: "*",
+      target: "mybucket/*",
+      action: "只读",
+      users: "*",
     },
     {
-      date: "bucket2",
-      name: "读/写",
-      address: "AAAbc",
+      target: "mybucket/aaa.png",
+      action: "读/写",
+      users: "AAAbc",
     },
     {
-      date: "bucket3",
-      name: "RAM读/写",
-      address: "*",
+      target: "mybucket/项目设计文档/4月8日更新版本",
+      action: "RAM读/写",
+      users: "*",
     },
     {
-      date: "bucket4",
-      name: "RAM读",
-      address: "abc,aaa,AAAbc",
+      target: "mybucket/wallpaper//*",
+      action: "RAM读",
+      users: "abc,aaa,AAAbc",
     },
     {
-      date: "bucket5",
-      name: "私有",
-      address: "*",
+      target: "mybucket/log/*",
+      action: "私有",
+      users: "*",
     },
     {
-      date: "bucket6",
-      name: "读/写",
-      address: "AAAbc",
+      target: "mybucket/preview.jpg",
+      action: "读/写",
+      users: "AAAbc",
     },
     {
-      date: "bucket7",
-      name: "RAM读/写",
-      address: "*",
+      target: "mybucket/12.jpg",
+      action: "RAM读/写",
+      users: "*",
     },
     {
-      date: "bucket8",
-      name: "RAM读",
-      address: "abc,aaa,AAAbc",
+      target: "mybucket/123/textBox/*",
+      action: "RAM读",
+      users: "abc,aaa,AAAbc",
     },
     {
-      date: "bucket9",
-      name: "私有",
-      address: "*",
+      target: "mybucket/D/*",
+      action: "私有",
+      users: "*",
     },
   ],
   //分页
