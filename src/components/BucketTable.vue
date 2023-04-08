@@ -113,22 +113,14 @@ function Pre(){
 }
 }
 
-
+defineExpose({
+Pre
+})
 
 const changePage = (val) => {
   state.currentPage = val;
-  if(props.searchText!=null){
-    console.log(state)
-  apiFun.bucket.getList(state.currentPage,state.pageSize,props.searchText).then((res)=>{
-   if(res.code==200){
-    state.tableData=res.data.rows
-    state.total=res.data.totalCount
-   }
-   else
-   ElMessage.error(res.msg)
-  })
+ Pre()
 }
-};
 </script>
 <style scoped>
 .bucketTable {
