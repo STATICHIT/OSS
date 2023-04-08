@@ -77,6 +77,22 @@ apiFun.newRAM = params => {
   return http.post('/user/createRam', params)
 }
 
+//创建RAM用户
+apiFun.user.createRam =(params) =>{
+  return http.post('/user/createRam',params)
+}
+
+//获取子用户列表
+apiFun.user.getSubUsers =(keyword,pageNum,size) =>{
+  return http.get('/user/getSubUsers?keyword='+keyword+'&pageNum='+pageNum+'&size='+size)
+}
+
+//删除子用户
+apiFun.user.deleteSubUser =(userId) =>{
+  return http.delete('/user/deleteSubUser?userId='+userId)
+}
+
+
 /**
  * bucket接口
  *  */
@@ -139,6 +155,14 @@ apiFun.bucket.updateBucketAcl = (bucketName,bucketAcl) =>{
   return http.put('/bucket/updateBucketAcl?bucketName='+bucketName+'&bucketAcl='+bucketAcl)
 }
 
+//获取bucket内碎片列表
+apiFun.bucket.getFragment =(bucketName) =>{
+  return http.get('/fragment/list?bucketName='+bucketName)
+}
+
+//删除bucket内碎片
+apiFun.bucket.deleteFragment =(bucketName,blockToken) =>{
+  return http.delete('/fragment?bucketName='+bucketName+'&blockToken='+blockToken)
 /**
  * bucket标签接口
  */
