@@ -55,6 +55,21 @@ apiFun.newRAM = params => {
   return http.post('/user/createRam',params)
 }
 
+//创建RAM用户
+apiFun.user.createRam =(params) =>{
+  return http.post('/user/createRam',params)
+}
+
+//获取子用户列表
+apiFun.user.getSubUsers =(keyword,pageNum,size) =>{
+  return http.get('/user/getSubUsers?keyword='+keyword+'&pageNum='+pageNum+'&size='+size)
+}
+
+//删除子用户
+apiFun.user.deleteSubUser =(userId) =>{
+  return http.delete('/user/deleteSubUser?userId='+userId)
+}
+
 /**
  * bucket接口
  *  */
@@ -115,6 +130,17 @@ apiFun.bucket.authorize.delete =(bucketName,authorizeId) =>{
 apiFun.object.metadata = (objectName,bucketName) => {
   return http.get('/ossObject/getObjectInfo?objectName='+objectName+'&bucketName='+bucketName)
 }
+
+//获取bucket内碎片列表
+apiFun.bucket.getFragment =(bucketName) =>{
+  return http.get('/fragment/list?bucketName='+bucketName)
+}
+
+//删除bucket内碎片
+apiFun.bucket.deleteFragment =(bucketName,blockToken) =>{
+  return http.delete('/fragment?bucketName='+bucketName+'&blockToken='+blockToken)
+}
+
 /**
  * 对象接口
  *  */
@@ -175,29 +201,8 @@ apiFun.object.tag.delete =(objectName,key) =>{
 }
 
 
-//获取bucket内碎片列表
-apiFun.bucket.getFragment =(bucketName) =>{
-  return http.get('/fragment/list?bucketName='+bucketName)
-}
 
-//删除bucket内碎片
-apiFun.bucket.deleteFragment =(bucketName,blockToken) =>{
-  return http.delete('/fragment?bucketName='+bucketName+'&blockToken='+blockToken)
-}
 
-//创建RAM用户
-apiFun.user.createRam =(params) =>{
-  return http.post('/user/createRam',params)
-}
 
-//获取子用户列表
-apiFun.user.getSubUsers =(keyword,pageNum,size) =>{
-  return http.get('/user/getSubUsers?keyword='+keyword+'&pageNum='+pageNum+'&size='+size)
-}
-
-//删除子用户
-apiFun.user.deleteSubUser =(userId) =>{
-  return http.delete('/user/deleteSubUser?userId='+userId)
-}
 
 export default apiFun;
