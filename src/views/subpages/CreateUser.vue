@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-03-19 20:46:34
  * @LastEditors: Fleurxxx 984209872@qq.com
- * @LastEditTime: 2023-04-06 22:04:58
+ * @LastEditTime: 2023-04-08 18:40:14
  * @FilePath: \OSS\src\views\subpages\CreateUser.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -113,9 +113,6 @@ let rules= reactive({
       { required: true, message: "该项不能为空", trigger: "blur" },
     ],
 }) 
-
-
-
 
 const radio = ref('1') //单选框
 //确认
