@@ -19,14 +19,13 @@
         class-name="el-table-name"
         prop="name"
         label="文件名"
-        width="190"
+        width="300"
       >
         <template #default="scope">
           <FileIcon :fileName="scope.row.name" :isFolder="scope.row.isFolder" @click="$emit('toFile',scope.$index)"></FileIcon>
         </template>
       </el-table-column>
       <el-table-column prop="size" label="文件大小"  :formatter="formatSize" />
-      <el-table-column prop="capacity" label="存储类型" />
       <el-table-column prop="lastUpdateTime" label="更新时间" />
       <!-- 操作 -->
       <el-table-column
@@ -35,20 +34,34 @@
         <template #default="scope">
           <!-- 加其他操作按钮的插槽 -->
           <el-button
-            @click="$emit('handleMsg',scope.$index)"
+            @click="$emit('toFile',scope.$index)"
             type="text"
             size="small"
-            width="250px"
             v-show="!scope.row.isFolder"
             >详情</el-button
           >
+          <el-button
+            @click="$emit('preview',scope.$index)"
+            type="text"
+            size="small"
+       style="margin-left: -2px;"
+            v-show="!scope.row.isFolder"
+            >预览</el-button
+          >
+      <el-button text
+       type="primary"
+       size="small"
+       style="margin-left: -2px;"
+       v-show="!scope.row.isFolder"
+       @click="$emit('addLabel',scope.$index)"
+       >标签</el-button>
           <el-button
             @click="$emit('deleteFile',scope.$index)"
             text
             type="danger"
             style="margin-left: -2px;"
             size="small"
-            >彻底删除</el-button
+            >删除</el-button
           >
         </template>
       </el-table-column>
@@ -68,7 +81,6 @@
       <el-button :disabled="btnDisabled" size="large">解冻</el-button>
     </template>
   </el-popconfirm>
-      <el-button size="large" :disabled="btnDisabled" @click="$emit('addLabel')">标签</el-button>
       <el-button size="large" :disabled="btnDisabled" @click="$emit('showUpdateAcl')">设置读写权限</el-button>
       <el-popconfirm
     width="220"
@@ -104,6 +116,8 @@ import { computed } from "vue";
 import router from "../router";
 import { useRoute } from "vue-router";
 
+const emit = defineEmits(['getPage','addLabel','toFile','preview'])
+
 const prop = defineProps({
   //文件对象列表
   tableData:{
@@ -112,18 +126,23 @@ const prop = defineProps({
 },
   state:{
     type:Object,
-
   }
 })
 
 
 /* 文件大小数据格式化 */
 function formatSize(row) {
-  const size = row.size
+  let size = row.size
   if (size === null) {
-    return "未知";
+    return "";
   } else {
-    return `${size}KB`;
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  let index = 0;
+  while (size >= 1024 && index < units.length - 1) {
+    size /= 1024;
+    index++;
+  }
+  return `${size.toFixed(2)} ${units[index]}`;
   }
 }
 
@@ -131,8 +150,8 @@ const multipleSelection = reactive([])
 const multipleTableRef = ref()
 
 const changePage = (val) => {
-  $emit('getPage')
   prop.state.currentPage = val;
+  emit('getPage')
 };
 const handleSelectionChange = (val) => {
   multipleSelection.value = val

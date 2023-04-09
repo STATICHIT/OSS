@@ -15,20 +15,23 @@
         <tr>
           <td>
             <span class="key">空间名称</span>
-            <span class="value">important-text</span>
+            <span class="value"
+              ><b>{{ bucketName }}</b></span
+            >
           </td>
           <td>
             <span class="key">存储类型</span>
-            <span class="value">标准存储</span>
+            <span class="value">{{ storageLevel }}</span>
           </td>
         </tr>
         <tr>
           <td>
             <span class="key">创建时间</span>
-            <span class="value">202年月11日 20:13</span>
+            <span class="value">{{ createTime }}</span>
           </td>
           <td>
-            <span class="key">读写权限</span> <span class="value">私有</span>
+            <span class="key">读写权限</span>
+            <span class="value">{{ bucketAcl }}</span>
           </td>
         </tr>
       </table>
@@ -39,18 +42,53 @@
 <script>
 import * as echarts from "echarts";
 import theme from "../subpages/echarts_test";
+import apiFun from "../../utils/api";
 export default {
   data() {
     return {
       title: "Bucket 概览",
       content:
         "概览页面提供了本存储空间中依据存储类型不同的存储容量横向柱形图和一些基本信息。",
+      bucketName: "",
+      createTime: "",
+      storageLevel: "", //存储类型
+      bucketAcl: "", //读写权限
     };
   },
   mounted() {
+    this.initdate();
     this.initEcharts();
   },
   methods: {
+    initdate() {
+      this.bucketName = this.$route.query.bucketName;
+      apiFun.bucket.get(this.bucketName).then((res) => {
+        console.log(res);
+        this.createTime = res.data.createTime;
+        if (res.data.storageLevel == "1") {
+          this.storageLevel = "标准存储";
+        } else if (res.data.storageLevel == "2") {
+          this.storageLevel = "归档存储";
+        }
+        switch (res.data.bucketAcl) {
+          case 1:
+            this.bucketAcl = "公共读写";
+            break;
+          case 2:
+            this.bucketAcl = "RAM读写";
+            break;
+          case 3:
+            this.bucketAcl = "公共读";
+            break;
+          case 4:
+            this.bucketAcl = "RAM读";
+            break;
+          case 5:
+            this.bucketAcl = "私有";
+            break;
+        }
+      });
+    },
     initEcharts() {
       // 表格数据
       var option = {
@@ -87,7 +125,7 @@ export default {
           },
         ],
       };
-      
+
       echarts.registerTheme("theme", theme); //注册主题
       const myChart = echarts.init(document.getElementById("mychart"), "theme"); // 图标初始化
       myChart.setOption(option);
