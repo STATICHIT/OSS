@@ -63,7 +63,7 @@ apiFun.getScreenData = () => {
  * */
 
 //登录
-apiFun.login = params => {
+apiFun.login = (params) => {
   return http.post('/user/login', params)
 }
 

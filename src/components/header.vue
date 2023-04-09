@@ -19,15 +19,15 @@
               src="../assets/preAvatar.png"
               class="avatar-img"
             />
-            <span style="margin-top: -5px">{{ username }}</span>
+            <span style="margin-top: -5px">{{ userStore.name }}</span>
             <!-- <i class="icon el-icon-s-custom" /> -->
             <!-- <i class="el-icon-caret-bottom" /> -->
             <el-icon><CaretBottom /></el-icon>
           </div>
         </template>
         <div class="nickname">
-          <p>昵称:{{ username }}</p>
-          <p>账号:{{ id }}</p>
+          <p>昵称:{{ userStore.name }}</p>
+          <p>账号:{{ userStore.id }}</p>
           <el-tag size="small" effect="dark" class="logout" @click="logout"
             >退出</el-tag
           >
@@ -44,9 +44,11 @@ import { ref, onMounted, reactive } from "vue";
 import axios from "@/utils/axios";
 import { localGet, localRemove } from "../utils";
 import "@/style/base.scss";
+import user from "../store/user";
+
 const username = ref("STATICHIT");
 const id = ref("1245377");
-
+const userStore = user()
 const back = () => {
   router.back();
 };

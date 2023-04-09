@@ -3,7 +3,7 @@ import { createRouter, createWebHistory, useRouter, useRoute } from 'vue-router'
 //路由配置数组
 const routes = [
   //   { path: '/', component: () => import('../views/home.vue') },
-  { path: '/', redirect: '/home', },
+  { path: '/', redirect: '/login', },
   {
     // 登录注册底页
     path: '/index',
@@ -19,11 +19,6 @@ const routes = [
         // 注册模块
         path: '/register',
         component: () => import('../views/Register.vue')
-      },
-      {
-        // RAM用户登录模块
-        path: '/ramLogin',
-        component: () => import('../views/RamLogin.vue')
       },
     ]
   },

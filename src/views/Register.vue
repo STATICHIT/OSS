@@ -4,6 +4,7 @@
       <div>
         <div class="login-box">
           <br />
+          <b>注册页</b>
           <p class="login-box-msg">
             Fill in the information here to register an account.
           </p>
@@ -12,6 +13,7 @@
         <el-icon><User /></el-icon><span style="color: gray"> Username</span>
 
         <input
+          v-model="username"
           type="text"
           class="form-control"
           name="username"
@@ -24,6 +26,7 @@
         <el-icon><Phone /></el-icon><span style="color: gray"> Phone</span>
 
         <input
+          v-model="phone"
           type="text"
           class="form-control"
           name="phone"
@@ -37,6 +40,7 @@
 
         <div class="help-block with-errors"></div>
         <input
+          v-model="password"
           minlength="5"
           maxlength="20"
           type="password"
@@ -52,9 +56,10 @@
 
         <div class="help-block with-errors"></div>
         <input
+          v-model="password2"
           minlength="5"
           maxlength="20"
-          type="password2"
+          type="password"
           class="form-control"
           name="password"
           placeholder="请确认您的密码"
@@ -89,37 +94,35 @@ export default {
   },
   methods: {
     register() {
-      //测试
-      this.$router.push({ path: "/login" });
-
-      //   //注册
-      //   if (this.password != this.password2) {
-      //     ElMessage.error("两次输入密码不相同");
-      //   } else {
-      //     if (
-      //       this.username == "" ||
-      //       this.password == "" ||
-      //       this.password2 == "" ||
-      //       this.phone == ""
-      //       ) {
-      //       ElMessage.error("请完整填写信息");
-      //     }
-      //     apiFun
-      //       .enroll({
-      //         username: this.username,
-      //         password: this.password,
-      //         phone: this.phone,
-      //       })
-      //       .then((res) => {
-      //         if (res.flag == false) {
-      //           ElMessage.error(res.data);
-      //         } else {
-      //           ElMessage.success(
-      //               "注册成功，即将跳转至登录页"
-      //           );
-      //         }
-      //       });
-      //   }
+      //注册
+      console.log(this.username);
+      console.log(this.password);
+      console.log(this.password2);
+      console.log(this.phone);
+      if (this.password != this.password2) {
+        ElMessage.error("两次输入密码不相同");
+      } else {
+        if (
+          this.username == "" ||
+          this.password == "" ||
+          this.password2 == "" ||
+          this.phone == ""
+        ) {
+          ElMessage.error("请完整填写信息");
+        } else {
+          console.log("我进来了这里");
+          apiFun
+            .enroll({
+              username: this.username,
+              password: this.password,
+              phone: this.phone,
+            })
+            .then((res) => {
+              ElMessage.success("注册成功");
+              this.$router.push({ path: "/login" });
+            });
+        }
+      }
     },
   },
 };
