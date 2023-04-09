@@ -8,7 +8,6 @@
     @close="handleClose"
     router
   >
-  
     <el-menu-item
       index="/overView"
       class="el-menu-font"
@@ -74,6 +73,11 @@
         index="bucketLabel"
         :route="{ path: '/bucketLabel', query: { bucketName: bucketName } }"
         >Bucket标签</el-menu-item
+      >
+      <el-menu-item
+        index="bucketSetting"
+        :route="{ path: '/bucketSetting', query: { bucketName: bucketName } }"
+        >其他设置</el-menu-item
       >
     </el-sub-menu>
     <el-menu-item

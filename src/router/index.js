@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory, useRouter, useRoute } from 'vue-router'
-
 //路由配置数组
 const routes = [
   //   { path: '/', component: () => import('../views/home.vue') },
@@ -93,18 +92,18 @@ const routes = [
         //子用户管理
         path: '/sub',
         redirect: '/userManage',
-        meta: { title: '资源管理' ,hidden: true},
+        meta: { title: '资源管理', hidden: true },
         children: [
           {
-            path:"/userManage",  //子用户管理
+            path: "/userManage",  //子用户管理
             component: () => import('../views/subpages/SubUserManage.vue'),
             meta: { title: '子用户管理' },
-          },{
-              path:"/createUser",   //创建子用户
-              component: ()=>import('../views/subpages/CreateUser.vue'),
-              meta: {
-                  title: '创建子用户'
-              },
+          }, {
+            path: "/createUser",   //创建子用户
+            component: () => import('../views/subpages/CreateUser.vue'),
+            meta: {
+              title: '创建子用户'
+            },
           },
         ]
       },
@@ -113,7 +112,7 @@ const routes = [
         path: '/bucket',
         component: () => import('../views/subpages/Bucket.vue'),
         redirect: '/fileList',//初始显示在文件列表页面
-        meta: { title: '当前Bucket名' },
+        meta: { title: "bucketName" },
         children: [
           {
             //概览
@@ -164,10 +163,10 @@ const routes = [
             meta: { title: '视频处理' }
           },
           {
-            //Bucket配置
+            //Bucket其他设置
             path: '/bucketSetting',
             component: () => import('../views/bucketSubpage/BucketSetting.vue'),
-            meta: { title: 'Bucket配置' },
+            meta: { title: '其他设置' },
           },
           {
             //Bucket标签
@@ -222,8 +221,8 @@ router.beforeEach((to, from, next) => {
     // 如果路径是 /login 则正常执行
     next()
   } else {
-    // 如果不是 /login，判断是否有 to ken
-    if (!localStorage.getItem('user')) {
+    // 如果不是 /login，判断是否有 token
+    if (!localStorage.getItem('token')) {
       // 如果没有，则跳至登录页面
       next({ path: '/login' })
     } else {
@@ -233,6 +232,5 @@ router.beforeEach((to, from, next) => {
   }
 })
 */
-
 
 export default router
