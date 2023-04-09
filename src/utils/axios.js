@@ -80,6 +80,7 @@ const http = {
     })
   },
   post(url = '', params = {}) {
+    console.log("!@!!!:",params)
     return new Promise((resolve, reject) => {
       _axios({
         url,
