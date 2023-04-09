@@ -10,8 +10,8 @@
       ref="multipleTableRef"
     >
       <el-table-column prop="id" label="AccessKey ID" />
-      <el-table-column prop="survivalTime" label="存活时间(秒)" />
-      <el-table-column prop="creationTime" label="创建时间" />
+      <el-table-column prop="survivalTime" label="存活时间(秒)" width="130px" />
+      <el-table-column prop="creationTime" label="创建时间" width="130px"/>
       <!-- 操作 -->
       <el-table-column
         label="操作">
@@ -23,6 +23,7 @@
             type="danger"
             style="margin-left: -2px;"
             size="small"
+            width="150px"
             >删除</el-button
           >
         </template>
@@ -33,7 +34,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from "vue";
-import CreateSecret from "./action/createSecret.vue";
+import CreateSecret from "./action/CreateSecret.vue";
 import apiFun from "../utils/api";
 import { ElMessage } from "element-plus";
 
@@ -89,7 +90,7 @@ const deleteSecret = (index) => {
   text-align: left;
 }
 .table{
-    width: 1000px;
+    width: 800px;
 }
 .box{
     display: flex;

@@ -63,7 +63,7 @@ function confirmClick(){
         console.log(props.objectName+props.bucketName)
         apiFun.object.backupObject(props.bucketName,props.objectName,state.targetBucketName,state.newObjectName).then(res=>{
             console.log(res)
-            if(res.code!=200){
+            if(res.code==200){
             ElMessage.success('操作成功！')
             emit('close')
             }else {

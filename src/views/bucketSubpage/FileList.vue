@@ -73,7 +73,9 @@
               <span>{{ state.objectInfo.name }}</span>
               <el-button type="text" size="small" @click="copyFilename"
                 >复制文件名</el-button
-              >
+              ><el-button class="download-btn" type="primary" @click="download" :disabled="downloadBtn" >
+      下载<el-icon><Download /></el-icon>
+    </el-button>
             </div>
           </div>
           <div class="box-items">
@@ -452,11 +454,7 @@ const goToFile = (index) => {
     /* 当点击对象为文件时跳转进入文件夹，设置路由参数为点击文件夹的id */
     router.push({
       path: "/fileList",
-      query: {
-        bucketName: bucketName,
-        parentObjectId: fileData.id,
-        parentObjectName: fileData.name,
-      },
+      query: { bucketName:bucketName,parentObjectId: fileData.id, parentObjectName: fileData.name },
     });
   } else {
     apiFun.object.getStatus(name, bucketName).then((res) => {
@@ -477,6 +475,7 @@ const goToFile = (index) => {
   }
 };
 const Pre = () => {
+  console.log(parentObjectId+'111')
   if (bucketName != null) {
     apiFun.object
       .objectList(
@@ -487,6 +486,7 @@ const Pre = () => {
         parentObjectId
       )
       .then((res) => {
+        console.log(res)
         page.total = res.data.totalCount;
         state.fileList = res.data.rows;
         const items = [];
@@ -556,7 +556,24 @@ const handleChange = (value) => {
 function cancelClick() {
   newFileDialog.value = false;
 }
-
+/* 下载文件 */
+const download = () => {
+  const xhr = new XMLHttpRequest(); 
+  let src =`http://192.168.50.236:5555/object/preview-image/${bucketName}/${state.objectInfo.name}`
+  console.log(src)
+    xhr.open('GET', src, true); 
+    xhr.responseType = 'blob'; 
+    xhr.onload = function() { 
+ const blob = new Blob([this.response], 
+            { type: 'application/octet-stream' }); 
+        const link = document.createElement('a'); 
+        link.href = window.URL.createObjectURL(blob); 
+        link.download = src.split('/').pop(); 
+        document.body.appendChild(link);
+        link.click(); 
+}; 
+xhr.send();
+}
 function uploadFiles() {
   console.log("1:", bucketName);
   console.log("1:", parentObjectId);
@@ -600,7 +617,12 @@ function confirmClick() {
       .catch(() => {});
   }
 }
-
+/* 禁用下载按钮 */
+const downloadBtn = computed(()=>{
+  if(state.objectInfo.storageLevel != 1 || state.fileStatus != "正常"){
+    return true;
+  }else return false;
+})
 function cancelClickAcl() {
   innerVisible.value = false;
 }
@@ -799,7 +821,7 @@ const accessKeys = ref([]);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 20px 10px;
+  padding: 0px 15px 30px 15px;
 }
 .btn-list {
   display: flex;
@@ -841,6 +863,11 @@ const accessKeys = ref([]);
   justify-content: flex-start;
   gap: 13px;
   margin-top: 20px;
+}
+.download-btn{
+  position:absolute;
+  right:20px;
+  top:20px;
 }
 .file-text-child {
   font-size: 13px;
