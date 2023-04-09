@@ -8,7 +8,7 @@ import { createPinia } from 'pinia'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './style.css'
 import axios from 'axios'
-import "../mock/index.js"
+// import "../mock/index.js"
 import locale from 'element-plus/lib/locale/lang/zh-cn';
 
 

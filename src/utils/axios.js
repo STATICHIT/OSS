@@ -39,7 +39,7 @@ _axios.interceptors.response.use(res => {
   return res
 })
 
-const header = { 'Content-Type': 'application/json;charset=UTF-8', 'Authorization':'eyJ0eXBlIjoiSnd0IiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJjdXJyZW50VGltZSI6MTY4MDM0ODgyNTQ1OCwicGFzc3dvcmQiOiIxIiwiaWQiOiIzIiwiZXhwIjoxNjgwMzQ4ODI1LCJ1c2VybmFtZSI6IjEifQ.HqPFNUcdYXmZ7JAtA9y_cXKFmFh1djEppriXDJUOGa4' }
+const header = { 'Content-Type': 'application/json;charset=UTF-8', 'Authorization': 'eyJ0eXBlIjoiSnd0IiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJjdXJyZW50VGltZSI6MTY4MDM0ODgyNTQ1OCwicGFzc3dvcmQiOiIxIiwiaWQiOiIzIiwiZXhwIjoxNjgwMzQ4ODI1LCJ1c2VybmFtZSI6IjEifQ.HqPFNUcdYXmZ7JAtA9y_cXKFmFh1djEppriXDJUOGa4' }
 
 
 // 封装filePost,post,get,post,delete方法
@@ -113,7 +113,7 @@ const http = {
     return new Promise((resolve, reject) => {
       _axios({
         url,
-        data: params,
+        data: qs.parse(params),
         headers: header,
         method: 'DELETE'
       }).then(res => {

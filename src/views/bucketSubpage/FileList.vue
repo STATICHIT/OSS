@@ -15,7 +15,9 @@
           parentObjectName
         }}/</el-button
       >
-      <el-button type="primary" size="large" @click="uploadFiles()">上传文件</el-button>
+      <el-button type="primary" size="large" @click="uploadFiles()"
+        >上传文件</el-button
+      >
       <el-button type="warning" size="large" @click="newFileDialog = true"
         >新建目录</el-button
       >
@@ -43,15 +45,15 @@
       @getPage="getPage"
       @preview="getFilePreview"
     ></FileTable>
- <!-- 预览 -->
-          
- <ObjectPreviewVue
-          v-model="showPreview"
-    :bucketName="bucketName"
-    :objectInfo="state.objectInfo"
-    :fileStatus="fileStatus"
-    @close="showPreview=false"
-          ></ObjectPreviewVue>
+    <!-- 预览 -->
+
+    <ObjectPreviewVue
+      v-model="showPreview"
+      :bucketName="bucketName"
+      :objectInfo="state.objectInfo"
+      :fileStatus="fileStatus"
+      @close="showPreview = false"
+    ></ObjectPreviewVue>
     <!-- 文件详情对话框 -->
     <el-dialog
       v-model="drawer"
@@ -65,7 +67,6 @@
       </template>
       <template #default>
         <div class="content-box">
-         
           <div class="box-items">
             <span class="file-text">文件名</span>
             <div class="file-text-child">
@@ -190,7 +191,10 @@
       append-to-body
     >
       <el-form-item class="objectAcl-form" label="读写权限">
-        <el-radio-group style="margin-left: 30px" v-model="updateFileListData.objectAcl">
+        <el-radio-group
+          style="margin-left: 30px"
+          v-model="updateFileListData.objectAcl"
+        >
           <el-radio border :label="6">继承Bukcet</el-radio>
           <el-radio border :label="5">私有</el-radio>
           <el-radio border :label="4">RAM读</el-radio>
@@ -325,7 +329,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { useRoute } from "vue-router";
 import FileLimitThaw from "../../components/action/FileLimitThaw.vue";
 import apiFun from "../../utils/api";
-import SecretTableVue from "../../components/secretTable.vue";
+// import SecretTableVue from "../../components/secretTable.vue";
 import CreateSecret from "../../components/action/createSecret.vue";
 import BackupVue from "../../components/action/Backup.vue";
 import addLabelVue from "../../components/action/addLabel.vue";
@@ -351,7 +355,7 @@ const useHttps = ref(true); //使用https
 const updateCapacityDialog = ref(false); //修改存储类型对话框
 const isVisit = ref(false);
 const showLimitThaw = ref(false); //限制解冻警告对话框
-const showPreview = ref(false)//显示预览
+const showPreview = ref(false); //显示预览
 const objectLabel = reactive([]); //标签
 const openBackup = ref(false);
 let tagObjectName = ref("");
@@ -371,32 +375,34 @@ onMounted(() => {
 });
 /* 解冻一个对象 */
 const unfreeze = () => {
-  ElMessageBox.confirm(`确定解冻该文件吗?`,{
-    type:'Warning'
+  ElMessageBox.confirm(`确定解冻该文件吗?`, {
+    type: "Warning",
   })
     .then(() => {
-      apiFun.object.unfreeze(bucketName,state.objectInfo.name).then(res=>{
-        console.log(res)
-        ElMessage.success('操作成功！')
-        drawer.value=false
-      })
+      apiFun.object.unfreeze(bucketName, state.objectInfo.name).then((res) => {
+        console.log(res);
+        ElMessage.success("操作成功！");
+        drawer.value = false;
+      });
     })
-    .catch(()=>{})
-}
+    .catch(() => {});
+};
 const backupRecover = () => {
-  ElMessageBox.confirm(`确定解冻该文件吗?`,{
-    type:'Warning'
+  ElMessageBox.confirm(`确定解冻该文件吗?`, {
+    type: "Warning",
   })
     .then(() => {
-      console.log(state.objectInfo.name)
- apiFun.object.backupRecoveryObject(bucketName,state.objectInfo.name).then(res=>{
-   console.log(res)
-   ElMessage.success('操作成功！')
-   drawer.value=false
- })
-})
-.catch(()=>{})
-}
+      console.log(state.objectInfo.name);
+      apiFun.object
+        .backupRecoveryObject(bucketName, state.objectInfo.name)
+        .then((res) => {
+          console.log(res);
+          ElMessage.success("操作成功！");
+          drawer.value = false;
+        });
+    })
+    .catch(() => {});
+};
 
 const page = reactive({
   total: 200, // 总条数
@@ -426,17 +432,17 @@ const getAccessKeys = (secretList) => {
 const getFilePreview = (index) => {
   fileData = state.fileList[index];
   let name = state.fileList[index].name;
-  showPreview.value = true
-  console.log(showPreview.value)
+  showPreview.value = true;
+  console.log(showPreview.value);
   apiFun.object.getStatus(name, bucketName).then((res) => {
-    console.log(res)
-      fileStatus.value = res.data.stateStr;
-    });
+    console.log(res);
+    fileStatus.value = res.data.stateStr;
+  });
   apiFun.object.getInfo(name, bucketName).then((res) => {
-    console.log(res)
-      state.objectInfo = res.data;
-    });
-}
+    console.log(res);
+    state.objectInfo = res.data;
+  });
+};
 
 /* 打开文件或文件夹 */
 const goToFile = (index) => {
@@ -446,7 +452,11 @@ const goToFile = (index) => {
     /* 当点击对象为文件时跳转进入文件夹，设置路由参数为点击文件夹的id */
     router.push({
       path: "/fileList",
-      query: { parentObjectId: fileData.id, parentObjectName: fileData.name },
+      query: {
+        bucketName: bucketName,
+        parentObjectId: fileData.id,
+        parentObjectName: fileData.name,
+      },
     });
   } else {
     apiFun.object.getStatus(name, bucketName).then((res) => {
@@ -454,9 +464,9 @@ const goToFile = (index) => {
     });
     apiFun.object.getInfo(name, bucketName).then((res) => {
       state.objectInfo = res.data;
-      updateFileListData.value.storageLevel = res.data.storageLevel
-      updateFileListData.value.objectAcl = res.data.objectAcl
-      console.log(updateFileListData.value)
+      updateFileListData.value.storageLevel = res.data.storageLevel;
+      updateFileListData.value.objectAcl = res.data.objectAcl;
+      console.log(updateFileListData.value);
       console.log(state.objectInfo);
       drawer.value = true;
     });
@@ -480,14 +490,14 @@ const Pre = () => {
         page.total = res.data.totalCount;
         state.fileList = res.data.rows;
         const items = [];
-  for (let i = 0; i < state.fileList.length; i++) {
-    if (state.fileList[i].isFolder) {
-      items.push(state.fileList[i]);
-      state.fileList.splice(i, 1);
-      i--;
-    }
-  }
-  state.fileList.unshift(...items);
+        for (let i = 0; i < state.fileList.length; i++) {
+          if (state.fileList[i].isFolder) {
+            items.push(state.fileList[i]);
+            state.fileList.splice(i, 1);
+            i--;
+          }
+        }
+        state.fileList.unshift(...items);
       });
   }
 };
@@ -527,16 +537,18 @@ const getThaw = (objectList) => {
 
 const deleteFile = (index) => {
   //删除文件
-    ElMessageBox.confirm(`确定删除该对象吗?`,{
-      type:'Warning'
+  ElMessageBox.confirm(`确定删除该对象吗?`, {
+    type: "Warning",
+  })
+    .then(() => {
+      apiFun.object
+        .delete(bucketName, state.fileList[index].name)
+        .then((res) => {
+          state.fileList.splice(index, 1);
+          ElMessage.success("操作成功！");
+        });
     })
-      .then(()=>{
-        apiFun.object.delete(bucketName,state.fileList[index].name).then(res=>{
-   state.fileList.splice(index, 1);
-        ElMessage.success('操作成功！')
-        })
-      })
-        .catch(() => {});
+    .catch(() => {});
 };
 const handleChange = (value) => {
   console.log(value);
@@ -546,42 +558,46 @@ function cancelClick() {
 }
 
 function uploadFiles() {
-  console.log("1:",parentObjectId)
-  console.log("2:",parentObjectName)
+  console.log("1:", bucketName);
+  console.log("1:", parentObjectId);
+  console.log("2:", parentObjectName);
   //上传文件
   router.push({
-    path:'/uploadFiles',
-    query:{bucketName:bucketName,parentObjectId:parentObjectId,parentObjectName:parentObjectName}
-  })
+    path: "/uploadFiles",
+    query: {
+      bucketName: bucketName,
+      parentObjectId: parentObjectId,
+      parentObjectName: parentObjectName,
+    },
+  });
 }
 
 function confirmClick() {
   //创建目录
-if(state.newFolderName==''){
-  ElMessage.error('目录名不能为空！')
-}
-else{
-  ElMessageBox.confirm(`确定创建该目录吗?`)
-    .then(() => {
-      let str = state.newFolderName
-      const regExp = /^(?!\/)(?!.*[\uD800-\uDFFF]).+\/$/;
-      console.log(regExp.test(str));
-      if(regExp.test(str)){
-      apiFun.object.add(bucketName,str,parentObjectId).then(res=>{
-        console.log(res)
-        if(res.code==200){
-          newFileDialog.value = false;
-      ElMessage.success("创建成功！");
-    Pre()
-        }else {
-          ElMessage.error('请不要输入相同的目录名！')
+  if (state.newFolderName == "") {
+    ElMessage.error("目录名不能为空！");
+  } else {
+    ElMessageBox.confirm(`确定创建该目录吗?`)
+      .then(() => {
+        let str = state.newFolderName;
+        const regExp = /^(?!\/)(?!.*[\uD800-\uDFFF]).+\/$/;
+        console.log(regExp.test(str));
+        if (regExp.test(str)) {
+          apiFun.object.add(bucketName, str, parentObjectId).then((res) => {
+            console.log(res);
+            if (res.code == 200) {
+              newFileDialog.value = false;
+              ElMessage.success("创建成功！");
+              Pre();
+            } else {
+              ElMessage.error("请不要输入相同的目录名！");
+            }
+          });
+        } else {
+          ElMessage.error("请输入正确格式！");
         }
       })
-    }else{
-      ElMessage.error('请输入正确格式！')
-    }
-    })
-    .catch(() => {});
+      .catch(() => {});
   }
 }
 
@@ -590,15 +606,21 @@ function cancelClickAcl() {
 }
 function confirmClickAcl() {
   //设置存储类型
-  console.log(state.objectInfo.name+updateFileListData.value.objectAcl)
-   apiFun.object.updateAcl(bucketName,state.objectInfo.name,updateFileListData.value.objectAcl).then(res=>{
-     console.log(res)
-     if(res.code==200){
-     ElMessage.success('设置成功！')
-   innerVisible.value = false;
-     drawer.value=false
-     }
-   })
+  console.log(state.objectInfo.name + updateFileListData.value.objectAcl);
+  apiFun.object
+    .updateAcl(
+      bucketName,
+      state.objectInfo.name,
+      updateFileListData.value.objectAcl
+    )
+    .then((res) => {
+      console.log(res);
+      if (res.code == 200) {
+        ElMessage.success("设置成功！");
+        innerVisible.value = false;
+        drawer.value = false;
+      }
+    });
 }
 function cancelClickCapacity() {
   updateCapacityDialog.value = false;
@@ -607,7 +629,7 @@ function confirmClickCapacity() {
   //设置存储类型
   updateCapacityDialog.value = false;
   /* 当设置的存储类型为归档时 */
-  console.log(updateFileListData.value.storageLevel)
+  console.log(updateFileListData.value.storageLevel);
   if (updateFileListData.value.storageLevel == 2) {
     apiFun.object.freeze(bucketName, state.objectInfo.name).then((res) => {
       console.log(res);
@@ -615,7 +637,7 @@ function confirmClickCapacity() {
   }
   ElMessage.success("操作成功！");
   updateCapacityDialog.value = false;
-    drawer.value = false;
+  drawer.value = false;
 
   // router.push({path:'/bucket',query:{name:state.newBucket.name}})
 }
@@ -653,7 +675,7 @@ const addLabel = (labels) => {
 /* 读写权限数据格式化 */
 const aclComputed = computed(() => {
   const acl = state.objectInfo.objectAcl;
-  console.log(acl)
+  console.log(acl);
   if (acl === null) {
     return "未知";
   } else {
@@ -667,8 +689,8 @@ const aclComputed = computed(() => {
       return "RAM读";
     } else if (acl == 5) {
       return "私有";
-    }else if(acl==6){
-      return '继承Bucket';
+    } else if (acl == 6) {
+      return "继承Bucket";
     }
   }
 });
@@ -682,19 +704,21 @@ const copyFilename = () => {
 const fileStatus = ref("");
 /* 批量删除 */
 const deleteMoreFile = (fileList) => {
-  const objectNameList = []
-  fileList.forEach((item)=>{
-    objectNameList.push(item.name)
-  })
+  const objectNameList = [];
+  fileList.forEach((item) => {
+    objectNameList.push(item.name);
+  });
   console.log({
-    objectNameListJson:JSON.stringify(objectNameList)
-  })
-   apiFun.object.deleteMore(bucketName,{
-     objectNameListJson:JSON.stringify(objectNameList)
-   }).then(res=>{
-     console.log(res)
-   })
-  console.log(fileList)
+    objectNameListJson: JSON.stringify(objectNameList),
+  });
+  apiFun.object
+    .deleteMore(bucketName, {
+      objectNameListJson: JSON.stringify(objectNameList),
+    })
+    .then((res) => {
+      console.log(res);
+    });
+  console.log(fileList);
   fileList.forEach((item) => {
     state.fileList.splice(item, 1);
   });
@@ -714,9 +738,9 @@ const storageLevelStatus = computed(() => {
 });
 
 const updateFileListData = ref({
-  storageLevel:1,
-  objectAcl:1
-})/* 将要更改的文件数据 */
+  storageLevel: 1,
+  objectAcl: 1,
+}); /* 将要更改的文件数据 */
 
 const state = reactive({
   title: "文件列表",
@@ -741,7 +765,7 @@ const state = reactive({
     storageLevel: 1,
   } /* 选择的文件元数据 */,
   /* 新建目录 */
-  newFolderName:'',
+  newFolderName: "",
 });
 
 const keyList = reactive([]);
