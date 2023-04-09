@@ -91,7 +91,7 @@ let login = () => {
       })
       .then((res) => {
         console.log(res);
-        var token = res.data;
+        var token = res.data.token;
         localStorage.setItem("token", token);
         //解析token
         const decode = jwt_decode(token);
@@ -100,8 +100,15 @@ let login = () => {
         useStore.id = decode.id;
         useStore.username = decode.username;
         useStore.token = token;
-        ElMessage.success("登录成功");
-        router.push({ path: "/home" }); //跳转到主页面
+        let admin = res.data.admin
+        console.log(admin)
+        if(admin === true){
+          ElMessage.success("登录成功");
+          window.location.href = 'http://localhost:8080/#/home' //跳转到主页面管理界面
+        }else{
+          ElMessage.success("登录成功");
+          router.push({ path: "/home" }); //跳转到主页面
+        }
       });
   }
 };
