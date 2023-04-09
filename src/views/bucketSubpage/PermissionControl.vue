@@ -327,72 +327,74 @@ let init = () => {
     bucketAcl.value = res.data.bucketAcl.toString();
   });
 
-  // 获取授权资源列表
-  apiFun.bucket.authorize.getList(bucketName, 1, 8).then((res) => {
-    console.log("bucket.authorize.getList(bucketName)", res);
-    res.data.forEach((a) => {
-      let target = bucketName + "/";
-      if (a.pathIsAll) {
-        target += "*";
-      } else {
-        console.log(a.paths)
-        target += a.paths.join(",");
-      }
-      let type = a.operation;
-      let action = "";
-      switch (type) {
-        case 1:
-          action = "只读（不包括ListObject操作）";
-          break;
-        case 2:
-          action = "只读（包括ListObject操作）";
-          break;
-        case 3:
-          action = "读 / 写";
-          break;
-        case 4:
-          action = "完全控制";
-          break;
-        case 5:
-          action = "拒绝访问（私有）";
-          break;
-        default:
-          action = "获取失败";
-      }
+  // 获取授权资源列表（后端返回数据还有点问题，暂时不用）
+  // apiFun.bucket.authorize.getList(bucketName, 1, 8).then((res) => {
+  //   console.log("bucket.authorize.getList(bucketName)", res);
+  //   res.data.forEach((a) => {
+  //     let target = bucketName + "/";
+  //     if (a.pathIsAll) {
+  //       target += "*";
+  //     } else {
+  //       console.log(a.paths)
+  //       target += a.paths.join(",");
+  //     }
+  //     let type = a.operation;
+  //     let action = "";
+  //     switch (type) {
+  //       case 1:
+  //         action = "只读（不包括ListObject操作）";
+  //         break;
+  //       case 2:
+  //         action = "只读（包括ListObject操作）";
+  //         break;
+  //       case 3:
+  //         action = "读 / 写";
+  //         break;
+  //       case 4:
+  //         action = "完全控制";
+  //         break;
+  //       case 5:
+  //         action = "拒绝访问（私有）";
+  //         break;
+  //       default:
+  //         action = "获取失败";
+  //     }
 
-      let users = "";
-      if (a.userIsAll) {
-        //如果是全部用户
-        users = "*";
-      } else {
-        //先看子用户
-        let sonUsers = a.sonUser;
-        if (sonUsers) {
-          // 子用户不为空
-          users += sonUsers.join(",");
-        }
-        let otherUsers = a.otherUser;
-        if (sonUsers && otherUsers) {
-          users += ",";
-        }
-        if (otherUsers) {
-          //如果不为空
-          users += otherUsers.join(",");
-        }
-      }
-      let oneData = {
-        id: a.id,
-        target: target,
-        action: action,
-        users: users,
-      };
-      state.tableData.push(oneData);
-      console.log("XXX:", a.id, target, action, users);
-    });
-    console.log("DRYGSERDT:", state.tableData);
-  });
+  //     let users = "";
+  //     if (a.userIsAll) {
+  //       //如果是全部用户
+  //       users = "*";
+  //     } else {
+  //       //先看子用户
+  //       let sonUsers = a.sonUser;
+  //       if (sonUsers) {
+  //         // 子用户不为空
+  //         users += sonUsers.join(",");
+  //       }
+  //       let otherUsers = a.otherUser;
+  //       if (sonUsers && otherUsers) {
+  //         users += ",";
+  //       }
+  //       if (otherUsers) {
+  //         //如果不为空
+  //         users += otherUsers.join(",");
+  //       }
+  //     }
+  //     let oneData = {
+  //       id: a.id,
+  //       target: target,
+  //       action: action,
+  //       users: users,
+  //     };
+  //     state.tableData.push(oneData);
+  //     console.log("XXX:", a.id, target, action, users);
+  //   });
+  //   console.log("DRYGSERDT:", state.tableData);
+  // });
+
 
   //获取子用户
+  
   apiFun.user.getSubUsers("", 1, 1000).then((res) => {
     console.log("apiFun.user.getSubUsers:", res);
     userList = res.data.rows;
@@ -444,60 +446,60 @@ const handleDelete = (index, row) => {
 const state = reactive({
   //表格（fake）数据
   tableData: [
-    // {
-    //   id: 1,
-    //   target: "mybucket/*",
-    //   action: "只读",
-    //   users: "*",
-    // },
-    // {
-    //   id: 2,
-    //   target: "mybucket/aaa.png",
-    //   action: "读/写",
-    //   users: "AAAbc",
-    // },
-    // {
-    //   id: 3,
-    //   target: "mybucket/项目设计文档/4月8日更新版本",
-    //   action: "RAM读/写",
-    //   users: "*",
-    // },
-    // {
-    //   id: 4,
-    //   target: "mybucket/wallpaper/*",
-    //   action: "RAM读",
-    //   users: "abc,aaa,AAAbc",
-    // },
-    // {
-    //   id: 5,
-    //   target: "mybucket/log/*",
-    //   action: "私有",
-    //   users: "*",
-    // },
-    // {
-    //   id: 6,
-    //   target: "mybucket/preview.jpg",
-    //   action: "读/写",
-    //   users: "AAAbc",
-    // },
-    // {
-    //   id: 7,
-    //   target: "mybucket/12.jpg",
-    //   action: "RAM读/写",
-    //   users: "*",
-    // },
-    // {
-    //   id: 8,
-    //   target: "mybucket/123/textBox/*",
-    //   action: "RAM读",
-    //   users: "abc,aaa,AAAbc",
-    // },
-    // {
-    //   id: 9,
-    //   target: "mybucket/D/*",
-    //   action: "私有",
-    //   users: "*",
-    // },
+    {
+      id: 1,
+      target: "mybucket/*",
+      action: "只读",
+      users: "*",
+    },
+    {
+      id: 2,
+      target: "mybucket/aaa.png",
+      action: "读/写",
+      users: "AAAbc",
+    },
+    {
+      id: 3,
+      target: "mybucket/项目设计文档/4月8日更新版本",
+      action: "RAM读/写",
+      users: "*",
+    },
+    {
+      id: 4,
+      target: "mybucket/wallpaper/*",
+      action: "RAM读",
+      users: "abc,aaa,AAAbc",
+    },
+    {
+      id: 5,
+      target: "mybucket/log/*",
+      action: "私有",
+      users: "*",
+    },
+    {
+      id: 6,
+      target: "mybucket/preview.jpg",
+      action: "读/写",
+      users: "AAAbc",
+    },
+    {
+      id: 7,
+      target: "mybucket/12.jpg",
+      action: "RAM读/写",
+      users: "*",
+    },
+    {
+      id: 8,
+      target: "mybucket/123/textBox/*",
+      action: "RAM读",
+      users: "abc,aaa,AAAbc",
+    },
+    {
+      id: 9,
+      target: "mybucket/D/*",
+      action: "私有",
+      users: "*",
+    },
   ],
   //分页
   total: 200, // 总条数
