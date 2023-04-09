@@ -155,7 +155,7 @@
               <!--资源路径-->
               <div>
                 <span class="littleTitle">资源路径</span>
-                <span>当前Bucket名称 /</span>&nbsp;
+                <span>{{ bucketName }}/</span>&nbsp;
                 <span v-if="disabled1">*</span>
                 <el-input v-if="!disabled1" style="width: 57%" v-model="path" />
                 <br /><br />
@@ -165,7 +165,7 @@
                   <span
                     >当您给某个目录授权时，请使用通配符*结尾。如<span
                       style="color: red"
-                      >bucketName/folderName/*</span
+                      >bucketName/folderName/ *</span
                     ></span
                   >
                 </div>
@@ -174,74 +174,99 @@
               <br />
 
               <!-- 授权用户 -->
-              <div class="part2">
+              <div>
                 <div class="leftPart">
-                  <div class="littleTitle">授权用户</div>
+                  <span class="littleTitle">授权用户</span>
                 </div>
                 <div class="rightPart">
-                  <el-checkbox label="1" class="black"
+                  <el-checkbox v-model="checked" label="1" class="black"
                     >所有账号 (*)</el-checkbox
                   >
                   <br />
-                  <el-checkbox label="2" class="black"> 子账号</el-checkbox>
-                  <!--子账号-->
-                  <div class="m-4 in2">
-                    <el-select
-                      v-model="value1"
-                      multiple
-                      placeholder="Select"
-                      style="width: 478px"
-                    >
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
+                  <div v-show="!checked">
+                    <el-checkbox v-model="checked2" label="2" class="black">
+                      子账号</el-checkbox>
+                    <!--子账号-->
+                    <div class="m-4 in2">
+                      <el-select :disabled="!checked2" v-model="value1" multiple style="width: 478px">
+                        <el-option
+                          v-for="item in userList"
+                          :key="item.value"
+                          :label="item.username"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </div>
+                    <br />
+                    <el-checkbox v-model="checked3" label="3" class="black">其他账号</el-checkbox>
+                    <br />
+                    <el-input
+                      :disabled="!checked3"
+                      class="textarea"
+                      v-model="textarea"
+                      :rows="4"
+                      type="textarea"
+                      placeholder="请输入对应账号或子账号的ID 或者以am：sts 开头的临时授权用户。可以授权给多个用户，每行一个"
+                      style="width: 550px"
+                    />
                   </div>
-                  <br />
-                  <el-checkbox label="3" class="black">其他账号</el-checkbox>
-                  <br />
-                  <el-input
-                    class="textarea"
-                    v-model="textarea"
-                    :rows="4"
-                    type="textarea"
-                    placeholder="请输入对应账号或子账号的ID 或者以am：sts 开头的临时授权用户。可以授权给多个用户，每行一个"
-                    style="width: 550px"
-                  />
                 </div>
               </div>
 
+              <br />
               <!-- 授权操作 -->
               <div class="part2">
-                <div class="littleTitle">授权用户</div>
-                <div class="radio-group">
-                  <div class="mb-2 flex items-center text-sm">
-                    <el-radio-group v-model="radio" class="ml-4">
-                      <el-radio
-                        label="1"
-                        size="large"
-                        border
-                        style="margin-bottom: 20px"
-                        >只读（不包括ListObject操作）</el-radio
+                <span class="littleTitle">授权操作</span>
+                <div style="display: inline-block">
+                  <div class="radio-group">
+                    <div class="mb-2 flex items-center text-sm">
+                      <el-radio-group
+                        v-model="settingAcl"
+                        class="ml-4"
+                        style="
+                          display: flex;
+                          flex-flow: column nowrap;
+                          align-items: flex-start;
+                          margin-left: -70px;
+                        "
                       >
-                      <el-radio
-                        label="2"
-                        size="large"
-                        border
-                        style="margin-bottom: 20px"
-                        >只读（包括ListObject操作）</el-radio
-                      >
-                      <el-radio label="3" size="large" border>读/写</el-radio>
-                      <el-radio label="4" size="large" border
-                        >完全控制</el-radio
-                      >
-                      <el-radio label="5" size="large" border
-                        >拒绝访问</el-radio
-                      >
-                    </el-radio-group>
+                        <el-radio
+                          label="1"
+                          size="large"
+                          style="margin-bottom: 10px"
+                          border
+                          >只读（不包括ListObject操作）</el-radio
+                        >
+                        <el-radio
+                          label="2"
+                          size="large"
+                          border
+                          style="margin-bottom: 10px"
+                          >只读（包括ListObject操作）</el-radio
+                        >
+                        <el-radio
+                          label="3"
+                          size="large"
+                          border
+                          style="margin-bottom: 10px"
+                          >读 / 写</el-radio
+                        >
+                        <el-radio
+                          label="4"
+                          size="large"
+                          border
+                          style="margin-bottom: 10px"
+                          >完全控制</el-radio
+                        >
+                        <el-radio
+                          label="5"
+                          size="large"
+                          border
+                          style="margin-bottom: 10px"
+                          >拒绝访问(私有)</el-radio
+                        >
+                      </el-radio-group>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -287,15 +312,23 @@ onMounted(() => {
 });
 
 let init = () => {
-  console.log(bucketName);
+  console.log("bucketName:",bucketName);
   apiFun.bucket.get(bucketName).then((res) => {
-    console.log("bucket.get(bucketName):",res);
+    console.log("bucket.get(bucketName):", res);
     bucketAcl.value = res.data.bucketAcl.toString();
   });
 
+  // 获取授权资源列表
   // apiFun.bucket.authorize.getList(bucketName).then((res) => {
   //   console.log("bucket.authorize.getList(bucketName)", res);
   // });
+
+  //获取子用户
+  // const userId="1";
+  // apiFun.user.getSubUsers(userId,1,1000).then((res)=>{
+  //   console.log("apiFun.user.getSubUsers:",res);
+  //   userList=res.data.rows;
+  // })
 };
 
 //设置按钮点击方法
@@ -400,50 +433,44 @@ const changePage = (val) => {
   state.currentPage = val;
 };
 
-//确定按钮点击事件
-const save2 = () => {
-  centerDialogVisible.value = false;
-  if (nowTitle.value == "新增授权") {
-    ElMessage.success("新增成功");
-  } else if (nowTitle.value == "编辑授权") {
-    ElMessage.success == "编辑成功";
-  }
-};
-
 //编辑/新增框字段
+let checked = ref(false); // 是否选择了全部用户选项
+let checked2 = ref(false); //是否选择了子账号
+let checked3 = ref(false); //是否选择了其他账号
+let path=ref("");
 //当前操作标题
 const nowTitle = ref("新增授权");
 //子账号列表
-const value1 = ref("Option1");
-const options = [
+// const checkList = ref(["selected and disabled", "Option A"]);
+const value1 = ref([]);
+let userList = [
   {
-    value: "Option1",
-    label: "子用户1",
+    id: "01",
+    username: "子用户1",
   },
   {
-    value: "Option2",
-    label: "子用户2",
+    id: "02",
+    username: "子用户2",
   },
   {
-    value: "Option3",
-    label: "子用户3",
+    id: "03",
+    username: "子用户3",
   },
   {
-    value: "Option4",
-    label: "子用户4",
+    id: "04",
+    username: "子用户4",
   },
   {
-    value: "Option5",
-    label: "子用户5",
+    id: "05",
+    username: "子用户5",
   },
 ];
 
-const radio1 = ref("1");
+let radio1 = ref("1");//授权资源类型
 const disabled1 = ref(true);
 const drawer = ref(false);
 
-//当前单选框选择
-var radio = ref("1");
+let settingAcl = ref("1");//设置授权资源的授权操作
 
 //新增按钮点击事件
 function add() {
@@ -456,15 +483,52 @@ function cancelClick() {
 }
 
 function confirmClick() {
-  drawer.value = false;
-  if (nowTitle.value == "新增授权") {
-    ElMessage.success("新增成功");
-  } else if (nowTitle.value == "编辑授权") {
-    ElMessage.success == "编辑成功";
+  let pathIsAll = true;
+  let userIsAll = false;
+  let operation = 0;
+  let paths     = bucketName +"/*";
+  let sonUser   =[];
+  let otherUser =[];
+ if(radio1.value == "2"){
+    pathIsAll = false;
+    paths=bucketName+path.value;
   }
+
+  if(checked.value == true){
+    //是否选择了全部用户
+    userIsAll=true;
+  }else{
+    if(checked2.value == true){
+      //如果选了子用户，赋值子用户列表
+      sonUser=value1.value;
+    }
+    if(checked3.value == true){
+      //如果选了其他用户，赋值其他用户列表
+      otherUser=textarea.value.split('\n');
+    }
+  }
+
+  operation = settingAcl.value;
+
+
+  console.log("pathIsAll:",pathIsAll)
+  console.log("userIsAll:",userIsAll)
+  console.log("operation:",operation)
+  console.log("paths    :",paths    )
+  console.log("sonUser  :",sonUser  )
+  console.log("otherUser:",otherUser)
+  console.log("operation:",operation)
+  console.log("--------------------")
+
+  // if (nowTitle.value == "新增授权") {
+  //   drawer.value = false;
+  //   ElMessage.success("新增成功");
+  // } else if (nowTitle.value == "编辑授权") {
+  //   drawer.value = false;
+  //   ElMessage.success == "编辑成功";
+  // }
 }
 
-const checkList = ref(["selected and disabled", "Option A"]);
 const textarea = ref("");
 
 // 对时限输入框进行监听
@@ -531,7 +595,7 @@ watch(
 }
 
 .tip2 {
-  margin-left: 80px;
+  margin-left: 100px;
   color: gray;
   font-size: 13px;
 }
@@ -544,6 +608,9 @@ watch(
 }
 
 .littleTitle {
+  vertical-align: top;
+  width: 80px;
+  display: inline-block;
   font-weight: bold;
   margin-right: 20px;
 }
@@ -557,16 +624,13 @@ watch(
   display: inline-block;
 }
 
-.part2 {
-  height: 100px;
-  margin-bottom: 120px;
-}
 .leftPart {
-  float: left;
+  display: inline-block;
+  vertical-align: top;
   margin-top: 5px;
 }
 .rightPart {
-  float: left;
+  display: inline-block;
   width: 85%;
 }
 

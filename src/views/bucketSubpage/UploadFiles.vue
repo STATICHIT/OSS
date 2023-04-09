@@ -58,12 +58,12 @@
         <div class="radio-group">
           <div class="mb-2 flex items-center text-sm">
             <el-radio-group v-model="fileAcl" class="ml-4">
-              <el-radio label="0" size="large">继承 Bucket</el-radio>
+              <el-radio label="5" size="large">私有</el-radio>
               <el-radio label="1" size="large">公共读写</el-radio>
               <el-radio label="2" size="large">RAM读写</el-radio>
               <el-radio label="3" size="large">公共读</el-radio>
               <el-radio label="4" size="large">RAM读</el-radio>
-              <el-radio label="5" size="large">私有</el-radio>
+              <el-radio label="6" size="large">继承 Bucket</el-radio>
             </el-radio-group>
           </div>
         </div>
@@ -161,7 +161,7 @@
             <div class="radio-group">
               <div class="mb-2 flex items-center text-sm">
                 <el-radio-group v-model="storageType" class="ml-4">
-                  <el-radio label="0" size="large">继承 Bucket</el-radio>
+                  <el-radio label="6" size="large">继承 Bucket</el-radio>
                   <el-radio label="1" size="large">标准存储</el-radio>
                   <el-radio label="2" size="large">RAM归档存储</el-radio>
                 </el-radio-group>
@@ -172,7 +172,7 @@
               <div class="radio-group">
                 <div class="mb-2 flex items-center text-sm">
                   <el-radio-group v-model="secret" class="ml-4">
-                    <el-radio label="0" size="large">继承 Bucket</el-radio>
+                    <el-radio label="6" size="large">继承 Bucket</el-radio>
                     <el-radio label="1" size="large">SM4加密</el-radio>
                     <el-radio label="2" size="large">无加密</el-radio>
                   </el-radio-group>
@@ -187,9 +187,7 @@
     <!-- 操作选项组 -->
     <div class="btnGroup">
       <el-button type="danger" @click="uploadMyFiles">开始上传</el-button>
-      <el-button @click="cancelUpload"
-        >&nbsp;&nbsp;取消&nbsp;&nbsp;</el-button
-      >
+      <el-button @click="cancelUpload">&nbsp;&nbsp;取消&nbsp;&nbsp;</el-button>
     </div>
   </div>
 </template>
@@ -209,10 +207,10 @@ export default {
       disabled: true,
       radio: "1", //上传到
       afterPath: "", //指定目录
-      fileAcl: "0", //文件ACL
+      fileAcl: "5", //文件ACL
       highSetting: true, //开关高级选项
-      storageType: "0", //存储类型
-      secret: "0", //服务器端加密方式
+      storageType: "6", //存储类型
+      secret: "6", //服务器端加密方式
     };
   },
   watch: {
@@ -232,11 +230,18 @@ export default {
   methods: {
     init() {
       this.bucketName = this.$route.query.bucketName;
-      this.parentObjectId = this.$route.query.parentObjectId;
-      this.parentObjectName = this.$route.query.parentObjectName;
-      console.log(this.parentObjectName);
+      this.parentObjectId =
+        this.$route.query.parentObjectId == undefined
+          ? ""
+          : this.$route.query.parentObjectId;
+      this.parentObjectName =
+        this.$route.query.parentObjectName == undefined
+          ? ""
+          : this.$route.query.parentObjectName;
+      console.log("parentObjectId:", this.parentObjectId);
+      console.log("parentObjectName:", this.parentObjectName);
       this.curpath =
-        this.parentObjectName == ""
+        this.parentObjectName == undefined
           ? this.bucketName + "/"
           : this.bucketName + "/" + this.parentObjectName;
     },
