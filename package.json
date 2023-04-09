@@ -36,7 +36,7 @@
     "@types/video.js": "^7.3.51",
     "@vitejs/plugin-vue": "^4.0.0",
     "sass": "^1.58.3",
-    "vue-video-player": "^5.0.2"
+    "vue-video-player": "^5.0.2",
     "spark-md5": "^3.0.2",
     "vite": "^4.0.0",
     "webpack": "^5.0.0"

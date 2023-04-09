@@ -132,11 +132,17 @@ const prop = defineProps({
 
 /* 文件大小数据格式化 */
 function formatSize(row) {
-  const size = row.size
+  let size = row.size
   if (size === null) {
     return "";
   } else {
-    return `${size}KB`;
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  let index = 0;
+  while (size >= 1024 && index < units.length - 1) {
+    size /= 1024;
+    index++;
+  }
+  return `${size.toFixed(2)} ${units[index]}`;
   }
 }
 
