@@ -20,11 +20,6 @@ const routes = [
         path: '/register',
         component: () => import('../views/Register.vue')
       },
-      {
-        // RAM用户登录模块
-        path: '/ramLogin',
-        component: () => import('../views/RamLogin.vue')
-      },
     ]
   },
   {

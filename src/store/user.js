@@ -4,7 +4,12 @@ import { ref } from "vue";
 
 export default defineStore('first', {
   state: () => {
-    const token = ''
+    return {
+			token: '',
+      id:'',
+      username:'',
+      name:'STATICHIT'
+		};
   },
   getters: {
   },

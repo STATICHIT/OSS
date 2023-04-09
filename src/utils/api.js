@@ -2,17 +2,17 @@ import http from './axios.js'
 
 let apiFun = {
   //自定义对象，命名隔离，消除重名影响
-  user:{},
-  bucket:{
-    authorize:{},
-    tag:{},
+  user: {},
+  bucket: {
+    authorize: {},
+    tag: {},
   },
-  object:{
-    tag:{},
-    accessKey:{},
+  object: {
+    tag: {},
+    accessKey: {},
   },
   test: {},
-  file:{},
+  file: {},
 };
 
 //测试接口（按需添加，可删）
@@ -39,8 +39,8 @@ apiFun.file.mergefile = (params) => {
 }
 
 //小文件上传
-apiFun.file.smallFile = (params) =>{
-  return http.post('/ossObject/putSmallObject?bucketName='+params.bucketName+'&objectName='+params.objectName+'&etag='+params.etag+'&parentObjectId='+params.parentObjectId+'&objectAcl='+params.objectAcl)
+apiFun.file.smallFile = (params) => {
+  return http.post('/ossObject/putSmallObject?bucketName=' + params.bucketName + '&objectName=' + params.objectName + '&etag=' + params.etag + '&parentObjectId=' + params.parentObjectId + '&objectAcl=' + params.objectAcl)
 }
 
 //测试文件预览
@@ -63,7 +63,7 @@ apiFun.getScreenData = () => {
  * */
 
 //登录
-apiFun.login = params => {
+apiFun.login = (params) => {
   return http.post('/user/login', params)
 }
 
@@ -78,18 +78,18 @@ apiFun.newRAM = params => {
 }
 
 //创建RAM用户
-apiFun.user.createRam =(params) =>{
-  return http.post('/user/createRam',params)
+apiFun.user.createRam = (params) => {
+  return http.post('/user/createRam', params)
 }
 
 //获取子用户列表
-apiFun.user.getSubUsers =(keyword,pageNum,size) =>{
-  return http.get('/user/getSubUsers?keyword='+keyword+'&pageNum='+pageNum+'&size='+size)
+apiFun.user.getSubUsers = (keyword, pageNum, size) => {
+  return http.get('/user/getSubUsers?keyword=' + keyword + '&pageNum=' + pageNum + '&size=' + size)
 }
 
 //删除子用户
-apiFun.user.deleteSubUser =(userId) =>{
-  return http.delete('/user/deleteSubUser?userId='+userId)
+apiFun.user.deleteSubUser = (userId) => {
+  return http.delete('/user/deleteSubUser?userId=' + userId)
 }
 
 
@@ -103,8 +103,8 @@ apiFun.bucket.get = (bucketName) => {
 }
 
 //获取桶列表
-apiFun.bucket.getList = (pageNum,size,key) => {
-  return http.get('/bucket/listBuckets?pageNum='+pageNum+'&size='+size+'&key='+key)
+apiFun.bucket.getList = (pageNum, size, key) => {
+  return http.get('/bucket/listBuckets?pageNum=' + pageNum + '&size=' + size + '&key=' + key)
 }
 
 //创建一个桶
@@ -114,7 +114,7 @@ apiFun.bucket.create = params => {
 
 //删除一个桶
 apiFun.bucket.delete = (bucketName) => {
-  return http.delete('/bucket/deleteBucket?bucketName='+bucketName)
+  return http.delete('/bucket/deleteBucket?bucketName=' + bucketName)
 }
 
 //用户收藏一个桶
@@ -136,13 +136,13 @@ apiFun.bucket.getCollect = () => {
  *  */
 
 //添加/更新一个bucket授权策略
-apiFun.bucket.authorize.addOrUpdate = (bucketName, authorizeId) => {
-  return http.post('/authorize/putAuthorize?bucketName=' + bucketName + '&authorizeId=' + authorizeId)
+apiFun.bucket.authorize.addOrUpdate = (bucketName, authorizeId, params) => {
+  return http.post('/authorize/putAuthorize?bucketName=' + bucketName + '&authorizeId=' + authorizeId, params)
 }
 
 //获取权限策略列表
-apiFun.bucket.authorize.getList = (bucketName) => {
-  return http.get('/authorize/listAuthorizes?bucketName=' + bucketName)
+apiFun.bucket.authorize.getList = (bucketName,pageNum,pageSize) => {
+  return http.get('/authorize/listAuthorizes?bucketName=' + bucketName+'&pageNum='+pageNum+'&pageSize='+pageSize)
 }
 
 //删除一个授权策略
@@ -151,39 +151,40 @@ apiFun.bucket.authorize.delete = (bucketName, authorizeId) => {
 }
 
 //更新bucketAcl(1:公共读写；2：RAM读写；3：公共读；4：RAM写；5：私有)
-apiFun.bucket.updateBucketAcl = (bucketName,bucketAcl) =>{
-  return http.put('/bucket/updateBucketAcl?bucketName='+bucketName+'&bucketAcl='+bucketAcl)
+apiFun.bucket.updateBucketAcl = (bucketName, bucketAcl) => {
+  return http.put('/bucket/updateBucketAcl?bucketName=' + bucketName + '&bucketAcl=' + bucketAcl)
 }
 
 //获取bucket内碎片列表
-apiFun.bucket.getFragment =(bucketName) =>{
-  return http.get('/fragment/list?bucketName='+bucketName)
+apiFun.bucket.getFragment = (bucketName) => {
+  return http.get('/fragment/list?bucketName=' + bucketName)
 }
 
 //删除bucket内碎片
-apiFun.bucket.deleteFragment =(bucketName,blockToken) =>{
-  return http.delete('/fragment?bucketName='+bucketName+'&blockToken='+blockToken)
+apiFun.bucket.deleteFragment = (bucketName, blockToken) => {
+  return http.delete('/fragment?bucketName=' + bucketName + '&blockToken=' + blockToken)
+}
 /**
  * bucket标签接口
  */
 
 //获取bucket标签列表
-apiFun.bucket.tag.getTags= (bucketName) => {
+apiFun.bucket.tag.getTags = (bucketName) => {
   return http.get(`/bucketTag/getBucketTag?bucketName=${bucketName}`)
 }
 //删除bucket标签
-apiFun.bucket.tag.deleteTag= (bucketName,tagId) => {
+apiFun.bucket.tag.deleteTag = (bucketName, tagId) => {
   return http.delete(`deleteBucketTag?bucketName=${bucketName}&TagId=${tagId}`)
 }
 //添加bucket标签
-apiFun.bucket.tag.addTag= params => {
-  return http.put(`/bucketTag/putBucketTag`,params)
+apiFun.bucket.tag.addTag = params => {
+  return http.put(`/bucketTag/putBucketTag`, params)
 }
 
 
 //更新Secret服务器端加密(1:SM4加密；2：AES256加密；null：不加密)
-apiFun.bucket.updateSecret = (bucketName,secret) =>{
-  return http.put('/bucket/updateSecret?bucketName='+bucketName+'&secret='+secret)
+apiFun.bucket.updateSecret = (bucketName, secret) => {
+  return http.put('/bucket/updateSecret?bucketName=' + bucketName + '&secret=' + secret)
 }
 
 //从桶中获取一个对象的元数据
@@ -206,11 +207,11 @@ apiFun.object.dataInfo = (objectName, bucketName) => {
 }
 
 //在桶中添加一个文件夹
-apiFun.object.add = (bucketName,objectName,parentObject) =>{
-  if(parentObject==null){
-  return http.put('/ossObject/putFolder?bucketName='+bucketName+'&objectName='+objectName)
-  }else 
-  return http.put('/ossObject/putFolder?bucketName='+bucketName+'&objectName='+objectName+'&parentObjectId='+parentObject)
+apiFun.object.add = (bucketName, objectName, parentObject) => {
+  if (parentObject == null) {
+    return http.put('/ossObject/putFolder?bucketName=' + bucketName + '&objectName=' + objectName)
+  } else
+    return http.put('/ossObject/putFolder?bucketName=' + bucketName + '&objectName=' + objectName + '&parentObjectId=' + parentObject)
 }
 
 //在桶中添加一个对象[小文件]
@@ -229,71 +230,71 @@ apiFun.object.delete = (bucketName, objectName) => {
 }
 
 //获取对象列表
-apiFun.object.objectList = (bucketName,key,pagenum,size,parentObjectId) => {
-  if(!parentObjectId){
-    if(!key)
-  return http.get('/ossObject/listObjects?bucketName='+bucketName+'&pagenum='+pagenum+'&size='+size)
-    else 
-  return http.get('/ossObject/listObjects?bucketName='+bucketName+'&key='+key+'&pagenum='+pagenum+'&size='+size)
-  }else{
-    if(!key)
-  return http.get('/ossObject/listObjects?bucketName='+bucketName+'&pagenum='+pagenum+'&size='+size+'&parentObjectId='+parentObjectId)
-  else
-  return http.get('/ossObject/listObjects?bucketName='+bucketName+'&key='+key+'&pagenum='+pagenum+'&size='+size+'&parentObjectId='+parentObjectId)
+apiFun.object.objectList = (bucketName, key, pagenum, size, parentObjectId) => {
+  if (!parentObjectId) {
+    if (!key)
+      return http.get('/ossObject/listObjects?bucketName=' + bucketName + '&pagenum=' + pagenum + '&size=' + size)
+    else
+      return http.get('/ossObject/listObjects?bucketName=' + bucketName + '&key=' + key + '&pagenum=' + pagenum + '&size=' + size)
+  } else {
+    if (!key)
+      return http.get('/ossObject/listObjects?bucketName=' + bucketName + '&pagenum=' + pagenum + '&size=' + size + '&parentObjectId=' + parentObjectId)
+    else
+      return http.get('/ossObject/listObjects?bucketName=' + bucketName + '&key=' + key + '&pagenum=' + pagenum + '&size=' + size + '&parentObjectId=' + parentObjectId)
   }
 }
 
 //获取对象状态
-apiFun.object.getStatus = (objectName,bucketName) => {
-  return http.get('/ossObject/getState?objectName='+objectName+'&bucketName='+bucketName)
+apiFun.object.getStatus = (objectName, bucketName) => {
+  return http.get('/ossObject/getState?objectName=' + objectName + '&bucketName=' + bucketName)
 }
 
 //获取对象的元数据
-apiFun.object.getInfo = (objectName,bucketName) => {
-  return http.get('/ossObject/getObjectInfo?objectName='+objectName+'&bucketName='+bucketName)
+apiFun.object.getInfo = (objectName, bucketName) => {
+  return http.get('/ossObject/getObjectInfo?objectName=' + objectName + '&bucketName=' + bucketName)
 }
 
 //解冻一个对象
-apiFun.object.unfreeze = (bucketName,objectName) => {
+apiFun.object.unfreeze = (bucketName, objectName) => {
   return http.post(`/ossObject/unfreeze?bucketName=${bucketName}&objectName=${objectName}`)
 }
 
 //备份一个对象
-apiFun.object.backupObject = (bucketName,objectName,targetBucketName,newObjectName) => {
-  return http.post('/ossObject/backup?bucketName='+bucketName+'&objectName='+objectName+'&targetBucketName='+targetBucketName+'&newObjectName='+newObjectName)
+apiFun.object.backupObject = (bucketName, objectName, targetBucketName, newObjectName) => {
+  return http.post('/ossObject/backup?bucketName=' + bucketName + '&objectName=' + objectName + '&targetBucketName=' + targetBucketName + '&newObjectName=' + newObjectName)
 }
 //复原一个对象
-apiFun.object.backupRecoveryObject = (bucketName,objectName) => {
-  return http.post('/ossObject/backupRecovery?bucketName='+bucketName+'&objectName='+objectName)
+apiFun.object.backupRecoveryObject = (bucketName, objectName) => {
+  return http.post('/ossObject/backupRecovery?bucketName=' + bucketName + '&objectName=' + objectName)
 }
 //归档一个对象
-apiFun.object.freeze = (bucketName,objectName) => {
+apiFun.object.freeze = (bucketName, objectName) => {
   return http.post(`/ossObject/freeze?bucketName=${bucketName}&objectName=${objectName}`)
 }
 //批量删除对象
-apiFun.object.deleteMore = (bucketName,params) => {
-  return http.delete(`/ossObject/batchDeletion?bucketName=${bucketName}`,params)
+apiFun.object.deleteMore = (bucketName, params) => {
+  return http.delete(`/ossObject/batchDeletion?bucketName=${bucketName}`, params)
 }
 
 //更新objectAcl
- apiFun.object.updateAcl = (bucketName,objectName,bucketAcl) => {
+apiFun.object.updateAcl = (bucketName, objectName, bucketAcl) => {
   return http.put(`/ossObject/updateObjectAcl?bucketName=${bucketName}&objectName=${objectName}&newtName=${bucketAcl}`)
- }
+}
 
 
 /**
  * 对象accessKey接口
  */
 //获取accessKey
-apiFun.object.accessKey.get=(objectId)=>{
+apiFun.object.accessKey.get = (objectId) => {
   return http.get(`/accessKey/getAccessKeys?objectId=${objectId}`)
 }
 //删除accessKey
-apiFun.object.accessKey.delete=params=>{
-  return http.delete(`/accessKey/deleteAccessKey`,params)
+apiFun.object.accessKey.delete = params => {
+  return http.delete(`/accessKey/deleteAccessKey`, params)
 }
 //创建accessKey
-apiFun.object.accessKey.create=(objectId,survivalTime)=>{
+apiFun.object.accessKey.create = (objectId, survivalTime) => {
   return http.post(`/accessKey/createAccessKey?objectId=${objectId}&survivalTime=${survivalTime}`)
 }
 /**
@@ -301,17 +302,17 @@ apiFun.object.accessKey.create=(objectId,survivalTime)=>{
  */
 
 //获取对象标签
-apiFun.object.tag.get =(bucketName,objectName) =>{
+apiFun.object.tag.get = (bucketName, objectName) => {
   return http.get(`/objectTag/getObjectTag?bucketName=${bucketName}&objectName=${objectName}`)
 }
 
 //添加对象标签
-apiFun.object.tag.add = params =>{
-  return http.put(`/objectTag/putObjectTag`,params)
+apiFun.object.tag.add = params => {
+  return http.put(`/objectTag/putObjectTag`, params)
 }
 
 //删除对象标签
-apiFun.object.tag.delete =(bucketName,objectName,TagId) =>{
+apiFun.object.tag.delete = (bucketName, objectName, TagId) => {
   return http.delete(`/objectTag/deleteObjectTag?bucketName=${bucketName}&objectName=${objectName}&TagId=${TagId}`)
 }
 

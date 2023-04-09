@@ -2,6 +2,7 @@
   <div>
     <div>
       <br />
+      <b>登录页</b>
       <p>Welcome , please login to your account.</p>
       <br /><br />
 
@@ -42,11 +43,11 @@
           <span> Remember me</span>
         </div>
         <!-- 注册 -->
-        <div class="register">
+        <!-- <div class="register">
           <router-link to="/register" style="text-decoration: none"
             ><span>注册新账号</span></router-link
           >
-        </div>
+        </div> -->
       </div>
       <br />
       <!-- 登录 -->
@@ -57,8 +58,8 @@
 
       <!-- ram -->
       <div>
-        <router-link to="/ramLogin" class="ram" style="text-decoration: none"
-          ><span>RAM账户登录</span></router-link
+        <router-link to="/register" class="ram" style="text-decoration: none"
+          ><span>注册新账号</span></router-link
         >
       </div>
     </div>
@@ -68,36 +69,41 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
-import router from "../router/index";
+import router from "../router";
 import apiFun from "../utils/api";
+import jwt_decode from "jwt-decode"; //解析token
+import user from "../store/user";
 
-const username = ref("");
+let username = ref("");
 const email = ref("");
-const password = ref("");
+let password = ref("");
+const useStore = user();
 
 let login = () => {
-  ElMessage.success("登录成功");
-  router.push("/home");
-  //登录
-  // if(this.username == "" || this.password == ""){
-  //   ElMessage.error("账号或密码不能为空");
-  // }else{
-  //   alert("账号："+this.username+"密码："+this.password)
-  //   apiFun.login({
-  //     username:this.username,
-  //     password:this.password,
-  //   }).then((res)=>{
-  //     if(res.success == false){
-  //       ElMessage.error(res.msg)
-  //     }else{
-  //       var token = res.data;
-  //       //把token放进store中
-  //       // this.$store.commit("setToken", token);
-  //       ElMessage.success("用户 “"+this.username+"” 登录成功");
-  //       this.$router.push({path:'/main'})//跳转到主页面
-  //     }
-  //   })
-  // }
+  // 登录
+  if (username.value == "" || password.value == "") {
+    ElMessage.error("账号或密码不能为空");
+  } else {
+    apiFun
+      .login({
+        username: username.value,
+        password: password.value,
+      })
+      .then((res) => {
+        console.log(res);
+        var token = res.data;
+        localStorage.setItem("token", token);
+        //解析token
+        const decode = jwt_decode(token);
+        console.log("token解析内容", decode); //decode是一个对象
+        //把解析后的token内容放进store中
+        useStore.id = decode.id;
+        useStore.username = decode.username;
+        useStore.token = token;
+        ElMessage.success("登录成功");
+        router.push({ path: "/home" }); //跳转到主页面
+      });
+  }
 };
 </script>
 
@@ -136,7 +142,7 @@ let login = () => {
   color: #4e5e9b;
   position: absolute;
   bottom: 20px;
-  left: 180px;
+  left: 190px;
   background-color: white;
   text-align: center;
 }
