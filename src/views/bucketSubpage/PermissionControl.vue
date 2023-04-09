@@ -101,14 +101,10 @@
                   cancel-button-text="取消"
                   confirm-button-text="确定"
                   title="确定要删除这条授权策略吗？"
+                  @confirm="handleDelete(scope.$index, scope.row)"
                 >
                   <template #reference>
-                    <el-button
-                      size="small"
-                      type="danger"
-                      @click="handleDelete(scope.$index, scope.row)"
-                      >删除</el-button
-                    >
+                    <el-button size="small" type="danger">删除</el-button>
                   </template>
                 </el-popconfirm>
               </template>
@@ -199,7 +195,7 @@
                           v-for="item in userList"
                           :key="item.value"
                           :label="item.username"
-                          :value="item.id"
+                          :value="item.username"
                         />
                       </el-select>
                     </div>
@@ -298,7 +294,6 @@ import { reactive, computed, ref, watch, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute } from "vue-router";
 import apiFun from "../../utils/api";
-import { breakpointsTailwind } from "@vueuse/core";
 const activeIndex = ref("1"); //横向导航当前选中（1为读写权限；2为Bucket授权策略）
 const now = ref(true); //now为当前显示子页
 const route = useRoute();
@@ -321,82 +316,81 @@ onMounted(() => {
 });
 
 let init = () => {
-  console.log("bucketName:", bucketName);
   apiFun.bucket.get(bucketName).then((res) => {
-    console.log("bucket.get(bucketName):", res);
+    console.log("获取bucket基本信息：", res);
     bucketAcl.value = res.data.bucketAcl.toString();
   });
 
   // 获取授权资源列表（后端返回数据还有点问题，暂时不用）
-  // apiFun.bucket.authorize.getList(bucketName, 1, 8).then((res) => {
-  //   console.log("bucket.authorize.getList(bucketName)", res);
-  //   res.data.forEach((a) => {
-  //     let target = bucketName + "/";
-  //     if (a.pathIsAll) {
-  //       target += "*";
-  //     } else {
-  //       console.log(a.paths)
-  //       target += a.paths.join(",");
-  //     }
-  //     let type = a.operation;
-  //     let action = "";
-  //     switch (type) {
-  //       case 1:
-  //         action = "只读（不包括ListObject操作）";
-  //         break;
-  //       case 2:
-  //         action = "只读（包括ListObject操作）";
-  //         break;
-  //       case 3:
-  //         action = "读 / 写";
-  //         break;
-  //       case 4:
-  //         action = "完全控制";
-  //         break;
-  //       case 5:
-  //         action = "拒绝访问（私有）";
-  //         break;
-  //       default:
-  //         action = "获取失败";
-  //     }
+  apiFun.bucket.authorize.getList(bucketName, 1, 9).then((res) => {
+    console.log("获取授权资源列表：", res);
+    state.total = res.data.totalCount;
+    state.currentPage = res.data.currentPage;
+    state.pageSize = res.data.pageSize;
+    res.data.rows.forEach((a) => {
+      let target = bucketName + "/";
+      if (a.pathIsAll) {
+        target += "*";
+      } else {
+        console.log(a.paths);
+        target += a.paths.join(",");
+      }
+      let type = a.operation;
+      let action = "";
+      switch (type) {
+        case 1:
+          action = "只读（不包括ListObject操作）";
+          break;
+        case 2:
+          action = "只读（包括ListObject操作）";
+          break;
+        case 3:
+          action = "读 / 写";
+          break;
+        case 4:
+          action = "完全控制";
+          break;
+        case 5:
+          action = "拒绝访问（私有）";
+          break;
+        default:
+          action = "获取失败";
+      }
 
-  //     let users = "";
-  //     if (a.userIsAll) {
-  //       //如果是全部用户
-  //       users = "*";
-  //     } else {
-  //       //先看子用户
-  //       let sonUsers = a.sonUser;
-  //       if (sonUsers) {
-  //         // 子用户不为空
-  //         users += sonUsers.join(",");
-  //       }
-  //       let otherUsers = a.otherUser;
-  //       if (sonUsers && otherUsers) {
-  //         users += ",";
-  //       }
-  //       if (otherUsers) {
-  //         //如果不为空
-  //         users += otherUsers.join(",");
-  //       }
-  //     }
-  //     let oneData = {
-  //       id: a.id,
-  //       target: target,
-  //       action: action,
-  //       users: users,
-  //     };
-  //     state.tableData.push(oneData);
-  //     console.log("XXX:", a.id, target, action, users);
-  //   });
-  //   console.log("DRYGSERDT:", state.tableData);
-  // });
-
+      let users = "";
+      if (a.userIsAll) {
+        //如果是全部用户
+        users = "*";
+      } else {
+        //先看子用户
+        let sonUsers = a.sonUser;
+        if (sonUsers) {
+          // 子用户不为空
+          users += sonUsers.join(",");
+        }
+        let otherUsers = a.otherUser;
+        if (sonUsers && otherUsers) {
+          users += ",";
+        }
+        if (otherUsers) {
+          //如果不为空
+          users += otherUsers.join(",");
+        }
+      }
+      let oneData = {
+        id: a.id,
+        target: target,
+        action: action,
+        users: users,
+      };
+      state.tableData.push(oneData);
+    });
+    console.log("授权策略列表:", state.tableData);
+  });
 
   //获取子用户
-  
   apiFun.user.getSubUsers("", 1, 1000).then((res) => {
-    console.log("apiFun.user.getSubUsers:", res);
+    console.log("获取子用户列表：", res);
     userList = res.data.rows;
   });
 };
@@ -440,66 +434,70 @@ const handleEdit = (index, row) => {
 
 //子项删除按钮点击方法
 const handleDelete = (index, row) => {
-  console.log(index, row);
+  console.log(row);
+  apiFun.bucket.authorize.delete(bucketName, row.id).then((res) => {
+    console.log("删除成功");
+    this.state.tableData.splice(index, 1);
+  });
 };
 
 const state = reactive({
   //表格（fake）数据
   tableData: [
-    {
-      id: 1,
-      target: "mybucket/*",
-      action: "只读",
-      users: "*",
-    },
-    {
-      id: 2,
-      target: "mybucket/aaa.png",
-      action: "读/写",
-      users: "AAAbc",
-    },
-    {
-      id: 3,
-      target: "mybucket/项目设计文档/4月8日更新版本",
-      action: "RAM读/写",
-      users: "*",
-    },
-    {
-      id: 4,
-      target: "mybucket/wallpaper/*",
-      action: "RAM读",
-      users: "abc,aaa,AAAbc",
-    },
-    {
-      id: 5,
-      target: "mybucket/log/*",
-      action: "私有",
-      users: "*",
-    },
-    {
-      id: 6,
-      target: "mybucket/preview.jpg",
-      action: "读/写",
-      users: "AAAbc",
-    },
-    {
-      id: 7,
-      target: "mybucket/12.jpg",
-      action: "RAM读/写",
-      users: "*",
-    },
-    {
-      id: 8,
-      target: "mybucket/123/textBox/*",
-      action: "RAM读",
-      users: "abc,aaa,AAAbc",
-    },
-    {
-      id: 9,
-      target: "mybucket/D/*",
-      action: "私有",
-      users: "*",
-    },
+    // {
+    //   id: 1,
+    //   target: "mybucket/*",
+    //   action: "只读",
+    //   users: "*",
+    // },
+    // {
+    //   id: 2,
+    //   target: "mybucket/aaa.png",
+    //   action: "读/写",
+    //   users: "AAAbc",
+    // },
+    // {
+    //   id: 3,
+    //   target: "mybucket/项目设计文档/4月8日更新版本.txt",
+    //   action: "RAM读/写",
+    //   users: "*",
+    // },
+    // {
+    //   id: 4,
+    //   target: "mybucket/wallpaper/*",
+    //   action: "RAM读",
+    //   users: "abc,aaa,AAAbc",
+    // },
+    // {
+    //   id: 5,
+    //   target: "mybucket/log/*",
+    //   action: "私有",
+    //   users: "*",
+    // },
+    // {
+    //   id: 6,
+    //   target: "mybucket/preview.jpg",
+    //   action: "读/写",
+    //   users: "AAAbc",
+    // },
+    // {
+    //   id: 7,
+    //   target: "mybucket/12.jpg",
+    //   action: "RAM读/写",
+    //   users: "*",
+    // },
+    // {
+    //   id: 8,
+    //   target: "mybucket/123/textBox/*",
+    //   action: "RAM读",
+    //   users: "abc,aaa,AAAbc",
+    // },
+    // {
+    //   id: 9,
+    //   target: "mybucket/D/*",
+    //   action: "私有",
+    //   users: "*",
+    // },
   ],
   //分页
   total: 200, // 总条数
@@ -520,7 +518,6 @@ let path = ref("");
 //当前操作标题
 const nowTitle = ref("新增授权");
 //子账号列表
-// const checkList = ref(["selected and disabled", "Option A"]);
 const value1 = ref([]);
 let userList = [
   {
@@ -576,9 +573,9 @@ function confirmClick() {
   let otherUser = [];
   if (radio1.value == "2") {
     pathIsAll = false;
-    paths.push(bucketName + path.value);
+    paths.push(path.value);
   } else {
-    paths.push(bucketName + "/*");
+    paths.push("/*");
   }
 
   if (checked.value == true) {
@@ -587,7 +584,10 @@ function confirmClick() {
   } else {
     if (checked2.value == true) {
       //如果选了子用户，赋值子用户列表
-      sonUser = value1.value;
+      value1.value.forEach((v) => {
+        sonUser.push(v);
+      });
+      console.log("sonList", sonUser);
     }
     if (checked3.value == true) {
       //如果选了其他用户，赋值其他用户列表
@@ -595,14 +595,15 @@ function confirmClick() {
     }
   }
 
-  console.log("pathIsAll:", pathIsAll);
-  console.log("userIsAll:", userIsAll);
-  console.log("operation:", operation);
-  console.log("paths    :", paths);
-  console.log("sonUser  :", sonUser);
-  console.log("otherUser:", otherUser);
-  console.log("operation:", operation);
-  console.log("--------------------");
+  //测试打印
+  // console.log("pathIsAll:", pathIsAll);
+  // console.log("userIsAll:", userIsAll);
+  // console.log("operation:", operation);
+  // console.log("paths    :", paths);
+  // console.log("sonUser  :", sonUser);
+  // console.log("otherUser:", otherUser);
+  // console.log("operation:", operation);
+  // console.log("--------------------");
 
   apiFun.bucket.authorize
     .addOrUpdate(bucketName, "", {
@@ -615,19 +616,9 @@ function confirmClick() {
     })
     .then((res) => {
       console.log(res);
-      if (res.success) {
-        ElMessage.success(tip + "成功");
-      } else {
-        ElMessage.error(tip + "失败");
-      }
+      ElMessage.success(tip + "成功,若未显示请尝试刷新页面");
+      drawer.value = false;
     });
-  // if (nowTitle.value == "新增授权") {
-  //   drawer.value = false;
-  //   ElMessage.success("新增成功");
-  // } else if (nowTitle.value == "编辑授权") {
-  //   drawer.value = false;
-  //   ElMessage.success == "编辑成功";
-  // }
 }
 
 const textarea = ref("");

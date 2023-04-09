@@ -38,7 +38,7 @@ import { ref } from "vue";
 import { Check, Close } from "@element-plus/icons-vue";
 const value1 = ref(true);
 const value2 = ref(true);
-const title = "Bucket配置";
+const title = "其他设置";
 const content =
   "您可以在此页面对当前Bucket进行一些基础的配置,例如上传文件（图片或视频）是否进行压缩操作等";
 </script>
