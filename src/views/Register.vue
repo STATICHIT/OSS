@@ -69,7 +69,7 @@
 
         <br /><br /><br />
         <br />
-        <button class="login-btn" @click="register">注 册</button>
+        <button class="register-btn" @click="register">注 册</button>
         <div>
           <router-link to="/login" class="back" style="text-decoration: none"
             ><span>回到登录页</span></router-link
@@ -129,7 +129,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login-btn {
+.register-btn {
   color: white;
   border-style: none;
   width: 350px;
@@ -140,6 +140,11 @@ export default {
   background-color: #586cb1;
   cursor: pointer;
   box-shadow: 0 3px 1px -2px rgb(209, 208, 208);
+}
+
+.register-btn:hover {
+  background-color: #4e5e9b;
+  box-shadow: 0 3px 1px -2px rgb(104, 103, 103);
 }
 .form-control {
   width: 330px;
@@ -155,10 +160,7 @@ export default {
   box-shadow: 0 3px 1px -2px rgb(199, 199, 199);
 }
 
-.login-btn:hover {
-  background-color: #4e5e9b;
-  box-shadow: 0 3px 1px -2px rgb(104, 103, 103);
-}
+
 .text-left {
   display: flex;
 }

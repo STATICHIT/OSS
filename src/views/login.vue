@@ -115,7 +115,7 @@ let login = () => {
 </script>
 
 <style lang="scss" scoped>
-.login-btn {
+.login-btn{
   width: 350px;
   height: 34px;
   color: white;
@@ -125,12 +125,12 @@ let login = () => {
   cursor: pointer;
 }
 
-.login-btn:hover {
+.login-btn:hover{
   background-color: #4e5e9b;
   box-shadow: 0 3px 1px -2px rgb(104, 103, 103);
 }
 
-.fontStyle {
+.fontStyle{
   width: 330px;
   height: 36px;
   padding: 0 10px;

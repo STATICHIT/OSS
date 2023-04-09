@@ -525,7 +525,7 @@ const customTheme = {
 }
 
 .drawing-container {
-  width: 1300px;
+  width: 1280px;
   height: 750px;
   position: relative;
   .myBtn {
