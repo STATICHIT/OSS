@@ -205,7 +205,10 @@ apiFun.object.metadata = (objectName, bucketName) => {
 apiFun.object.dataInfo = (objectName, bucketName) => {
   return http.get('/ossObject/getObject?objectName=' + objectName + '&bucketName=' + bucketName)
 }
-
+//获取一个对象的详细信息
+apiFun.object.getData = (id) => {
+  return http.get(`/manageObject/getObject?id=${id}`)
+}
 //在桶中添加一个文件夹
 apiFun.object.add = (bucketName, objectName, parentObject) => {
   if (parentObject == null) {
@@ -242,6 +245,10 @@ apiFun.object.objectList = (bucketName, key, pagenum, size, parentObjectId) => {
     else
       return http.get('/ossObject/listObjects?bucketName=' + bucketName + '&key=' + key + '&pagenum=' + pagenum + '&size=' + size + '&parentObjectId=' + parentObjectId)
   }
+}
+//重命名对象
+apiFun.object.updateObjectName = (bucketName,objectName,newtName) => {
+  return http.put(`/ossObject/updateObjectName?bucketName=${bucketName}&objectName=${objectName}&newtName=${newtName}`)
 }
 
 //获取对象状态

@@ -15,12 +15,13 @@ import user from "../store/user";
 const userStore = user()
 
 
-let baseURL = 'http://192.168.50.236:8080/'
-// 'http://192.168.50.35:8080/' //后端开发环境地址(部署后端到本机后只需修改此地址)
+let baseURL = 'http://192.168.50.35:8080/'
+//'http://192.168.50.236:8080/'  //后端开发环境地址(部署后端到本机后只需修改此地址)
 let config = {
   baseURL: baseURL,
   timeout: 30000    //设置最大请求时间
 }
+
 const _axios = axios.create(config);
 
 
@@ -43,7 +44,7 @@ _axios.interceptors.response.use(res => {
 
 const header = { 
   'Content-Type': 'application/json;charset=UTF-8', 
-  'Authorization': 'eyJ0eXBlIjoiSnd0IiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJjdXJyZW50VGltZSI6MTY4MDM0ODgyNTQ1OCwicGFzc3dvcmQiOiIxIiwiaWQiOiIzIiwiZXhwIjoxNjgwMzQ4ODI1LCJ1c2VybmFtZSI6IjEifQ.HqPFNUcdYXmZ7JAtA9y_cXKFmFh1djEppriXDJUOGa4' 
+  'Authorization': 'eyJ0eXBlIjoiSnd0IiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJjdXJyZW50VGltZSI6MTY4MTA1NjA2NjIyMywicGFzc3dvcmQiOiIxIiwiaWQiOiIxMzU3NDMiLCJleHAiOjE2ODEwNTYwNjYsInVzZXJuYW1lIjoiMSJ9.cV6UCIMdU_h4wA5tyw6xiNf2VNPqXwnOQUNCazC1RHU' 
 }
 
 // const header = { 

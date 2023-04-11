@@ -9,7 +9,7 @@
       style="width:100%"
       size="large"
     >
-      <el-table-column class-name="el-table-name" prop="name" label="Bucket名称" width="190" >
+      <el-table-column class-name="el-table-name" prop="name" label="Bucket名称">
         <template #default="{row}">
       <router-link :to="{ path: '/bucket', query: { bucketName: row.name } }" class="el-table-link">{{ row.name }}</router-link>
     </template>

@@ -9,11 +9,11 @@
       <el-button
         v-show="parentObjectId != null"
         size="large"
-        style="margin-left: "
+        style="margin-left: 12px"
         @click="returnParent"
         ><el-icon><ArrowLeftBold /></el-icon>&nbsp; /{{
           parentObjectName
-        }}/</el-button
+        }}</el-button
       >
       <el-button type="primary" size="large" @click="uploadFiles()"
         >上传文件</el-button
@@ -44,9 +44,9 @@
       :state="page"
       @getPage="getPage"
       @preview="getFilePreview"
+      @rename="objectRename"
     ></FileTable>
     <!-- 预览 -->
-
     <ObjectPreviewVue
       v-model="showPreview"
       :bucketName="bucketName"
@@ -58,7 +58,7 @@
     <el-dialog
       v-model="drawer"
       title="文件详情"
-      width="60%"
+      width="50%"
       style="height: auto"
       align-center
     >
@@ -71,7 +71,7 @@
             <span class="file-text">文件名</span>
             <div class="file-text-child">
               <span>{{ state.objectInfo.name }}</span>
-              <el-button type="text" size="small" @click="copyFilename"
+              <el-button link type="primary" size="small" @click="copyFilename"
                 >复制文件名</el-button
               ><el-button class="download-btn" type="primary" @click="download" :disabled="downloadBtn" >
       下载<el-icon><Download /></el-icon>
@@ -96,7 +96,7 @@
             <span class="file-text">文件ACL</span>
             <div class="file-text-child">
               <span>{{ aclComputed }}</span>
-              <el-button type="text" size="small" @click="innerVisible = true"
+              <el-button link type="primary" size="small" @click="innerVisible = true"
                 >设置读写权限</el-button
               >
             </div>
@@ -108,7 +108,7 @@
               <!-- 当对象不为正常状态时，不能设置存储类型，只能解冻 -->
               <el-button
                 v-show="fileStatus == '正常'"
-                type="text"
+                link type="primary"
                 size="small"
                 @click="updateCapacityDialog = true"
                 >设置存储类型</el-button
@@ -118,7 +118,7 @@
                 v-show="
                   fileStatus == '已经归档' && state.objectInfo.storageLevel != 1
                 "
-                type="text"
+                link type="primary"
                 size="small"
                 @click="unfreeze"
                 >解冻</el-button
@@ -142,20 +142,29 @@
               <span v-show="state.objectInfo.isBackup" style="color: burlywood"
                 >该对象为备份对象</span
               >
+               <el-button
+               link type="primary"
+                size="small"
+                style="margin-left: -10px;"
+                v-show="!state.objectInfo.isBackup"
+                @click="searchBackup"
+                >查看备份</el-button
+              >
               <el-button
-                type="text"
+              link type="primary"
+                size="small"
+                v-show="state.objectInfo.isBackup"
+                @click="backupRecover"
+                >复原</el-button
+              >
+             <el-button
+                type="primary"
                 size="small"
                 style="margin-left: -12px"
                 v-show="!state.objectInfo.isBackup"
                 @click="openBackup = true"
+                plain
                 >点击备份</el-button
-              >
-              <el-button
-                type="text"
-                size="small"
-                v-show="state.objectInfo.isBackup"
-                @click="backupRecover"
-                >还原</el-button
               >
             </div>
             <BackupVue
@@ -323,7 +332,7 @@
 
 <script setup>
 import { Search, Tickets } from "@element-plus/icons-vue";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import FileTable from "../../components/FileTable.vue";
 import TitleTip from "../../components/TitleTip.vue";
 import router from "../../router";
@@ -331,7 +340,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { useRoute } from "vue-router";
 import FileLimitThaw from "../../components/action/FileLimitThaw.vue";
 import apiFun from "../../utils/api";
-// import SecretTableVue from "../../components/secretTable.vue";
+import SecretTableVue from "../../components/secretTable.vue";
 import CreateSecret from "../../components/action/createSecret.vue";
 import BackupVue from "../../components/action/Backup.vue";
 import addLabelVue from "../../components/action/addLabel.vue";
@@ -344,7 +353,7 @@ const updateFileList = reactive([
   /* 更改的文件列表 */
 ]);
 const route = useRoute();
-const query = route.query;
+var query = route.query;
 var bucketName = query["bucketName"];
 var parentObjectId = query["parentObjectId"];
 var parentObjectName = query["parentObjectName"];
@@ -375,6 +384,7 @@ function labelPre(index) {
 onMounted(() => {
   Pre();
 });
+
 /* 解冻一个对象 */
 const unfreeze = () => {
   ElMessageBox.confirm(`确定解冻该文件吗?`, {
@@ -389,8 +399,18 @@ const unfreeze = () => {
     })
     .catch(() => {});
 };
+/* 重名名 */
+const objectRename = (msg) => {
+  let index = msg['index']
+  let newName = msg['newName']
+  state.fileList[index].name=newName
+}
+/* 查看备份 */
+const searchBackup = () => {
+
+}
 const backupRecover = () => {
-  ElMessageBox.confirm(`确定解冻该文件吗?`, {
+  ElMessageBox.confirm(`确定复原该对象吗?`, {
     type: "Warning",
   })
     .then(() => {
@@ -405,7 +425,7 @@ const backupRecover = () => {
     })
     .catch(() => {});
 };
-
+const parentObject = ref({})//父级对象
 const page = reactive({
   total: 200, // 总条数
   currentPage: 1, // 当前页
@@ -452,11 +472,16 @@ const goToFile = (index) => {
   let name = state.fileList[index].name;
   if (fileData.isFolder == true) {
     /* 当点击对象为文件时跳转进入文件夹，设置路由参数为点击文件夹的id */
-    router.push({
+    router.replace({
       path: "/fileList",
       query: { bucketName:bucketName,parentObjectId: fileData.id, parentObjectName: fileData.name },
     });
+    parentObjectName=fileData.name
+    parentObjectId=fileData.id
+    parentObject.value=fileData
+    Pre()
   } else {
+    console.log(bucketName)
     apiFun.object.getStatus(name, bucketName).then((res) => {
       fileStatus.value = res.data.stateStr;
     });
@@ -475,7 +500,7 @@ const goToFile = (index) => {
   }
 };
 const Pre = () => {
-  console.log(parentObjectId+'111')
+  console.log(parentObjectId)
   if (bucketName != null) {
     apiFun.object
       .objectList(
@@ -520,7 +545,24 @@ const getPage = () => {
 // });
 /* 返回上一级 */
 const returnParent = () => {
-  router.back;
+  console.log(parentObject.value.parent)
+  if(parentObject.value.parent!=null){
+ router.push({path:'/fileList',query:{
+   bucketName:bucketName,
+   parentObjectId:parentData.id,
+   parentObjectName:parentData.name
+   }})
+   parentObjectId=parentData.id
+   parentObjectName=parentData.name
+   Pre()
+}else{
+  router.push({path:'/fileList',query:{
+    bucketName:bucketName,
+  }})
+  parentObjectId=null
+  parentObjectName=null
+  Pre()
+}
 };
 
 /* 文件解冻 */
@@ -531,6 +573,7 @@ const getThaw = (objectList) => {
       showLimitThaw.value = true;
       return;
     } else {
+
     }
   });
 };
@@ -619,7 +662,8 @@ function confirmClick() {
 }
 /* 禁用下载按钮 */
 const downloadBtn = computed(()=>{
-  if(state.objectInfo.storageLevel != 1 || state.fileStatus != "正常"){
+  console.log(fileStatus.value)
+  if(state.objectInfo.storageLevel != 1 || fileStatus.value != "正常"){
     return true;
   }else return false;
 })
@@ -655,11 +699,16 @@ function confirmClickCapacity() {
   if (updateFileListData.value.storageLevel == 2) {
     apiFun.object.freeze(bucketName, state.objectInfo.name).then((res) => {
       console.log(res);
-    });
-  }
-  ElMessage.success("操作成功！");
+      if(res.code==200){
+        ElMessage.success("操作成功！");
   updateCapacityDialog.value = false;
   drawer.value = false;
+      }else{
+        ElMessage.error(res.msg)
+      }
+    });
+  }
+ 
 
   // router.push({path:'/bucket',query:{name:state.newBucket.name}})
 }
@@ -871,14 +920,15 @@ const accessKeys = ref([]);
 }
 .file-text-child {
   font-size: 13px;
-  width: 80%;
+  width: 70%;
   display: flex;
   flex-direction: row;
   gap: 20px;
+  justify-content: space-between;
 }
-.file-text-child > el-button {
-  margin-top: -7px;
-}
+// .file-text-child > el-button {
+//   margin-top: -7px;
+// }
 .box-items {
   display: flex;
   flex-direction: row;

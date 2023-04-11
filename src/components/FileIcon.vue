@@ -1,20 +1,59 @@
 <!-- 文件图标组件，根据不同文件后缀名显示不同图标 -->
 <template>
-  <div class="file-icon-content">
+  <div
+  @mouseover="isVisit=true"
+@mouseleave="isVisit=false"
+   class="file-icon-content">
     <img :src="fileIcon" />   
 <el-button
 link
 type="primary"
 class="file-name"
+@click="$emit('toFile')"
       >{{ fileName }}</el-button
     >
+    <el-button v-show="isVisit" link type="info" @click="showDialogRename=true"> 
+      <el-icon><EditPen /></el-icon>
+    </el-button>
+    <el-dialog
+    width="45%"
+     title="重命名"
+      append-to-body
+      v-model="showDialogRename"
+      >
+      <template #default>
+        <el-form-item label="文件重命名">
+        <el-input v-model="name" placeholder="请输入要更改的文件名" />
+      </el-form-item>
+      </template>
+      <template #footer>
+        <div style="flex: auto; justify-content: center">
+        <el-button type="primary" @click="confirmClick"
+          >确定</el-button
+        >
+        <el-button @click="close"
+          >取消</el-button
+        >
+      </div>
+      </template>
+      </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ElMessage } from "element-plus";
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
 import router from "../router";
+import apiFun from "../utils/api";
 
+
+const route = useRoute()
+const query = route.query
+const bucketName = query['bucketName']
+const isVisit = ref(false)
+const showDialogRename = ref(false)
+const emit = defineEmits(['rename'])
 const prop = defineProps({
   //文件名
   fileName: {
@@ -26,7 +65,32 @@ const prop = defineProps({
     type:Boolean,
     default:false
   },
+  index:{
+    type:Number
+  }
 });
+
+const confirmClick = () => {
+  if(name.value==''){
+    ElMessage.error('输入文件名不能为空！')
+  }else {
+  const newName = name.value +"."+prop.fileName.split(".").pop()
+  apiFun.object.updateObjectName(bucketName,prop.fileName,newName).then(res=>{
+    if(res.code==200){
+    console.log(newName+prop.index)
+    emit('rename',{newName:newName,index:prop.index})
+    ElMessage.success('操作成功！')
+    showDialogRename.value=false
+    }else {
+      ElMessage.error(res.msg)
+    }
+  })
+}
+}
+const close = () => {
+  showDialogRename.value=false
+}
+const name = ref('')
 const fileIcon = computed(() => {
   let icon = "";
   if(prop.isFolder==true){
@@ -78,7 +142,6 @@ const fileIcon = computed(() => {
 }
 return icon;
 });
-
 
 </script>
 

@@ -2,9 +2,9 @@
   <div class="header">
     <div class="left"></div>
     <div style="margin-left: -80%">
+      <img src="../assets/icon.png" class="logo">
       <span class="head-text">CloudCan云罐</span>
     </div>
-
     <div class="right">
       <el-popover
         placement="bottom"
@@ -15,11 +15,11 @@
         <template #reference>
           <div class="author" style="font-weight: bold">
             <img
-              style="margin-top: 2px; margin-right: 5px"
-              src="../assets/preAvatar.png"
+              style="margin-right: 7px"
+              src="../assets/avatar.png"
               class="avatar-img"
             />
-            <span style="margin-top: -5px">{{ userStore.name }}</span>
+            <span>{{ userStore.name }}</span>
             <!-- <i class="icon el-icon-s-custom" /> -->
             <!-- <i class="el-icon-caret-bottom" /> -->
             <el-icon><CaretBottom /></el-icon>
@@ -86,7 +86,9 @@ $back-color: #f0f2f8;
   font-size: 18px;
   margin-right: 6px;
 }
-
+.logo{
+  height:40px
+}
 .head-text {
   color: $primary-color;
   font-weight: bold;
@@ -95,6 +97,11 @@ $back-color: #f0f2f8;
 .author {
   margin-left: 10px;
   cursor: pointer;
+  display: flex;
+  flex-direction: row;
+}
+.author>span{
+  margin-top: 5px;
 }
 </style>
 

@@ -11,8 +11,16 @@
 </template>
 
 <script setup>
+import { useRoute } from "vue-router";
 import menuVue from "../../components/InMenu.vue";
 import "../../style/base.scss";
+
+//  const route = useRoute
+//  const query = route.query
+//  const bucketName = query['bucketName']
+
+
+// $route.meta.title = 'suhs'
 </script>
 
 <style lang="scss" scoped>

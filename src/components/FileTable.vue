@@ -22,7 +22,7 @@
         width="300"
       >
         <template #default="scope">
-          <FileIcon :fileName="scope.row.name" :isFolder="scope.row.isFolder" @click="$emit('toFile',scope.$index)"></FileIcon>
+          <FileIcon :fileName="scope.row.name" :index="scope.$index" :isFolder="scope.row.isFolder" @rename="rename" @toFile="$emit('toFile',scope.$index)"></FileIcon>
         </template>
       </el-table-column>
       <el-table-column prop="size" label="文件大小"  :formatter="formatSize" />
@@ -35,33 +35,42 @@
           <!-- 加其他操作按钮的插槽 -->
           <el-button
             @click="$emit('toFile',scope.$index)"
-            type="text"
+            link
+            type="primary"
             size="small"
             v-show="!scope.row.isFolder"
             >详情</el-button
           >
           <el-button
             @click="$emit('preview',scope.$index)"
-            type="text"
+            link
+            type="primary"
             size="small"
-       style="margin-left: -2px;"
             v-show="!scope.row.isFolder"
             >预览</el-button
           >
-      <el-button text
+      <el-button link
        type="primary"
        size="small"
-       style="margin-left: -2px;"
        v-show="!scope.row.isFolder"
        @click="$emit('addLabel',scope.$index)"
        >标签</el-button>
           <el-button
             @click="$emit('deleteFile',scope.$index)"
-            text
+            link
+            v-show="!scope.row.isFolder"
             type="danger"
-            style="margin-left: -2px;"
             size="small"
             >删除</el-button
+          >
+          <el-button
+            @click="$emit('deleteFile',scope.$index)"
+            link
+            v-show="scope.row.isFolder"
+            style="margin-left: -2px;"
+            type="danger"
+            size="small"
+            >彻底删除</el-button
           >
         </template>
       </el-table-column>
@@ -116,7 +125,7 @@ import { computed } from "vue";
 import router from "../router";
 import { useRoute } from "vue-router";
 
-const emit = defineEmits(['getPage','addLabel','toFile','preview'])
+const emit = defineEmits(['getPage','addLabel','toFile','preview','rename'])
 
 const prop = defineProps({
   //文件对象列表
@@ -128,8 +137,12 @@ const prop = defineProps({
     type:Object,
   }
 })
-
-
+const rename = (msg) => {
+  let index = msg['index']
+  let newName = msg['newName']
+  console.log(index+newName+'111')
+  emit('rename',{index:index,newName:newName})
+}
 /* 文件大小数据格式化 */
 function formatSize(row) {
   let size = row.size
@@ -191,6 +204,8 @@ const toggleSelection = (rows) => {
     multipleTableRef.value.clearSelection()
   }
 }
+
+
 
 </script>
 <style scoped>
