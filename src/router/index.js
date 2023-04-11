@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, useRouter, useRoute } from 'vue-router'
 //路由配置数组
 const routes = [
   //   { path: '/', component: () => import('../views/home.vue') },
-  { path: '/', redirect: '/home', },
+  { path: '/', redirect: '/Home', },
   {
     // 登录注册底页
     path: '/index',

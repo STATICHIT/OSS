@@ -49,7 +49,7 @@ const prop = defineProps({
       type:String
     },
     labels:{
-      type:Number,
+      type:Array,
       default:()=>[{
         id:0,
     key:'',

@@ -7,7 +7,7 @@
     @close="handleClose"
     router
     style="
-      min-height: 90%;
+      min-height: 93vh;
       box-shadow: 10px 10px 10px -4px rgba(0, 0, 0, 0.06);
     "
   >
@@ -19,14 +19,6 @@
       <el-icon><FolderOpened /></el-icon>
       <template #title>Bucket列表</template>
     </el-menu-item>
-    <el-sub-menu index="/dataServer">
-      <template #title>
-        <el-icon><List /></el-icon>
-        <span class="el-menu-font">数据服务</span>
-      </template>
-      <el-menu-item index="/dataCopy">数据复制</el-menu-item>
-      <el-menu-item index="/dataImport">数据导入</el-menu-item>
-    </el-sub-menu>
     <el-sub-menu index="4">
       <template #title>
         <el-icon><TrendCharts /></el-icon>
@@ -60,7 +52,7 @@
         ><Plus /></el-icon>新增Bucket</el-menu-item
       >
     </el-sub-menu>
-    <button class="open-btn">
+    <button class="open-btn" @click="isCollapse=!isCollapse">
       <el-icon class="open-icon" v-show="isCollapse"
         ><ArrowRightBold
       /></el-icon>
