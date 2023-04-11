@@ -22,7 +22,6 @@
       v-model="drawer"
       title="I am the title"
       :direction="direction"
-      :before-close="handleClose"
       size="40%"
     >
       <template #header>

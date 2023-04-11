@@ -9,11 +9,12 @@
       size="large"
       ref="multipleTableRef"
     >
-      <el-table-column prop="id" label="AccessKey ID" />
-      <el-table-column prop="survivalTime" label="存活时间(秒)" width="130px" />
-      <el-table-column prop="creationTime" label="创建时间" width="130px"/>
+      <el-table-column prop="id" label="AccessKey ID" width="300px" />
+      <el-table-column prop="survivalTime" label="存活时间(秒)" width="130" />
+      <el-table-column prop="creationTime" label="创建时间" width="200"/>
       <!-- 操作 -->
       <el-table-column
+      width="120"
         label="操作">
         <template #default="scope">
           <!-- 加其他操作按钮的插槽 -->
@@ -21,9 +22,8 @@
             @click="deleteSecret(scope.$index)"
             text
             type="danger"
-            style="margin-left: -2px;"
+            style="margin-left: -1px;"
             size="small"
-            width="150px"
             >删除</el-button
           >
         </template>
