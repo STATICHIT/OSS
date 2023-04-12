@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="main">
-      <div class="left">
-        <div class="auth-brand">CloudCan云罐</div>
+    <div class="index-main">
+      <div class="index-left">
+        <div class="index-auth-brand">CloudCan云罐</div>
         <h4 class="mt-0">让存储无限量</h4>
         <!-- 声明子路由占位符 -->
         <router-view></router-view>
       </div>
-      <div class="right">
+      <div class="index-right">
         <!--阴影层-->
-        <div class="shade"></div>
-        <div class="description">
+        <div class="index-shade"></div>
+        <div class="index-description">
           让数据与智慧更高效地流动。
           <br />
           CloudCan
@@ -22,7 +22,7 @@
 
 
 <style lang="scss" scoped>
-.main {
+.index-main {
   position: relative;
   display: flex;
   min-height: 100vh;
@@ -31,18 +31,18 @@
   margin: 0;
 }
 
-.auth-brand {
+.index-auth-brand {
   margin: 4rem 0 4rem;
   font-size: 26px;
   width: 325px;
 }
 
-.left {
+.index-left {
   width: 20%;
   padding: 60px;
   text-align: left;
 }
-.right {
+.index-right {
   width: 80%;
   padding: 6rem 3rem;
   flex: 1;
@@ -52,7 +52,7 @@
   background: url(../assets/wallpaper.png) center;
   background-size: cover;
 }
-.description {
+.index-description {
   color: aliceblue;
   position: absolute;
   margin: 0 auto;
@@ -61,7 +61,7 @@
   left: 0;
   right: 0;
 }
-.shade {
+.index-shade {
   position: absolute;
   left: 0;
   right: 0;

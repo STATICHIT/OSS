@@ -11,7 +11,7 @@
       <input
         v-model="username"
         type="text"
-        class="fontStyle"
+        class="login-fontStyle"
         name="username"
         placeholder="请输入您的账号"
         required
@@ -28,7 +28,7 @@
         minlength="5"
         maxlength="20"
         type="password"
-        class="fontStyle"
+        class="login-fontStyle"
         name="password"
         placeholder="请输入您的密码"
         required
@@ -58,7 +58,7 @@
 
       <!-- ram -->
       <div>
-        <router-link to="/register" class="ram" style="text-decoration: none"
+        <router-link to="/register" class="login-ram" style="text-decoration: none"
           ><span>注册新账号</span></router-link
         >
       </div>
@@ -130,7 +130,7 @@ let login = () => {
   box-shadow: 0 3px 1px -2px rgb(104, 103, 103);
 }
 
-.fontStyle{
+.login-fontStyle{
   width: 330px;
   height: 36px;
   padding: 0 10px;
@@ -140,11 +140,11 @@ let login = () => {
   border-bottom: 1px solid #626364;
 }
 
-.fontStyle:hover {
+.login-fontStyle:hover {
   box-shadow: 0 3px 1px -2px rgb(104, 103, 103);
 }
 
-.ram {
+.login-ram {
   font-style: 8px;
   color: #4e5e9b;
   position: absolute;

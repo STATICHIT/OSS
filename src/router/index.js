@@ -109,10 +109,11 @@ const routes = [
       },
       {
         //Bucket(包含子菜单及子内页)
+        name:'bucket',
         path: '/bucket',
         component: () => import('../views/subpages/Bucket.vue'),
         redirect: '/fileList',//初始显示在文件列表页面
-        meta: { title: "bucketName" },
+        meta: { title: "myBucket" },
         children: [
           {
             //概览
@@ -214,9 +215,11 @@ const router = createRouter({
   routes
 })
 
-/*
+
 //设置路由守卫
 router.beforeEach((to, from, next) => {
+  console.log(to)
+  console.log(from)
   if (to.path == '/login') {
     // 如果路径是 /login 则正常执行
     next()
@@ -227,10 +230,11 @@ router.beforeEach((to, from, next) => {
       next({ path: '/login' })
     } else {
       // 否则继续执行
+      // if(to.)
       next()
     }
   }
 })
-*/
+
 
 export default router
