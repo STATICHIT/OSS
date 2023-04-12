@@ -23,7 +23,9 @@
             <span style="font-weight: bold">值</span>
           </div>
 
-          <div class="tag-msg" v-if="!openSetting">
+          <div
+          v-loading="loading"
+           class="tag-msg" v-if="!openSetting">
             <div
               class="tag-msg-span"
               v-for="label in state.labels"
@@ -81,7 +83,7 @@ import { useRoute } from "vue-router";
 import TitleTip from "../../components/TitleTip.vue";
 import apiFun from "../../utils/api";
 
-
+const loading = ref(true)
 const route = useRoute()
 const query = route.query
 const bucketName = query['bucketName']
@@ -106,6 +108,7 @@ const state = reactive({
    apiFun.bucket.tag.getTags(bucketName).then(res=>{
     console.log(res)
      state.labels=res.data
+     loading.value=false
    })
  }
 
@@ -152,7 +155,12 @@ const confirmClick = () => {
        tags:state.labels
      }).then(res=>{
        console.log(res)
+       if(res.code==200){
+        ElMessage.success('操作成功！')
        openSetting.value=false
+       }else{
+        ElMessage.error(res.msg)
+       }
      })
   }
 };

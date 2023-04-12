@@ -38,6 +38,7 @@
       @deleteFile="deleteFile"
       @getThaw="getThaw"
       class="fileTable"
+      v-loading="loading"
       @updateCapacity="updateCapacityDialog = true"
       @showUpdateAcl="innerVisible = true"
       @addLabel="labelPre"
@@ -59,7 +60,8 @@
       v-model="drawer"
       title="文件详情"
       width="50%"
-      style="height: auto"
+      style="height: auto;
+      padding:0 20px"
       align-center
     >
       <template #header>
@@ -145,7 +147,6 @@
                <el-button
                link type="primary"
                 size="small"
-                style="margin-left: -10px;"
                 v-show="!state.objectInfo.isBackup"
                 @click="searchBackup"
                 >查看备份</el-button
@@ -182,6 +183,7 @@
               </el-button>
             </div>
             <SecretTableVue
+              style="width:100%"
               :secrets="accessKeys"
               :objectId="fileData.id"
             ></SecretTableVue>
@@ -371,7 +373,7 @@ const objectLabel = reactive([]); //标签
 const openBackup = ref(false);
 let tagObjectName = ref("");
 const secretList = ref([]);
-
+const loading = ref(true)
 function labelPre(index) {
   tagObjectName = state.fileList[index].name;
   if (tagObjectName != "") {
@@ -511,6 +513,7 @@ const Pre = () => {
         parentObjectId
       )
       .then((res) => {
+        if(res.code==200){
         console.log(res)
         page.total = res.data.totalCount;
         state.fileList = res.data.rows;
@@ -523,7 +526,9 @@ const Pre = () => {
           }
         }
         state.fileList.unshift(...items);
+      }else ElMessage.error(res.msg)
       });
+      loading.value=false
   }
 };
 /* 翻页 */
@@ -639,7 +644,7 @@ function confirmClick() {
   } else {
     ElMessageBox.confirm(`确定创建该目录吗?`)
       .then(() => {
-        let str = state.newFolderName;
+        let str = state.newFolderName+'/'
         const regExp = /^(?!\/)(?!.*[\uD800-\uDFFF]).+\/$/;
         console.log(regExp.test(str));
         if (regExp.test(str)) {

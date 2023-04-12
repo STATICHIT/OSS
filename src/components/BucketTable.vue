@@ -2,6 +2,7 @@
 <template  >
   <div style="position: relative;">
     <el-table
+      v-loading="loading"
       :data="state.tableData"
       class="bucketTable"
       highlight-current-row:true
@@ -32,9 +33,11 @@
   </div>
 </template>
 <script setup>
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import apiFun from "../utils/api";
 import { ElMessage } from "element-plus";
+
+const loading = ref(true)
 
 /* 存储类型数据格式化 */
 function formatStorageLevel(row) {
@@ -106,6 +109,7 @@ function Pre(){
     console.log(res)
     state.tableData=res.data.rows
     state.total=res.data.totalCount
+    loading.value=false
    }
    else
    ElMessage.error(res.msg)

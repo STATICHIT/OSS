@@ -43,6 +43,7 @@
           stripe
           style="width: 98%"
           height="90%"
+          v-loading="loading"
           row-key="id"
           ref="multiTable"
           class="table"
@@ -217,7 +218,7 @@ const route = useRoute();
  */
 const router = useRouter();
 //console.log('1-开始创建组件-setup')
-
+const loading = ref(true)
 /**
  * 数据部分
  */
@@ -325,6 +326,7 @@ const initData = () => {
       if (res.code === 200) {
         data.tableData = res.data.rows;
         data.total = res.data.totalCount;
+        loading.value=false
       }
     })
     .catch((err) => {

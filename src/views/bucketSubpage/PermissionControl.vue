@@ -76,6 +76,7 @@
           <el-table
             ref="multipleTableRef"
             :data="filterTableData"
+            v-loading="loading"
             style="width: 100%"
             :header-cell-style="{ background: '#eff1f7', color: '#606266' }"
           >
@@ -299,6 +300,7 @@ const now = ref(true); //now为当前显示子页
 const route = useRoute();
 const query = route.query;
 const bucketName = query["bucketName"];
+const loading = ref(true)
 //横向导航选择与子页面显示的绑定
 const handleSelect = (key, keyPath) => {
   if (key == "1") {
@@ -385,6 +387,7 @@ let init = () => {
       };
       state.tableData.push(oneData);
     });
+    loading.value=false
     console.log("授权策略列表:", state.tableData);
   });
 

@@ -9,9 +9,9 @@
       size="large"
       ref="multipleTableRef"
     >
-      <el-table-column prop="id" label="AccessKey ID" width="300px" />
-      <el-table-column prop="survivalTime" label="存活时间(秒)" width="130" />
-      <el-table-column prop="creationTime" label="创建时间" width="200"/>
+      <el-table-column prop="id" label="AccessKey ID"/>
+      <el-table-column prop="survivalTime" label="存活时间(秒)"  />
+      <el-table-column prop="creationTime" label="创建时间"/>
       <!-- 操作 -->
       <el-table-column
       width="120"
@@ -90,7 +90,7 @@ const deleteSecret = (index) => {
   text-align: left;
 }
 .table{
-    width: 800px;
+    width: 1000px;
 }
 .box{
     display: flex;
