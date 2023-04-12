@@ -69,8 +69,8 @@
         <h2 class="title2">Bucket管理</h2>
         <div class="up" id="mychart"></div>
         <div class="down">
-          <el-button plain class="createBtn">创建 Bucket</el-button>
-          <el-button plain>查看 Bucket 列表</el-button>
+          <el-button plain class="createBtn" @click="btn1">创建 Bucket</el-button>
+          <el-button plain @click="btn1">查看 Bucket 列表</el-button>
           <el-button plain>导出CSV</el-button>
         </div>
       </div>
@@ -80,7 +80,6 @@
 </template>
 
 <script>
-import { ElMessage } from "element-plus";
 import apiFun from "../../utils/api";
 //引入echarts
 import * as echarts from "echarts";
@@ -347,6 +346,9 @@ export default {
         }
       }
     },
+    btn1(){
+      this.$router.push('/bucketList')
+    }
   },
 };
 </script>

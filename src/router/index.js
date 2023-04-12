@@ -218,8 +218,8 @@ const router = createRouter({
 
 //设置路由守卫
 router.beforeEach((to, from, next) => {
-  console.log(to)
-  console.log(from)
+  // console.log(to)
+  // console.log(from)
   if (to.path == '/login') {
     // 如果路径是 /login 则正常执行
     next()
