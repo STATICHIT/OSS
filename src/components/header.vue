@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="left"></div>
-    <div style="margin-left: -80%">
+    <div style="margin-left: -80%" class="logo-box">
       <img src="../assets/icon.png" class="logo">
       <span class="head-text">CloudCan云罐</span>
     </div>
@@ -87,12 +87,17 @@ $back-color: #f0f2f8;
   margin-right: 6px;
 }
 .logo{
-  height:40px
+  max-height:40px
 }
 .head-text {
   color: $primary-color;
   font-weight: bold;
   font-size: 20px;
+  margin-top: 10px;
+}
+.logo-box{
+  display: flex;
+  flex-direction: row;
 }
 .author {
   margin-left: 10px;

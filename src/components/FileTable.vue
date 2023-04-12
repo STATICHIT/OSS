@@ -7,7 +7,6 @@
       class="table"
       :data="tableData"
       size="large"
-
       ref="multipleTableRef"
       @selection-change="handleSelectionChange"
     >
@@ -126,7 +125,6 @@ import router from "../router";
 import { useRoute } from "vue-router";
 
 const emit = defineEmits(['getPage','addLabel','toFile','preview','rename'])
-
 const prop = defineProps({
   //文件对象列表
   tableData:{
@@ -137,6 +135,7 @@ const prop = defineProps({
     type:Object,
   }
 })
+
 const rename = (msg) => {
   let index = msg['index']
   let newName = msg['newName']
