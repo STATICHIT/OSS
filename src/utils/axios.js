@@ -15,7 +15,7 @@ import user from "../store/user";
 const userStore = user()
 
 
-let baseURL = 'http://192.168.50.236:8082/'
+let baseURL = 'http://192.168.50.236:8080/'
 // let baseURL = 'http://192.168.50.35:8080/' //后端开发环境地址(部署后端到本机后只需修改此地址)
 
 let config = {

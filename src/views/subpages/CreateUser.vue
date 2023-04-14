@@ -1,11 +1,4 @@
-<!--
- * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @Date: 2023-03-19 20:46:34
- * @LastEditors: Fleurxxx 984209872@qq.com
- * @LastEditTime: 2023-04-08 18:40:14
- * @FilePath: \OSS\src\views\subpages\CreateUser.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
+<!-- 云罐-创建子用户 -->
 <template>
   <div class="main">
     <div class="icon-return">
@@ -47,7 +40,7 @@
             style="width: 80px"
             >确认</el-button
           >
-          <el-button @click="reset" style="width: 80px">返回</el-button>
+          <el-button @click="back" style="width: 80px">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -55,22 +48,9 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import { ref, reactive, toRefs } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import req from "../../utils/api";
-const store = useStore(); //仓库
-const route = useRoute(); //路由对象
-const router = useRouter(); //路由实例
 
 //数据部分
 let formlabelref = reactive(null);
@@ -103,11 +83,9 @@ let rules = reactive({
   ],
 });
 
-const radio = ref("1"); //单选框
 //确认
 const submit = async (formEl) => {
   await formEl.validate((valid, fields) => {
-    console.log(valid);
     if (valid) {
       // 验证成功
       let params = {
@@ -145,26 +123,9 @@ const submit = async (formEl) => {
   });
 };
 //返回
-const reset = () => {
-  history.go(-1);
-};
-//绑定标签
-const edit = () => {
-  console.log("绑定标签");
-};
-//额头返回键
 const back = () => {
   history.go(-1);
 };
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
-onMounted(() => {
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
 defineExpose({
   ...toRefs(formlabel),
 });

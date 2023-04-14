@@ -300,7 +300,7 @@ const now = ref(true); //now为当前显示子页
 const route = useRoute();
 const query = route.query;
 const bucketName = query["bucketName"];
-const loading = ref(true)
+const loading = ref(true);
 //横向导航选择与子页面显示的绑定
 const handleSelect = (key, keyPath) => {
   if (key == "1") {
@@ -387,7 +387,7 @@ let init = () => {
       };
       state.tableData.push(oneData);
     });
-    loading.value=false
+    loading.value = false;
     console.log("授权策略列表:", state.tableData);
   });
 
@@ -445,64 +445,7 @@ const handleDelete = (index, row) => {
 };
 
 const state = reactive({
-  //表格（fake）数据
-  tableData: [
-    // {
-    //   id: 1,
-    //   target: "mybucket/*",
-    //   action: "只读",
-    //   users: "*",
-    // },
-    // {
-    //   id: 2,
-    //   target: "mybucket/aaa.png",
-    //   action: "读/写",
-    //   users: "AAAbc",
-    // },
-    // {
-    //   id: 3,
-    //   target: "mybucket/项目设计文档/4月8日更新版本.txt",
-    //   action: "RAM读/写",
-    //   users: "*",
-    // },
-    // {
-    //   id: 4,
-    //   target: "mybucket/wallpaper/*",
-    //   action: "RAM读",
-    //   users: "abc,aaa,AAAbc",
-    // },
-    // {
-    //   id: 5,
-    //   target: "mybucket/log/*",
-    //   action: "私有",
-    //   users: "*",
-    // },
-    // {
-    //   id: 6,
-    //   target: "mybucket/preview.jpg",
-    //   action: "读/写",
-    //   users: "AAAbc",
-    // },
-    // {
-    //   id: 7,
-    //   target: "mybucket/12.jpg",
-    //   action: "RAM读/写",
-    //   users: "*",
-    // },
-    // {
-    //   id: 8,
-    //   target: "mybucket/123/textBox/*",
-    //   action: "RAM读",
-    //   users: "abc,aaa,AAAbc",
-    // },
-    // {
-    //   id: 9,
-    //   target: "mybucket/D/*",
-    //   action: "私有",
-    //   users: "*",
-    // },
-  ],
-  //分页
+  tableData: [], //表格数据
   total: 200, // 总条数
   currentPage: 1, // 当前页
   pageSize: 9,
