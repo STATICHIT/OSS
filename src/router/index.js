@@ -109,11 +109,18 @@ const routes = [
       },
       {
         //Bucket(包含子菜单及子内页)
+        name: 'bucket',
         path: '/bucket',
         component: () => import('../views/subpages/Bucket.vue'),
         redirect: '/fileList',//初始显示在文件列表页面
-        meta: { title: "bucketName" },
+        meta: { title: "myBucket" },
         children: [
+          {
+            //403页面
+            path: '/page403',
+            component: () => import('../views/bucketSubpage/Page403.vue'),
+            meta: { title: '无权限' },
+          },
           {
             //概览
             path: '/overview',
@@ -149,6 +156,12 @@ const routes = [
             path: '/serverSideEncryption',
             component: () => import('../views/bucketSubpage/ServerSideEncryption.vue'),
             meta: { title: '服务器端加密' },
+          },
+          {
+            //文档处理
+            path: '/documentationProcessing',
+            component: () => import('../views/bucketSubpage/DocumentationProcessing.vue'),
+            meta: { title: '文档处理' }
           },
           {
             //图片处理
@@ -214,9 +227,11 @@ const router = createRouter({
   routes
 })
 
-/*
+
 //设置路由守卫
 router.beforeEach((to, from, next) => {
+  // console.log(to)
+  // console.log(from)
   if (to.path == '/login') {
     // 如果路径是 /login 则正常执行
     next()
@@ -231,6 +246,6 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
-*/
+
 
 export default router

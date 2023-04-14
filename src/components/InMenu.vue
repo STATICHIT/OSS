@@ -55,6 +55,11 @@
         <span class="el-menu-font">数据处理</span>
       </template>
       <el-menu-item
+        index="/documentationProcessing"
+        :route="{ path: '/documentationProcessing', query: { bucketName: bucketName } }"
+        >文档处理</el-menu-item
+      >
+      <el-menu-item
         index="/imageProcessing"
         :route="{ path: '/imageProcessing', query: { bucketName: bucketName } }"
         >图片处理</el-menu-item

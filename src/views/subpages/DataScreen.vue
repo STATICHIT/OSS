@@ -66,11 +66,13 @@
       </div>
 
       <div class="right">
-        <h2 class="title2">Bucket管理</h2>
+        <h2 class="title2">Object管理</h2>
         <div class="up" id="mychart"></div>
         <div class="down">
-          <el-button plain class="createBtn">创建 Bucket</el-button>
-          <el-button plain>查看 Bucket 列表</el-button>
+          <el-button plain class="createBtn" @click="btn1"
+            >创建 Bucket</el-button
+          >
+          <el-button plain @click="btn1">查看 Bucket 列表</el-button>
           <el-button plain>导出CSV</el-button>
         </div>
       </div>
@@ -80,20 +82,19 @@
 </template>
 
 <script>
-import { ElMessage } from "element-plus";
 import apiFun from "../../utils/api";
-//引入echarts
-import * as echarts from "echarts";
-//引入主题
-import theme from "./echarts_test";
-
+import * as echarts from "echarts";//引入echarts
+import theme from "./echarts_test";//引入主题
 export default {
   data() {
     return {
-      cnt1: 1048,
-      cnt2: 735,
-      cnt3: 580,
-      cnt4: 484,
+      cnt1: 24,
+      cnt2: 17,
+      cnt3: 53,
+      cnt4: 41,
+      cnt4: 8,
+      cnt5: 18,
+      cnt6: 22,
       capacity1: "485.65",
       capacity2: "485.71",
       rate1: "237.39%↑",
@@ -111,15 +112,7 @@ export default {
         },
         {
           value: "3",
-          label: "低频访问",
-        },
-        {
-          value: "4",
           label: "归档存储",
-        },
-        {
-          value: "5",
-          label: "冷归档存储",
         },
       ],
       value: "1",
@@ -137,8 +130,8 @@ export default {
     // 初始化数据
     initData() {
       // apiFun.getScreenData().then((res) => {
-      //   this.pv = res.method.pv;
-      //   this.uv = res.method.uv;
+      //   this.pv = res.data.method.pv;
+      //   this.uv = res.data.method.uv;
       //   //...
       // });
     },
@@ -153,27 +146,45 @@ export default {
           trigger: "item",
         },
         legend: {
-          orient: "vertical",
-          left: "left",
+          top: "5%",
+          left: "center",
         },
         series: [
           {
-            name: "Bucket数量",
+            name: "文件数量",
             type: "pie",
-            radius: "50%",
-            data: [
-              { value: this.cnt1, name: "标准存储" },
-              { value: this.cnt2, name: "冷归档存储" },
-              { value: this.cnt3, name: "归档存储" },
-              { value: this.cnt4, name: "低频访问存储" },
-            ],
+            radius: ["40%", "70%"],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 10,
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+            label: {
+              show: false,
+              position: "center",
+            },
             emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)",
+              label: {
+                show: true,
+                fontSize: 35,
+                fontWeight: "bold",
               },
             },
+            labelLine: {
+              show: false,
+            },
+            data: [
+              { value: this.cnt1, name: "txt文件" },
+              { value: this.cnt2, name: "doc文件" },
+              { value: this.cnt1, name: "pptx文件" },
+              { value: this.cnt4, name: "mp4文件" },
+              { value: this.cnt3, name: "png文件" },
+              { value: this.cnt6, name: "md文件" },
+              { value: this.cnt4, name: "pdf文件" },
+              { value: this.cnt5, name: "jpg文件" },
+              { value: this.cnt2, name: "exe文件" },
+            ],
           },
         ],
       };
@@ -181,7 +192,7 @@ export default {
       // 表格数据2
       var option2 = {
         title: {
-          text: "存储类型",
+          text: "Bucket存储类型",
         },
         tooltip: {
           trigger: "axis",
@@ -347,6 +358,9 @@ export default {
         }
       }
     },
+    btn1() {
+      this.$router.push("/bucketList");
+    },
   },
 };
 </script>
@@ -368,14 +382,14 @@ export default {
 }
 
 .up {
-  padding-top: 60px;
+  margin-top:40px;
   width: 100%;
-  height: 510px;
+  height: 500px;
 }
 
 .down {
   width: 100%;
-  height: 185px;
+  height: 155px;
 }
 
 .title2 {

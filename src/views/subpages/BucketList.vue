@@ -208,7 +208,7 @@ const state = reactive({
 .input-msg{
   margin-bottom: 6%;
   width: 82%;
-  margin-left: 21.5%;
+  margin-left: 18%;
   margin-top: -2%;
   text-align: left;
   font-weight: lighter;

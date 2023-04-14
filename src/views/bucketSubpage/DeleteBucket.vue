@@ -16,8 +16,11 @@
         </div>
         <br />
         <br />
-        <!-- 暂用个图片凑合一下 -->
-        <img src="../../assets/delete.png" />
+        <div v-if="ok">
+          <img v-if="!allow" src="../../assets/nodelete.png" alt="" />
+          <img v-if="allow" src="../../assets/delete.png" alt="" />
+        </div>
+
         <template #footer>
           <span class="dialog-footer">
             <el-button type="primary" @click="save" :disabled="disabled">
@@ -32,30 +35,51 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import router from "../../router/index";
 import { ElMessage } from "element-plus";
 import { useRoute } from "vue-router";
 import apiFun from "../../utils/api";
 const centerDialogVisible = ref(true);
-const disabled = ref(false);
-const route = useRoute()
-const query = route.query
+const disabled = ref(true);
+const route = useRoute();
+const query = route.query;
+const name = query["bucketName"];
+const allow = ref();
+const ok = ref(false);
+onMounted(() => {
+  Pre();
+});
+
+const Pre = () => {
+  apiFun.object.objectList(name, "", 1, 1, "").then((res) => {
+    console.log(res);
+    if (res.data.rows.length === 0) {
+      allow.value = true;
+      disabled.value = false;
+    } else {
+      allow.value = false;
+    }
+    ok.value = true;
+  });
+};
 
 let save = () => {
-  const name = query['bucketName']
-  apiFun.bucket.delete(name).then((res)=>{
-    console.log(res)
-  })
-  centerDialogVisible.value = false;
-  ElMessage.success("修改成功");
-  router.push("/bucketList");
+  apiFun.bucket.delete(name).then((res) => {
+    console.log(res);
+    centerDialogVisible.value = false;
+    ElMessage.success("删除成功");
+    router.push({ path: "/bucketList" });
+  });
 };
 let cancel = () => {
   centerDialogVisible.value = false;
-  router.push("/fileList");
+  router.push({ path: "/fileList", query: { bucketName: name } });
 };
 </script>
 
 <style lang="scss" scoped>
+img {
+  width: 90%;
+}
 </style>
