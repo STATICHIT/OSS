@@ -274,6 +274,10 @@ apiFun.object.backupObject = (bucketName, objectName, targetBucketName, newObjec
 apiFun.object.backupRecoveryObject = (bucketName, objectName) => {
   return http.post('/ossObject/backupRecovery?bucketName=' + bucketName + '&objectName=' + objectName)
 }
+//获取备份对象
+apiFun.object.listBackup = (bucketName,objectName) => {
+  return http.get(`/ossObject/listBackupObjects?bucketName=${bucketName}&objectName=${objectName}`)
+}
 //归档一个对象
 apiFun.object.freeze = (bucketName, objectName) => {
   return http.post(`/ossObject/freeze?bucketName=${bucketName}&objectName=${objectName}`)

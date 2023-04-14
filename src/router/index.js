@@ -112,7 +112,7 @@ const routes = [
         path: '/bucket',
         component: () => import('../views/subpages/Bucket.vue'),
         redirect: '/fileList',//初始显示在文件列表页面
-        meta: { title: "bucketName" },
+        meta: { title: "mybucket" },
         children: [
           {
             //概览

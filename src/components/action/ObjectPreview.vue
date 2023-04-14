@@ -19,6 +19,7 @@
               fileStatus == '正常'
             "
             class="preview-box"
+            v-loading="loading"
           >             
             <img
             ref="img"
@@ -33,6 +34,14 @@
               controls
               autoplay
             ></video>
+            <iframe
+                 v-if="objectInfo.ext == 6 || objectInfo.ext == 5 || objectInfo.ext == 1"
+                 :src="src"
+                 width="100%"
+                 height="100%"
+                 style="background: white"
+                >
+          </iframe>
           <el-button class="close" @click="close" type="info" circle ><el-icon><CloseBold /></el-icon> </el-button>
           </div>
           <div
@@ -58,10 +67,10 @@
   </template>
   
   <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
-
-const emit = defineEmits(['close',])
+const loading = ref(true)
+const emit = defineEmits(['close'])
 
 /* 放大缩小 */
 const img = ref(null)
@@ -105,21 +114,44 @@ xhr.send();
 
   const close = () => {
     src.value=''
+    loading.value=true
     emit('close')
   }
-  const objectInfoMsg = computed(() => {
-    if(prop.objectInfo!=null){
-  if (prop.objectInfo.ext != 2 && prop.objectInfo.ext != 4) {
-    return "该文件类型暂不支持预览。";
-  } else if (prop.objectInfo.storageLevel != 1 || prop.fileStatus != "正常") {
-    return "该Object处于归档/归档中/解冻中，无法对其进行预览和下载。";
-  } else if (prop.objectInfo.secret != null) {
-    return "该Object已被加密，不能进行预览";
-  }else {
-     src.value=`http://192.168.50.236:5555/object/preview-image/${prop.bucketName}/${prop.objectInfo.name}`
+  // const objectInfoMsg = ref('')
+
+//   onMounted(()=>{
+//     pre()
+//   })
+//    const pre = () => {
+//      if(prop.objectInfo!=null){
+//     if (prop.objectInfo.ext != 2 && prop.objectInfo.ext != 4 && prop.objectInfo.ext != 1 && prop.objectInfo.ext != 5 &&prop.objectInfo.ext != 6) {
+//      objectInfoMsg.value="该文件类型暂不支持预览。";
+//     } else if (prop.objectInfo.storageLevel != 1 || prop.fileStatus != "正常") {
+//      objectInfoMsg.value="该Object处于归档/归档中/解冻中，无法对其进行预览和下载。";
+//     } else if (prop.objectInfo.secret != null) {
+//      objectInfoMsg.value="该Object已被加密，不能进行预览";
+//     }else {
+//        src.value=`http://192.168.50.236:5555/object/preview-image/${prop.bucketName}/${prop.objectInfo.name}`
+//     }
+//    }
+//    console.log(src.value)
+//    console.log(objectInfoMsg.value)
+//  }
+    const objectInfoMsg = computed(() => {
+      if(prop.objectInfo!=null){
+    if (prop.objectInfo.ext != 2 && prop.objectInfo.ext != 4 && prop.objectInfo.ext != 1 && prop.objectInfo.ext != 5 &&prop.objectInfo.ext != 6) {
+      return "该文件类型暂不支持预览。";
+    } else if (prop.objectInfo.storageLevel != 1 || prop.fileStatus != "正常") {
+      return "该Object处于归档/归档中/解冻中，无法对其进行预览和下载。";
+    } else if (prop.objectInfo.secret != null) {
+      return "该Object已被加密，不能进行预览";
+    }else {
+       src.value=`http://192.168.50.236:5555/object/preview-image/${prop.bucketName}/${prop.objectInfo.name}`
+       loading.value=false
+       console.log(src.value)
+    }
   }
-}
-});
+  });
   </script>
   
   <style scoped>

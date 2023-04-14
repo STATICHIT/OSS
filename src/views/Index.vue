@@ -2,7 +2,11 @@
   <div>
     <div class="main">
       <div class="left">
-        <div class="auth-brand">CloudCan云罐</div>
+        <!-- <div class="auth-brand">CloudCan云罐</div> -->
+        <div class="logo-box">
+      <img src="../assets/icon.png" class="logo">
+      <span class="head-text">CloudCan云罐</span>
+    </div>
         <h4 class="mt-0">让存储无限量</h4>
         <!-- 声明子路由占位符 -->
         <router-view></router-view>
@@ -36,11 +40,25 @@
   font-size: 26px;
   width: 325px;
 }
-
+.logo-box{
+  display: flex;
+  flex-direction: row;
+  margin: 4rem 0 4rem;
+}
 .left {
   width: 20%;
   padding: 60px;
   text-align: left;
+}
+
+.logo{
+  max-height:40px
+}
+.head-text {
+  color:#6477b7;
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 10px;
 }
 .right {
   width: 80%;

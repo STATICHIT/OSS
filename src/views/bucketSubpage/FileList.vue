@@ -192,6 +192,7 @@
               :objectId="fileData.id"
               @createSecret="createSecret"
             ></CreateSecret>
+            <BackupDialog :target-file="state.objectInfo.name" :tableData="state.backupTableData" v-model="backupList" @close="backupList=false"></BackupDialog>
           </div>
         </div>
       </template>
@@ -348,6 +349,7 @@ import BackupVue from "../../components/action/Backup.vue";
 import addLabelVue from "../../components/action/addLabel.vue";
 import qs from "qs"; //转json数据工具包
 import ObjectPreviewVue from "../../components/action/ObjectPreview.vue";
+import BackupDialog from "../../components/action/BackupDialog.vue";
 
 var index = ref({}); //获取的文件下标
 let fileData = reactive({}); //选择的文件的普通数据
@@ -371,6 +373,7 @@ const showLimitThaw = ref(false); //限制解冻警告对话框
 const showPreview = ref(false); //显示预览
 const objectLabel = reactive([]); //标签
 const openBackup = ref(false);
+const backupList = ref(false)
 let tagObjectName = ref("");
 const secretList = ref([]);
 const loading = ref(true)
@@ -409,7 +412,15 @@ const objectRename = (msg) => {
 }
 /* 查看备份 */
 const searchBackup = () => {
-
+  apiFun.object.listBackup(bucketName,state.objectInfo.name).then(res=>{
+    console.log(res)
+    if(res.code==200){
+      state.backupTableData=res.data
+    }else{
+      ElMessage.success(res.msg)
+    }
+  })
+  backupList.value=true
 }
 const backupRecover = () => {
   ElMessageBox.confirm(`确定复原该对象吗?`, {
@@ -502,7 +513,7 @@ const goToFile = (index) => {
   }
 };
 const Pre = () => {
-  console.log(parentObjectId)
+  console.log(bucketName)
   if (bucketName != null) {
     apiFun.object
       .objectList(
@@ -842,6 +853,7 @@ const state = reactive({
   } /* 选择的文件元数据 */,
   /* 新建目录 */
   newFolderName: "",
+  backupTableData:[]
 });
 
 const keyList = reactive([]);
