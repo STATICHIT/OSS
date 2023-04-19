@@ -200,10 +200,8 @@ export default {
         legend: {
           top: 40,
           data: [
-            "标准存储-本地冗余",
-            "低频访问-本地冗余",
+            "标准存储",
             "归档存储",
-            "冷归档存储",
           ],
         },
         grid: {
@@ -228,29 +226,17 @@ export default {
         },
         series: [
           {
-            name: "标准存储-本地冗余",
+            name: "标准存储",
             type: "line",
             stack: "Total",
             data: [120, 132, 101, 134, 90, 230, 210],
-          },
-          {
-            name: "低频访问-本地冗余",
-            type: "line",
-            stack: "Total",
-            data: [220, 182, 191, 234, 290, 330, 310],
           },
           {
             name: "归档存储",
             type: "line",
             stack: "Total",
             data: [150, 232, 201, 154, 190, 330, 410],
-          },
-          {
-            name: "冷归档存储",
-            type: "line",
-            stack: "Total",
-            data: [320, 332, 301, 334, 390, 330, 320],
-          },
+          }
         ],
       };
 

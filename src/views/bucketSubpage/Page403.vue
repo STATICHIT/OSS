@@ -32,7 +32,7 @@ const back = () => {
   margin: 0 auto;
   width: 90%;
   height: 400px;
-  background-color: rgba(236, 234, 234, 0.438);
+  background-color: rgba(236, 234, 234, 0.185);
 }
 .icon-return {
   line-height: inherit;
